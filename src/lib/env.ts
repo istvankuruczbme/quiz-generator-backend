@@ -1,6 +1,6 @@
 const schema = {
 	type: "object",
-	required: ["PORT", "CLIENT_URL", "OPENAI_API_KEY"],
+	required: ["PORT", "CLIENT_URL", "OPENAI_API_KEY", "QUESTION_DEVELOPER_PROMPT"],
 	properties: {
 		PORT: {
 			type: "number",
@@ -10,6 +10,9 @@ const schema = {
 			type: "string",
 		},
 		OPENAI_API_KEY: {
+			type: "string",
+		},
+		QUESTION_DEVELOPER_PROMPT: {
 			type: "string",
 		},
 	},
