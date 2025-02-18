@@ -2,12 +2,23 @@ import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import { openai } from "../lib/openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
+import { stripe } from "../lib/stripe";
+import { ZodTypeProvider } from "fastify-type-provider-zod";
 
-export default function testRoute(app: FastifyInstance, _: FastifyPluginOptions, done: () => void) {
+export default function testRoute(
+	fastify: FastifyInstance,
+	_: FastifyPluginOptions,
+	done: () => void
+) {
+	// Add type provider to fastify object
+	const app = fastify.withTypeProvider<ZodTypeProvider>();
+
+	// Hello World
 	app.get("/hello", async () => {
 		return { text: "Hello World!" };
 	});
 
+	// OpenAI API - completion
 	const Answer = z.object({
 		id: z.string(),
 		text: z.string(),
@@ -17,7 +28,6 @@ export default function testRoute(app: FastifyInstance, _: FastifyPluginOptions,
 		asnwers: z.array(Answer),
 		correct_answer_ids: z.array(z.string()),
 	});
-
 	app.get("/completion", async () => {
 		const completion = await openai.chat.completions.create({
 			model: "gpt-4o-mini",
@@ -40,6 +50,78 @@ export default function testRoute(app: FastifyInstance, _: FastifyPluginOptions,
 		const response = completion.choices[0].message.content || "";
 		return JSON.parse(response);
 	});
+
+	// Stripe API - create customer
+	const createUserschema = {
+		body: z.object({
+			name: z.string().min(1),
+			email: z.string().email(),
+		}),
+		response: {
+			default: z.string(),
+		},
+	};
+	app.post("/stripe/create-customer", { schema: createUserschema }, async (req) => {
+		const customer = await stripe.customers.create({
+			name: req.body.name,
+			email: req.body.email,
+		});
+
+		return customer.id;
+	});
+
+	// Stripe API - get user
+	const getUserSchema = {
+		params: z.object({
+			customerId: z.string().min(1),
+		}),
+		// response: {
+		// 	default:
+		// }
+	};
+	app.get("/stripe/customers/:customerId", { schema: getUserSchema }, async (req) => {
+		const customer = await stripe.customers.retrieve(req.params.customerId);
+		return customer;
+	});
+
+	// Stripe API - checkout
+	app.post("/stripe/create-checkout-session", async () => {
+		const session = await stripe.checkout.sessions.create({
+			mode: "subscription",
+			line_items: [
+				{
+					price: "price_1QtnyzI0V5nYyjRdU8J6hxme",
+					quantity: 1,
+				},
+			],
+			success_url: `${process.env.CLIENT_URL}/success`,
+			cancel_url: `${process.env.CLIENT_URL}/error`,
+		});
+
+		return session.url;
+	});
+
+	// Stripe API - customer portal
+	const getCustomerPortalSchema = {
+		params: z.object({
+			customerId: z.string().min(1),
+		}),
+		response: {
+			"2xx": z.string(),
+		},
+	};
+	app.post(
+		"/stripe/customers/:customerId/portal-session",
+		{ schema: getCustomerPortalSchema },
+		async (req) => {
+			const session = await stripe.billingPortal.sessions.create({
+				customer: req.params.customerId,
+				return_url: `${process.env.CLIENT_URL}/from-portal`,
+			});
+
+			return session.url;
+		}
+	);
 
 	done();
 }

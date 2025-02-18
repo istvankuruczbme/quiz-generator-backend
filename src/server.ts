@@ -2,7 +2,6 @@ import Fastify from "fastify";
 import { serializerCompiler, validatorCompiler, ZodTypeProvider } from "fastify-type-provider-zod";
 import cors from "@fastify/cors";
 import testRoute from "./routes/testRoute";
-import "dotenv/config";
 import fastifyEnv from "@fastify/env";
 import { envOptions } from "./lib/env";
 
@@ -13,7 +12,7 @@ const app = Fastify({
 			target: "pino-pretty",
 		},
 	},
-}).withTypeProvider<ZodTypeProvider>();
+});
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
