@@ -4,6 +4,9 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import { stripe } from "../lib/stripe";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { db } from "../drizzle/db";
+import { userTable } from "../drizzle/schema/user";
+import { supabase } from "../lib/supabase";
 
 export default function testRoute(
 	fastify: FastifyInstance,
@@ -122,6 +125,53 @@ export default function testRoute(
 			return session.url;
 		}
 	);
+
+	// Supabase DB - Add test user
+	const addUserSchema = {
+		body: z.object({
+			firebaseId: z.string().length(28),
+			customerId: z.string().length(18),
+			name: z.string().min(1),
+			email: z.string().email(),
+			photoUrl: z.string().optional(),
+		}),
+	};
+	app.post("/users", { schema: addUserSchema }, async (req) => {
+		const { firebaseId, customerId, email, name } = req.body;
+
+		const [user] = await db
+			.insert(userTable)
+			.values({
+				firebaseId,
+				customerId,
+				email,
+				name,
+			})
+			.returning();
+
+		return user;
+	});
+
+	// Supabase Storage - add test file
+	app.post("/storage", async (req) => {
+		// Get file from request
+		const fileData = await req.file();
+		const fileBuffer = await fileData!.toBuffer();
+		// console.log("File: ", file);
+
+		// Upload file
+		const path = `userId.${fileData?.filename.split(".")[1]}`;
+		const { data: uploadedFile, error: uploadError } = await supabase.storage
+			.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
+			.upload(path, fileBuffer);
+		if (uploadError) throw uploadError;
+
+		// Get file URL
+		const { data } = supabase.storage
+			.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
+			.getPublicUrl(uploadedFile.path);
+		return data.publicUrl;
+	});
 
 	done();
 }
