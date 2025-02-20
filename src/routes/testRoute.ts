@@ -50,8 +50,11 @@ export default function testRoute(
 			response_format: zodResponseFormat(Question, "question"),
 		});
 
-		const response = completion.choices[0].message.content || "";
-		return JSON.parse(response);
+		const response = completion.choices[0];
+		if (response == undefined) throw new Error("No response from OpenAI API.");
+
+		const message = response.message.content || "";
+		return JSON.parse(message);
 	});
 
 	// Stripe API - create customer
