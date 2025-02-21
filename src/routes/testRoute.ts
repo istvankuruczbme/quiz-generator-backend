@@ -8,6 +8,39 @@ import { db } from "../drizzle/db";
 import { userTable } from "../drizzle/schema/user";
 import { supabase } from "../lib/supabase";
 
+export function webhookTestRoute(
+	fastify: FastifyInstance,
+	_: FastifyPluginOptions,
+	done: () => void
+) {
+	// Parse request.body
+	fastify.addContentTypeParser("application/json", { parseAs: "buffer" }, (_, body, done) => {
+		// console.log("Parse body:", body);
+		done(null, body);
+	});
+
+	// Add type provider to fastify object
+	const app = fastify.withTypeProvider<ZodTypeProvider>();
+
+	// Stripe API - Webhook
+	app.post("/stripe/webhooks", async (req) => {
+		// console.log("Body in handler as string: ", JSON.stringify(req.body));
+		const sig = req.headers["stripe-signature"];
+		console.log("Signature: ", sig);
+		const event = stripe.webhooks.constructEvent(
+			req.body as any,
+			sig!,
+			process.env.STRIPE_WEBHOOK_SECRET!
+		);
+
+		console.log("Event: ", event);
+
+		return event;
+	});
+
+	done();
+}
+
 export default function testRoute(
 	fastify: FastifyInstance,
 	_: FastifyPluginOptions,
@@ -55,6 +88,19 @@ export default function testRoute(
 
 		const message = response.message.content || "";
 		return JSON.parse(message);
+	});
+
+	// OpenAI API - embeddings
+	app.post("/openai/embeddings", async () => {
+		const embedding = await openai.embeddings.create({
+			model: "text-embedding-3-small",
+			input: "Title: Computer Science Quiz Decription: This quiz is designed to test your knowledge in the topic of computer science. Answer all the questions correct and be the first on the leaderboard!",
+			encoding_format: "float",
+			// dimensions: 100,
+		});
+
+		const values = embedding.data[0]?.embedding;
+		return values;
 	});
 
 	// Stripe API - create customer
@@ -139,21 +185,28 @@ export default function testRoute(
 			photoUrl: z.string().optional(),
 		}),
 	};
-	app.post("/users", { schema: addUserSchema }, async (req) => {
-		const { firebaseId, customerId, email, name } = req.body;
+	app.post(
+		"/users",
+		{
+			schema: addUserSchema,
+		},
+		async (req) => {
+			console.log(req.body);
+			const { firebaseId, customerId, email, name } = req.body;
 
-		const [user] = await db
-			.insert(userTable)
-			.values({
-				firebaseId,
-				customerId,
-				email,
-				name,
-			})
-			.returning();
+			const [user] = await db
+				.insert(userTable)
+				.values({
+					firebaseId,
+					customerId,
+					email,
+					name,
+				})
+				.returning();
 
-		return user;
-	});
+			return user;
+		}
+	);
 
 	// Supabase Storage - add test file
 	app.post("/storage", async (req) => {

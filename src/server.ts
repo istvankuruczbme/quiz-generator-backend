@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
-import testRoute from "./routes/testRoute";
+import testRoute, { webhookTestRoute } from "./routes/testRoute";
 import fastifyEnv from "@fastify/env";
 import cors from "@fastify/cors";
 import { envOptions } from "./lib/env";
@@ -26,6 +26,9 @@ app.register(multipart);
 
 // Register routes
 app.register(testRoute, {
+	prefix: "/api/test",
+});
+app.register(webhookTestRoute, {
 	prefix: "/api/test",
 });
 
