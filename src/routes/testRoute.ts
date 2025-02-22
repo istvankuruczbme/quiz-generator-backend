@@ -5,8 +5,8 @@ import { z } from "zod";
 import { stripe } from "../lib/stripe";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { db } from "../drizzle/db";
-import { userTable } from "../drizzle/schema/user";
 import { supabase } from "../lib/supabase";
+import { UserTable } from "../drizzle/schema/user";
 
 export function webhookTestRoute(
 	fastify: FastifyInstance,
@@ -123,7 +123,7 @@ export default function testRoute(
 	});
 
 	// Stripe API - get user
-	const getUserSchema = {
+	const getStripeUserSchema = {
 		params: z.object({
 			customerId: z.string().min(1),
 		}),
@@ -131,7 +131,7 @@ export default function testRoute(
 		// 	default:
 		// }
 	};
-	app.get("/stripe/customers/:customerId", { schema: getUserSchema }, async (req) => {
+	app.get("/stripe/customers/:customerId", { schema: getStripeUserSchema }, async (req) => {
 		const customer = await stripe.customers.retrieve(req.params.customerId);
 		return customer;
 	});
@@ -178,7 +178,6 @@ export default function testRoute(
 	// Supabase DB - Add test user
 	const addUserSchema = {
 		body: z.object({
-			firebaseId: z.string().length(28),
 			customerId: z.string().length(18),
 			name: z.string().min(1),
 			email: z.string().email(),
@@ -192,12 +191,11 @@ export default function testRoute(
 		},
 		async (req) => {
 			console.log(req.body);
-			const { firebaseId, customerId, email, name } = req.body;
+			const { customerId, email, name } = req.body;
 
 			const [user] = await db
-				.insert(userTable)
+				.insert(UserTable)
 				.values({
-					firebaseId,
 					customerId,
 					email,
 					name,
@@ -207,6 +205,26 @@ export default function testRoute(
 			return user;
 		}
 	);
+
+	// Supabase DB - get user
+	const getUserSchema = {
+		params: z.object({
+			userId: z.string().uuid(),
+		}),
+	};
+	app.get("/users/:userId", { schema: getUserSchema }, async (req) => {
+		// Get request headers
+		console.log("Headers: ", req.headers);
+
+		// Get user ID
+		const { userId } = req.params;
+
+		const user = await db.query.UserTable.findFirst({
+			where: (user, { eq }) => eq(user.id, userId),
+		});
+
+		return user;
+	});
 
 	// Supabase Storage - add test file
 	app.post("/storage", async (req) => {
