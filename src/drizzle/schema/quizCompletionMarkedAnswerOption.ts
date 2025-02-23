@@ -7,7 +7,7 @@ import { relations } from "drizzle-orm";
 export const QuizCompletionMarkedAnswerOptionTable = pgTable(
 	"quiz_completion_marked_answer_option",
 	{
-		answerOptionId: uuid("answer_id")
+		answerOptionId: uuid("answer_option_id")
 			.references(() => AnswerOptionTable.id)
 			.notNull(),
 		quizCompletionId: uuid("quiz_completion_id")
