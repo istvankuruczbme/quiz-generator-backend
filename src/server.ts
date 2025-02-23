@@ -1,9 +1,8 @@
+import "dotenv/config";
 import Fastify from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import testRoute, { webhookTestRoute } from "./routes/testRoute";
-import fastifyEnv from "@fastify/env";
 import cors from "@fastify/cors";
-import { envOptions } from "./lib/env";
 import multipart from "@fastify/multipart";
 
 // Create Fastify instance
@@ -18,7 +17,6 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 // Register plugins
-app.register(fastifyEnv, envOptions);
 app.register(cors, {
 	origin: process.env.CLIENT_URL,
 });
