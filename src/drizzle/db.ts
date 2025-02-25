@@ -1,6 +1,8 @@
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
 import * as user from "./schema/user";
+import * as category from "./schema/category";
+import * as userCategory from "./schema/userCategory";
 import * as quiz from "./schema/quiz";
 import * as quizConfig from "./schema/quizConfig";
 import * as question from "./schema/question";
@@ -14,6 +16,8 @@ const client = postgres(process.env.SUPABASE_DATABASE_URL!, { prepare: false });
 // Schema
 const schema = {
 	...user,
+	...category,
+	...userCategory,
 	...quiz,
 	...quizConfig,
 	...question,

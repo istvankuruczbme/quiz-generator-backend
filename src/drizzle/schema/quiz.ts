@@ -1,16 +1,19 @@
-import { index, pgTable, text, uuid, varchar, vector } from "drizzle-orm/pg-core";
+import { index, pgTable, text, uuid, vector } from "drizzle-orm/pg-core";
 import { UserTable } from "./user";
 import { relations } from "drizzle-orm";
 import { QuestionTable } from "./question";
 import { createdAt, deletedAt, id, updatedAt } from "../schemaHelpers";
 import { QuizCompletionTable } from "./quizCompletion";
+import { CategoryTable } from "./category";
 
 // Schema
 export const QuizTable = pgTable(
 	"quiz",
 	{
 		id,
-		category: varchar("category", { length: 255 }).notNull(),
+		categoryId: uuid("category")
+			.references(() => CategoryTable.id)
+			.notNull(),
 		title: text("title").notNull(),
 		description: text("description").notNull(),
 		photoUrl: text("photo_url"),
@@ -28,6 +31,10 @@ export const QuizTable = pgTable(
 // Relations
 export const QuizRelations = relations(QuizTable, ({ one, many }) => {
 	return {
+		category: one(CategoryTable, {
+			fields: [QuizTable.categoryId],
+			references: [CategoryTable.id],
+		}),
 		user: one(UserTable, {
 			fields: [QuizTable.userId],
 			references: [UserTable.id],

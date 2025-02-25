@@ -3,6 +3,7 @@ import { createdAt, deletedAt, id, updatedAt } from "../schemaHelpers";
 import { relations } from "drizzle-orm";
 import { QuizTable } from "./quiz";
 import { QuizCompletionTable } from "./quizCompletion";
+import { UserCategoryTable } from "./userCategory";
 
 // Schema
 export const UserTable = pgTable(
@@ -23,6 +24,7 @@ export const UserTable = pgTable(
 // Relations
 export const UserRelations = relations(UserTable, ({ many }) => {
 	return {
+		categories: many(UserCategoryTable),
 		quizzes: many(QuizTable),
 		completions: many(QuizCompletionTable),
 	};
