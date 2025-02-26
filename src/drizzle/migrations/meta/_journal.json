@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1739980513379,
-      "tag": "0000_clean_speedball",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1739980681284,
-      "tag": "0001_amazing_lifeguard",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1740224951563,
-      "tag": "0002_unique_sentinel",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1740250285591,
-      "tag": "0003_flippant_epoch",
+      "when": 1740553840290,
+      "tag": "0000_elite_centennial",
       "breakpoints": true
     }
   ]

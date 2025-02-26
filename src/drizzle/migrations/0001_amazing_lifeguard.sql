@@ -1,1 +1,0 @@
-CREATE UNIQUE INDEX "firebase_id_index" ON "user" USING btree ("firebase_id");

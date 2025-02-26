@@ -13,7 +13,7 @@ export type QuizConfigVisibility = (typeof quizConfigVisibilityOptions)[number];
 
 // Question order
 export const quizConfigQuestionOrderOptions = ["NORMAL", "RANDOM"] as const;
-export const quizConfigQuestionOrderEnum = pgEnum(
+const quizConfigQuestionOrderEnum = pgEnum(
 	"quiz_config_question_order",
 	quizConfigQuestionOrderOptions
 );

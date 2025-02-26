@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, uuid } from "drizzle-orm/pg-core";
 import { QuizTable } from "./quiz";
 import { UserCategoryTable } from "./userCategory";
 
@@ -24,7 +24,7 @@ export type CategoryName = (typeof categoryNameOptions)[number];
 // Schema
 export const CategoryTable = pgTable("category", {
 	id: uuid("id").defaultRandom().primaryKey(),
-	name: text("name").notNull(),
+	name: categoryNameEnum("name").notNull(),
 });
 
 // Relations
