@@ -1,251 +1,254 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { openai } from "../lib/openai";
-import { zodResponseFormat } from "openai/helpers/zod";
-import { z } from "zod";
-import { stripe } from "../lib/stripe";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { db } from "../drizzle/db";
-import { supabase } from "../lib/supabase";
-import { UserTable } from "../drizzle/schema/user";
+// import { FastifyInstance, FastifyPluginOptions } from "fastify";
+// import { openai } from "../config/openai";
+// import { zodResponseFormat } from "openai/helpers/zod";
+// import { z } from "zod";
+// import { stripe } from "../config/stripe";
+// import { ZodTypeProvider } from "fastify-type-provider-zod";
+// import { db } from "../drizzle/db";
+// import { supabase } from "../config/supabase";
+// import { UserTable } from "../drizzle/schema/user";
+// import { Router } from "express";
 
-export function webhookTestRoute(
-	fastify: FastifyInstance,
-	_: FastifyPluginOptions,
-	done: () => void
-) {
-	// Parse request.body
-	fastify.addContentTypeParser("application/json", { parseAs: "buffer" }, (_, body, done) => {
-		// console.log("Parse body:", body);
-		done(null, body);
-	});
+// export function webhookTestRoute(
+// 	fastify: FastifyInstance,
+// 	_: FastifyPluginOptions,
+// 	done: () => void
+// ) {
+// 	// Parse request.body
+// 	fastify.addContentTypeParser("application/json", { parseAs: "buffer" }, (_, body, done) => {
+// 		// console.log("Parse body:", body);
+// 		done(null, body);
+// 	});
 
-	// Add type provider to fastify object
-	const app = fastify.withTypeProvider<ZodTypeProvider>();
+// 	// Add type provider to fastify object
+// 	const app = fastify.withTypeProvider<ZodTypeProvider>();
 
-	// Stripe API - Webhook
-	app.post("/stripe/webhooks", async (req) => {
-		// console.log("Body in handler as string: ", JSON.stringify(req.body));
-		const sig = req.headers["stripe-signature"];
-		console.log("Signature: ", sig);
-		const event = stripe.webhooks.constructEvent(
-			req.body as any,
-			sig!,
-			process.env.STRIPE_WEBHOOK_SECRET!
-		);
+// 	// Stripe API - Webhook
+// 	app.post("/stripe/webhooks", async (req) => {
+// 		// console.log("Body in handler as string: ", JSON.stringify(req.body));
+// 		const sig = req.headers["stripe-signature"];
+// 		console.log("Signature: ", sig);
+// 		const event = stripe.webhooks.constructEvent(
+// 			req.body as any,
+// 			sig!,
+// 			process.env.STRIPE_WEBHOOK_SECRET!
+// 		);
 
-		console.log("Event: ", event);
+// 		console.log("Event: ", event);
 
-		return event;
-	});
+// 		return event;
+// 	});
 
-	done();
-}
+// 	done();
+// }
 
-export default function testRoute(
-	fastify: FastifyInstance,
-	_: FastifyPluginOptions,
-	done: () => void
-) {
-	// Add type provider to fastify object
-	const app = fastify.withTypeProvider<ZodTypeProvider>();
+// export default function testRoute(
+// 	fastify: FastifyInstance,
+// 	_: FastifyPluginOptions,
+// 	done: () => void
+// ) {
+// 	// Add type provider to fastify object
+// 	const app = fastify.withTypeProvider<ZodTypeProvider>();
 
-	// Hello World
-	app.get("/hello", async () => {
-		return { text: "Hello World!" };
-	});
+// 	// Hello World
+// 	app.get("/hello", async () => {
+// 		return { text: "Hello World!" };
+// 	});
 
-	// OpenAI API - completion
-	const Answer = z.object({
-		id: z.string(),
-		text: z.string(),
-	});
-	const Question = z.object({
-		text: z.string(),
-		asnwers: z.array(Answer),
-		correct_answer_ids: z.array(z.string()),
-	});
-	app.get("/completion", async () => {
-		const completion = await openai.chat.completions.create({
-			model: "gpt-4o-mini",
-			messages: [
-				{
-					role: "developer",
-					content: process.env.QUESTION_DEVELOPER_PROMPT!,
-				},
-				{
-					role: "user",
-					content:
-						"The Pacific Ocean is the largest and deepest ocean on Earth, covering more area than all the continents combined. It stretches from the Arctic Ocean in the north to the Southern Ocean in the south and is bordered by Asia, Australia, and the Americas. The Mariana Trench, located in the western Pacific, is the deepest point in the world's oceans.",
-					// "A Csendes-óceán a Föld legnagyobb és legmélyebb óceánja, amely nagyobb területet fed le, mint az összes kontinens együttvéve. Északon az Északi-sarkvidéki-óceán, délen a Déli-óceán határolja, míg nyugaton Ázsia és Ausztrália, keleten pedig Amerika partjaihoz csatlakozik. A Mariana-árok, amely a Csendes-óceán nyugati részén található, a világ óceánjainak legmélyebb pontja.",
-					// "Der Pazifische Ozean ist der größte und tiefste Ozean der Erde und bedeckt eine größere Fläche als alle Kontinente zusammen. Im Norden grenzt er an den Arktischen Ozean, im Süden an den Südlichen Ozean, während er im Westen von Asien und Australien und im Osten von Amerika begrenzt wird. Der Marianengraben, der sich im westlichen Pazifik befindet, ist der tiefste Punkt der Weltmeere.",
-				},
-			],
-			response_format: zodResponseFormat(Question, "question"),
-		});
+// 	// OpenAI API - completion
+// 	const Answer = z.object({
+// 		id: z.string(),
+// 		text: z.string(),
+// 	});
+// 	const Question = z.object({
+// 		text: z.string(),
+// 		asnwers: z.array(Answer),
+// 		correct_answer_ids: z.array(z.string()),
+// 	});
+// 	app.get("/completion", async () => {
+// 		const completion = await openai.chat.completions.create({
+// 			model: "gpt-4o-mini",
+// 			messages: [
+// 				{
+// 					role: "developer",
+// 					content: process.env.QUESTION_DEVELOPER_PROMPT!,
+// 				},
+// 				{
+// 					role: "user",
+// 					content:
+// 						"The Pacific Ocean is the largest and deepest ocean on Earth, covering more area than all the continents combined. It stretches from the Arctic Ocean in the north to the Southern Ocean in the south and is bordered by Asia, Australia, and the Americas. The Mariana Trench, located in the western Pacific, is the deepest point in the world's oceans.",
+// 					// "A Csendes-óceán a Föld legnagyobb és legmélyebb óceánja, amely nagyobb területet fed le, mint az összes kontinens együttvéve. Északon az Északi-sarkvidéki-óceán, délen a Déli-óceán határolja, míg nyugaton Ázsia és Ausztrália, keleten pedig Amerika partjaihoz csatlakozik. A Mariana-árok, amely a Csendes-óceán nyugati részén található, a világ óceánjainak legmélyebb pontja.",
+// 					// "Der Pazifische Ozean ist der größte und tiefste Ozean der Erde und bedeckt eine größere Fläche als alle Kontinente zusammen. Im Norden grenzt er an den Arktischen Ozean, im Süden an den Südlichen Ozean, während er im Westen von Asien und Australien und im Osten von Amerika begrenzt wird. Der Marianengraben, der sich im westlichen Pazifik befindet, ist der tiefste Punkt der Weltmeere.",
+// 				},
+// 			],
+// 			response_format: zodResponseFormat(Question, "question"),
+// 		});
 
-		const response = completion.choices[0];
-		if (response == undefined) throw new Error("No response from OpenAI API.");
+// 		const response = completion.choices[0];
+// 		if (response == undefined) throw new Error("No response from OpenAI API.");
 
-		const message = response.message.content || "";
-		return JSON.parse(message);
-	});
+// 		const message = response.message.content || "";
+// 		return JSON.parse(message);
+// 	});
 
-	// OpenAI API - embeddings
-	app.post("/openai/embeddings", async () => {
-		const embedding = await openai.embeddings.create({
-			model: "text-embedding-3-small",
-			input: "Title: Computer Science Quiz Decription: This quiz is designed to test your knowledge in the topic of computer science. Answer all the questions correct and be the first on the leaderboard!",
-			encoding_format: "float",
-			// dimensions: 100,
-		});
+// 	// OpenAI API - embeddings
+// 	app.post("/openai/embeddings", async () => {
+// 		const embedding = await openai.embeddings.create({
+// 			model: "text-embedding-3-small",
+// 			input: "Title: Computer Science Quiz Decription: This quiz is designed to test your knowledge in the topic of computer science. Answer all the questions correct and be the first on the leaderboard!",
+// 			encoding_format: "float",
+// 			// dimensions: 100,
+// 		});
 
-		const values = embedding.data[0]?.embedding;
-		return values;
-	});
+// 		const values = embedding.data[0]?.embedding;
+// 		return values;
+// 	});
 
-	// Stripe API - create customer
-	const createUserschema = {
-		body: z.object({
-			name: z.string().min(1),
-			email: z.string().email(),
-		}),
-		response: {
-			default: z.string(),
-		},
-	};
-	app.post("/stripe/create-customer", { schema: createUserschema }, async (req) => {
-		const customer = await stripe.customers.create({
-			name: req.body.name,
-			email: req.body.email,
-		});
+// 	// Stripe API - create customer
+// 	const createUserschema = {
+// 		body: z.object({
+// 			name: z.string().min(1),
+// 			email: z.string().email(),
+// 		}),
+// 		response: {
+// 			default: z.string(),
+// 		},
+// 	};
+// 	app.post("/stripe/create-customer", { schema: createUserschema }, async (req) => {
+// 		const { name, email } = req.body;
 
-		return customer.id;
-	});
+// 		const customer = await stripe.customers.create({
+// 			name,
+// 			email,
+// 		});
 
-	// Stripe API - get user
-	const getStripeUserSchema = {
-		params: z.object({
-			customerId: z.string().min(1),
-		}),
-		// response: {
-		// 	default:
-		// }
-	};
-	app.get("/stripe/customers/:customerId", { schema: getStripeUserSchema }, async (req) => {
-		const customer = await stripe.customers.retrieve(req.params.customerId);
-		return customer;
-	});
+// 		return customer.id;
+// 	});
 
-	// Stripe API - checkout
-	app.post("/stripe/create-checkout-session", async () => {
-		const session = await stripe.checkout.sessions.create({
-			mode: "subscription",
-			line_items: [
-				{
-					price: "price_1QtnyzI0V5nYyjRdU8J6hxme",
-					quantity: 1,
-				},
-			],
-			success_url: `${process.env.CLIENT_URL}/success`,
-			cancel_url: `${process.env.CLIENT_URL}/error`,
-		});
+// 	// Stripe API - get user
+// 	const getStripeUserSchema = {
+// 		params: z.object({
+// 			customerId: z.string().min(1),
+// 		}),
+// 		// response: {
+// 		// 	default:
+// 		// }
+// 	};
+// 	app.get("/stripe/customers/:customerId", { schema: getStripeUserSchema }, async (req) => {
+// 		const customer = await stripe.customers.retrieve(req.params.customerId);
+// 		return customer;
+// 	});
 
-		return session.url;
-	});
+// 	// Stripe API - checkout
+// 	app.post("/stripe/create-checkout-session", async () => {
+// 		const session = await stripe.checkout.sessions.create({
+// 			mode: "subscription",
+// 			line_items: [
+// 				{
+// 					price: "price_1QtnyzI0V5nYyjRdU8J6hxme",
+// 					quantity: 1,
+// 				},
+// 			],
+// 			success_url: `${process.env.CLIENT_URL}/success`,
+// 			cancel_url: `${process.env.CLIENT_URL}/error`,
+// 		});
 
-	// Stripe API - customer portal
-	const getCustomerPortalSchema = {
-		params: z.object({
-			customerId: z.string().min(1),
-		}),
-		response: {
-			"2xx": z.string(),
-		},
-	};
-	app.post(
-		"/stripe/customers/:customerId/portal-session",
-		{ schema: getCustomerPortalSchema },
-		async (req) => {
-			const session = await stripe.billingPortal.sessions.create({
-				customer: req.params.customerId,
-				return_url: `${process.env.CLIENT_URL}/from-portal`,
-			});
+// 		return session.url;
+// 	});
 
-			return session.url;
-		}
-	);
+// 	// Stripe API - customer portal
+// 	const getCustomerPortalSchema = {
+// 		params: z.object({
+// 			customerId: z.string().min(1),
+// 		}),
+// 		response: {
+// 			"2xx": z.string(),
+// 		},
+// 	};
+// 	app.post(
+// 		"/stripe/customers/:customerId/portal-session",
+// 		{ schema: getCustomerPortalSchema },
+// 		async (req) => {
+// 			const session = await stripe.billingPortal.sessions.create({
+// 				customer: req.params.customerId,
+// 				return_url: `${process.env.CLIENT_URL}/from-portal`,
+// 			});
 
-	// Supabase DB - Add test user
-	const addUserSchema = {
-		body: z.object({
-			customerId: z.string().length(18),
-			name: z.string().min(1),
-			email: z.string().email(),
-			photoUrl: z.string().optional(),
-		}),
-	};
-	app.post(
-		"/users",
-		{
-			schema: addUserSchema,
-		},
-		async (req) => {
-			console.log(req.body);
-			const { customerId, email, name } = req.body;
+// 			return session.url;
+// 		}
+// 	);
 
-			const [user] = await db
-				.insert(UserTable)
-				.values({
-					customerId,
-					email,
-					name,
-				})
-				.returning();
+// 	// Supabase DB - Add test user
+// 	const addUserSchema = {
+// 		body: z.object({
+// 			customerId: z.string().length(18),
+// 			name: z.string().min(1),
+// 			email: z.string().email(),
+// 			photoUrl: z.string().optional(),
+// 		}),
+// 	};
+// 	app.post(
+// 		"/users",
+// 		{
+// 			schema: addUserSchema,
+// 		},
+// 		async (req) => {
+// 			console.log(req.body);
+// 			const { customerId, email, name } = req.body;
 
-			return user;
-		}
-	);
+// 			const [user] = await db
+// 				.insert(UserTable)
+// 				.values({
+// 					customerId,
+// 					email,
+// 					name,
+// 				})
+// 				.returning();
 
-	// Supabase DB - get user
-	const getUserSchema = {
-		params: z.object({
-			userId: z.string().uuid(),
-		}),
-	};
-	app.get("/users/:userId", { schema: getUserSchema }, async (req) => {
-		// Get request headers
-		console.log("Headers: ", req.headers);
+// 			return user;
+// 		}
+// 	);
 
-		// Get user ID
-		const { userId } = req.params;
+// 	// Supabase DB - get user
+// 	const getUserSchema = {
+// 		params: z.object({
+// 			userId: z.string().uuid(),
+// 		}),
+// 	};
+// 	app.get("/users/:userId", { schema: getUserSchema }, async (req) => {
+// 		// Get request headers
+// 		console.log("Headers: ", req.headers);
 
-		const user = await db.query.UserTable.findFirst({
-			where: (user, { eq }) => eq(user.id, userId),
-		});
+// 		// Get user ID
+// 		const { userId } = req.params;
 
-		return user;
-	});
+// 		const user = await db.query.UserTable.findFirst({
+// 			where: (user, { eq }) => eq(user.id, userId),
+// 		});
 
-	// Supabase Storage - add test file
-	app.post("/storage", async (req) => {
-		// Get file from request
-		const fileData = await req.file();
-		const fileBuffer = await fileData!.toBuffer();
-		// console.log("File: ", file);
+// 		return user;
+// 	});
 
-		// Upload file
-		const path = `userId.${fileData?.filename.split(".")[1]}`;
-		const { data: uploadedFile, error: uploadError } = await supabase.storage
-			.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
-			.upload(path, fileBuffer);
-		if (uploadError) throw uploadError;
+// 	// Supabase Storage - add test file
+// 	app.post("/storage", async (req) => {
+// 		// Get file from request
+// 		const fileData = await req.file();
+// 		const fileBuffer = await fileData!.toBuffer();
+// 		// console.log("File: ", file);
 
-		// Get file URL
-		const { data } = supabase.storage
-			.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
-			.getPublicUrl(uploadedFile.path);
-		return data.publicUrl;
-	});
+// 		// Upload file
+// 		const path = `userId.${fileData?.filename.split(".")[1]}`;
+// 		const { data: uploadedFile, error: uploadError } = await supabase.storage
+// 			.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
+// 			.upload(path, fileBuffer);
+// 		if (uploadError) throw uploadError;
 
-	done();
-}
+// 		// Get file URL
+// 		const { data } = supabase.storage
+// 			.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
+// 			.getPublicUrl(uploadedFile.path);
+// 		return data.publicUrl;
+// 	});
+
+// 	done();
+// }
