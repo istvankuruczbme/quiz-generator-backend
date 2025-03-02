@@ -8,6 +8,20 @@
       "when": 1740553840290,
       "tag": "0000_elite_centennial",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1740909321261,
+      "tag": "0001_moaning_cloak",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740917080922,
+      "tag": "0002_cool_scarecrow",
+      "breakpoints": true
     }
   ]
 }
