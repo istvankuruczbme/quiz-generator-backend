@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { subscriptionRoute } from "./routes/subscriptionRoute";
+import { stripeWebhookRoute } from "./routes/stripeWebhookRoute";
 import { categoryRoute } from "./routes/categoryRoute";
 import { userRoute } from "./routes/userRoute";
 import errorHandlerMW from "./middlewares/error/errorHandlerMW";
@@ -15,6 +16,7 @@ app.use(cors({ origin: process.env.CLIENT_URL })); // Enable requests only from 
 
 // Routes
 app.use("/api/subscriptions", subscriptionRoute);
+app.use("/api/stripe/webhook", stripeWebhookRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/users", userRoute);
 
