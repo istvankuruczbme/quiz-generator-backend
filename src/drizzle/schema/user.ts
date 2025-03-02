@@ -14,7 +14,7 @@ export const UserTable = pgTable(
 		name: text("name").notNull(),
 		email: text("email").notNull().unique(),
 		photoUrl: text("photo_url"),
-		subscriptionId: char("subscription_id", { length: 19 }),
+		subscriptionId: char("subscription_id", { length: 28 }),
 		updatedAt,
 		createdAt,
 		deletedAt,
