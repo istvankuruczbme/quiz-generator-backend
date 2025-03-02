@@ -1,46 +1,27 @@
 import "dotenv/config";
-import Fastify from "fastify";
-import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
-import testRoute, { webhookTestRoute } from "./routes/testRoute";
-import cors from "@fastify/cors";
-import multipart from "@fastify/multipart";
+import express from "express";
+import cors from "cors";
+import { subscriptionRoute } from "./routes/subscriptionRoute";
+import { categoryRoute } from "./routes/categoryRoute";
+import { userRoute } from "./routes/userRoute";
+import errorHandlerMW from "./middlewares/error/errorHandlerMW";
 
 // Create Fastify instance
-const app = Fastify({
-	logger: {
-		transport: {
-			target: "pino-pretty",
-		},
-	},
-});
-app.setValidatorCompiler(validatorCompiler);
-app.setSerializerCompiler(serializerCompiler);
+const app = express();
 
-// Register plugins
-app.register(cors, {
-	origin: process.env.CLIENT_URL,
-});
-app.register(multipart);
+// Middlewares
+app.use(express.json()); // Convert JSON requests
+app.use(cors({ origin: process.env.CLIENT_URL })); // Enable requests only from the client
 
-// Register routes
-app.register(testRoute, {
-	prefix: "/api/test",
-});
-app.register(webhookTestRoute, {
-	prefix: "/api/test",
-});
+// Routes
+app.use("/api/subscriptions", subscriptionRoute);
+app.use("/api/categories", categoryRoute);
+app.use("/api/users", userRoute);
+
+// Error handler
+app.use(errorHandlerMW);
 
 // Run the server
-async function run() {
-	try {
-		// Wait until the app is ready
-		await app.ready();
-
-		// Run the server
-		await app.listen({ port: Number(process.env.PORT) });
-	} catch (err) {
-		app.log.error(err);
-		process.exit(1);
-	}
-}
-run();
+app.listen(process.env.PORT!, () => {
+	console.log("Listening on port", process.env.PORT!);
+});
