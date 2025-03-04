@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import validateUUID from "../../utils/general/validateUUID";
+import validateUUID from "../../utils/validation/validateUUID";
 
 export default function validateUserIdMW(_: Request, res: Response, next: NextFunction) {
 	// Get userId from res.locals

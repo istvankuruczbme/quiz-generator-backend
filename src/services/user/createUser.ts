@@ -4,9 +4,10 @@ import { User } from "../../types/userTypes";
 
 export default async function createUser(
 	id: string,
+	customerId: string,
 	name: string,
 	email: string,
-	customerId: string
+	photoUrl: string | null
 ): Promise<User | undefined> {
 	const [user] = await db
 		.insert(UserTable)
@@ -15,6 +16,7 @@ export default async function createUser(
 			name,
 			email,
 			customerId,
+			photoUrl,
 		})
 		.returning();
 
