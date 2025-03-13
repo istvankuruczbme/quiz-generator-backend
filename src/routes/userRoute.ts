@@ -17,11 +17,22 @@ import updateUserPersonalDataMW from "../middlewares/user/updateUserPersonalData
 import uploadUserPhotoMW from "../middlewares/user/uploadUserPhotoMW";
 import validateUserEmailMW from "../middlewares/user/validateUserEmailMW";
 import updateUserEmailMW from "../middlewares/user/updateUserEmailMW";
+import returnUserCategoriesMW from "../middlewares/userCategory/returnUserCategoriesMW";
 
 const router = Router();
 
 // Get user
 router.get("/:userId", getUserIdFromRequestMW("PARAMS"), validateUserIdMW, getUserMW, returnUserMW);
+
+// Get user categories
+router.get(
+	"/:userId/categories",
+	getUserIdFromRequestMW("PARAMS"),
+	validateUserIdMW,
+	checkExistingUserMW,
+	getUserCategoriesMW,
+	returnUserCategoriesMW
+);
 
 // Create new user
 router.post("/", validateUserDataMW, createCustomerMW, createUserMW, returnUserMW);
