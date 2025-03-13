@@ -3,11 +3,11 @@ import validateUserPersonalData from "../../services/user/validateUserPersonalDa
 
 export default function validateUserPersonalDataMW(req: Request, _: Response, next: NextFunction) {
 	// Get personal data
-	const { name, email } = req.body as { name: unknown; email: unknown };
+	const { name } = req.body as { name: unknown };
 
 	try {
 		// Validation
-		validateUserPersonalData(name, email);
+		validateUserPersonalData(name);
 
 		// Go to next MW
 		return next();

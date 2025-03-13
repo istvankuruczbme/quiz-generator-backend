@@ -9,11 +9,11 @@ export default async function updateUserPersonalDataMW(
 	// Get userId and photoUrl from res.locals
 	const { userId, photoUrl } = res.locals as { userId: string; photoUrl: string | null };
 	// Get personal data
-	const { name, email } = req.body as { name: string; email: string };
+	const { name } = req.body as { name: string };
 
 	try {
 		// Update user personal data in DB
-		await upadteUserPersonalData(userId, name, email, photoUrl);
+		await upadteUserPersonalData(userId, name, photoUrl);
 
 		// Go to next MW
 		return next();
