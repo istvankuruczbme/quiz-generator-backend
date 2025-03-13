@@ -23,6 +23,8 @@ import deleteUserCategoriesMW from "../middlewares/userCategory/deleteUserCatego
 import deleteUserPhotoMW from "../middlewares/user/deleteUserPhotoMW";
 import deleteCustomerMW from "../middlewares/user/deleteCustomerMW";
 import sendUserDeletedResponseMW from "../middlewares/user/sendUserDeletedResponseMW";
+import createCustomerPortalSessionMW from "../middlewares/user/createCustomerPortalSessionMW";
+import returnCustomerPortalSessionUrlMW from "../middlewares/user/returnCustomerPortalSessionUrlMW";
 
 const router = Router();
 
@@ -41,6 +43,16 @@ router.get(
 
 // Create new user
 router.post("/", validateUserDataMW, createCustomerMW, createUserMW, returnUserMW);
+
+// Create a session to customer portal
+router.post(
+	"/:userId/portal",
+	getUserIdFromRequestMW("PARAMS"),
+	validateUserIdMW,
+	getUserMW,
+	createCustomerPortalSessionMW,
+	returnCustomerPortalSessionUrlMW
+);
 
 // Update user email
 router.put(
