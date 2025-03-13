@@ -18,6 +18,11 @@ import uploadUserPhotoMW from "../middlewares/user/uploadUserPhotoMW";
 import validateUserEmailMW from "../middlewares/user/validateUserEmailMW";
 import updateUserEmailMW from "../middlewares/user/updateUserEmailMW";
 import returnUserCategoriesMW from "../middlewares/userCategory/returnUserCategoriesMW";
+import deleteUserMW from "../middlewares/user/deleteUserMW";
+import deleteUserCategoriesMW from "../middlewares/userCategory/deleteUserCategoriesMW";
+import deleteUserPhotoMW from "../middlewares/user/deleteUserPhotoMW";
+import deleteCustomerMW from "../middlewares/user/deleteCustomerMW";
+import sendUserDeletedResponseMW from "../middlewares/user/sendUserDeletedResponseMW";
 
 const router = Router();
 
@@ -71,6 +76,19 @@ router.put(
 	getUserCategoriesMW,
 	updateUserCategoriesMW,
 	sendUserUpdatedResponseMW
+);
+
+// Delete user
+router.delete(
+	"/:userId",
+	getUserIdFromRequestMW("PARAMS"),
+	validateUserIdMW,
+	getUserMW,
+	deleteUserMW,
+	deleteUserPhotoMW,
+	deleteUserCategoriesMW,
+	deleteCustomerMW,
+	sendUserDeletedResponseMW
 );
 
 export { router as userRoute };
