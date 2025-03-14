@@ -25,11 +25,26 @@ import deleteCustomerMW from "../middlewares/user/deleteCustomerMW";
 import sendUserDeletedResponseMW from "../middlewares/user/sendUserDeletedResponseMW";
 import createCustomerPortalSessionMW from "../middlewares/user/createCustomerPortalSessionMW";
 import returnCustomerPortalSessionUrlMW from "../middlewares/user/returnCustomerPortalSessionUrlMW";
+import getUserSubscriptionMW from "../middlewares/user/getUserSubscriptionMW";
+import validateNewSubscriptionDataMW from "../middlewares/subscription/validateNewSubscriptionDataMW";
+import updateUserSubscriptionMW from "../middlewares/user/updateUserSubscriptionMW";
+import sendSubscriptionUpdatedResponseMW from "../middlewares/subscription/sendSubscriptionUpdatedResponseMW";
+import returnSubscriptionMW from "../middlewares/subscription/returnSubscriptionMW";
 
 const router = Router();
 
 // Get user
 router.get("/:userId", getUserIdFromRequestMW("PARAMS"), validateUserIdMW, getUserMW, returnUserMW);
+
+// Get user subscription
+router.get(
+	"/:userId/subscription",
+	getUserIdFromRequestMW("PARAMS"),
+	validateUserIdMW,
+	getUserMW,
+	getUserSubscriptionMW,
+	returnSubscriptionMW
+);
 
 // Get user categories
 router.get(
@@ -76,6 +91,18 @@ router.put(
 	uploadUserPhotoMW,
 	updateUserPersonalDataMW,
 	sendUserUpdatedResponseMW
+);
+
+// Update user subscription
+router.put(
+	"/:userId/subscription",
+	getUserIdFromRequestMW("PARAMS"),
+	validateUserIdMW,
+	getUserMW,
+	validateNewSubscriptionDataMW,
+	getUserSubscriptionMW,
+	updateUserSubscriptionMW,
+	sendSubscriptionUpdatedResponseMW
 );
 
 // Update user categories

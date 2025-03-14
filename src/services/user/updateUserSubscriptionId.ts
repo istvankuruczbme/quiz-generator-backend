@@ -5,7 +5,7 @@ import { User } from "../../types/userTypes";
 
 export default async function updateUserSubscriptionId(
 	userId: string,
-	subscriptionId: string
+	subscriptionId: string | null
 ): Promise<User | undefined> {
 	const [user] = await db
 		.update(UserTable)
