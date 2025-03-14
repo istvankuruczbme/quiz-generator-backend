@@ -14,9 +14,9 @@ export default async function stripeWebhookHandlerMW(
 
 	switch (event.type) {
 		case "customer.subscription.created": {
-			// Get subscription ID
-			const subscriptionId = event.data.object.id;
-			const customerId = event.data.object.customer as string;
+			// Get subscription and customer
+			const subscription = event.data.object;
+			const customerId = subscription.customer as string;
 
 			try {
 				// Get user by customer ID
@@ -26,9 +26,29 @@ export default async function stripeWebhookHandlerMW(
 				if (user == undefined) throw new Error("user/not-found");
 
 				// Update user with subscription ID
-				await updateUserSubscriptionId(user.id, subscriptionId);
+				await updateUserSubscriptionId(user.id, subscription.id);
 
 				console.log("User subscription created.");
+			} catch (err) {
+				return next(err);
+			}
+		}
+		case "customer.subscription.deleted": {
+			// Get subscription and customer
+			const subscription = event.data.object;
+			const customerId = subscription.customer as string;
+
+			try {
+				// Get user by customer ID
+				const user = await getUserByCustomerId(customerId);
+
+				// Check if user exists
+				if (user == undefined) throw new Error("user/not-found");
+
+				// Delete user subscription ID
+				await updateUserSubscriptionId(user.id, null);
+
+				console.log("User subscription deleted.");
 			} catch (err) {
 				return next(err);
 			}
