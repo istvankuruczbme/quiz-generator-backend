@@ -1,9 +1,9 @@
 import { Router } from "express";
-import getUserIdFromRequestMW from "../middlewares/user/getUserIdFromRequestMW";
-import validateUserIdMW from "../middlewares/user/validateUserIdMW";
-import checkExistingUserMW from "../middlewares/user/checkExistingUserMW";
-import getAllCategoriesMW from "../middlewares/category/getAllCategoriesMW";
-import returnCategoriesMW from "../middlewares/category/returnCategoriesMW";
+import getUserIdFromRequestMW from "../middlewares/db/user/getUserIdFromRequestMW";
+import validateUserIdMW from "../middlewares/db/user/validateUserIdMW";
+import checkExistingUserMW from "../middlewares/db/user/checkExistingUserMW";
+import getAllCategoriesMW from "../middlewares/db/category/getAllCategoriesMW";
+import returnCategoriesMW from "../middlewares/db/category/returnCategoriesMW";
 
 const router = Router();
 

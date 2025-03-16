@@ -1,6 +1,6 @@
 import express from "express";
 import { Router } from "express";
-import stripeWebhookHandlerMW from "../middlewares/stripeWebhook/stripeWebhookHandlerMW";
+import stripeWebhookHandlerMW from "../middlewares/stripe/webhook/stripeWebhookHandlerMW";
 
 const router = Router();
 
