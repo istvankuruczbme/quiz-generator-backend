@@ -1,17 +1,17 @@
 import { Router } from "express";
-import getUserIdFromRequestMW from "../middlewares/db/user/getUserIdFromRequestMW";
-import validateUserIdMW from "../middlewares/db/user/validateUserIdMW";
-import checkExistingUserMW from "../middlewares/db/user/checkExistingUserMW";
 import getAllCategoriesMW from "../middlewares/db/category/getAllCategoriesMW";
 import returnCategoriesMW from "../middlewares/db/category/returnCategoriesMW";
+import validateAuthorizationHeaderMW from "../middlewares/auth/validateAuthorizationHeaderMW";
+import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
+import checkExistingUserFromAuthMW from "../middlewares/auth/checkExistingUserFromAuthMW";
 
 const router = Router();
 
 router.get(
 	"/",
-	getUserIdFromRequestMW("QUERY"),
-	validateUserIdMW,
-	checkExistingUserMW,
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	checkExistingUserFromAuthMW,
 	getAllCategoriesMW,
 	returnCategoriesMW
 );

@@ -1,22 +1,26 @@
 import { Router } from "express";
-import getUserIdFromRequestMW from "../middlewares/db/user/getUserIdFromRequestMW";
-import checkExistingUserMW from "../middlewares/db/user/checkExistingUserMW";
-import validateUserIdMW from "../middlewares/db/user/validateUserIdMW";
-import checkExistingUserByCustomerIdMW from "../middlewares/db/user/checkExistingUserByCustomerIdMW";
 import getProductsMW from "../middlewares/stripe/product/getProductsMW";
 import returnSubscriptionsMW from "../middlewares/stripe/subscription/returnSubscriptionsMW";
 import validateCheckoutSessionDataMW from "../middlewares/stripe/subscription/validateCheckoutSessionDataMW";
 import createCheckoutSessionMW from "../middlewares/stripe/product/createCheckoutSessionMW";
 import returnCheckoutSessionUrlMW from "../middlewares/stripe/subscription/returnCheckoutSessionUrlMW";
+import validateAuthorizationHeaderMW from "../middlewares/auth/validateAuthorizationHeaderMW";
+import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
+import checkExistingUserFromAuthMW from "../middlewares/auth/checkExistingUserFromAuthMW";
+import validateUserIdMW from "../middlewares/db/user/validateUserIdMW";
+import validateAuthUserMW from "../middlewares/auth/validateAuthUserMW";
+import checkExistingUserMW from "../middlewares/db/user/checkExistingUserMW";
+import getUserIdFromRequestMW from "../middlewares/db/user/getUserIdFromRequestMW";
+import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
 
 const router = Router();
 
-// Get subscriptions
+// Get products
 router.get(
 	"/",
-	getUserIdFromRequestMW("QUERY"),
-	validateUserIdMW,
-	checkExistingUserMW,
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	checkExistingUserFromAuthMW,
 	getProductsMW,
 	returnSubscriptionsMW
 );
@@ -24,8 +28,14 @@ router.get(
 // Create checkout session
 router.post(
 	"/checkout",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
+	getUserIdFromRequestMW("BODY"),
+	validateUserIdMW,
+	validateAuthUserMW,
+	checkExistingUserMW,
 	validateCheckoutSessionDataMW,
-	checkExistingUserByCustomerIdMW,
 	createCheckoutSessionMW,
 	returnCheckoutSessionUrlMW
 );

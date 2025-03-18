@@ -32,17 +32,35 @@ import sendSubscriptionUpdatedResponseMW from "../middlewares/stripe/subscriptio
 import validateCategoriesDataMW from "../middlewares/db/category/validateCategoriesDataMW";
 import deleteCustomerMW from "../middlewares/stripe/customer/deleteCustomerMW";
 import updateCustomerNameMW from "../middlewares/stripe/customer/updateCustomerNameMW";
+import validateAuthorizationHeaderMW from "../middlewares/auth/validateAuthorizationHeaderMW";
+import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
+import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
+import validateAuthUserMW from "../middlewares/auth/validateAuthUserMW";
 
 const router = Router();
 
 // Get user
-router.get("/:userId", getUserIdFromRequestMW("PARAMS"), validateUserIdMW, getUserMW, returnUserMW);
+router.get(
+	"/:userId",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
+	getUserIdFromRequestMW("PARAMS"),
+	validateUserIdMW,
+	validateAuthUserMW,
+	getUserMW,
+	returnUserMW
+);
 
 // Get user subscription
 router.get(
 	"/:userId/subscription",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
+	validateAuthUserMW,
 	getUserMW,
 	getUserSubscriptionMW,
 	returnSubscriptionMW
@@ -51,8 +69,12 @@ router.get(
 // Get user categories
 router.get(
 	"/:userId/categories",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
+	validateAuthUserMW,
 	checkExistingUserMW,
 	getUserCategoriesMW,
 	returnUserCategoriesMW
@@ -64,8 +86,12 @@ router.post("/", validateUserDataMW, createCustomerMW, createUserMW, returnUserM
 // Create a session to customer portal
 router.post(
 	"/:userId/portal",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
+	validateAuthUserMW,
 	getUserMW,
 	createCustomerPortalSessionMW,
 	returnCustomerPortalSessionUrlMW
@@ -74,8 +100,12 @@ router.post(
 // Update user email
 router.put(
 	"/:userId/email",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
+	validateAuthUserMW,
 	getUserMW,
 	validateUserEmailMW,
 	updateCustomerEmailMW,
@@ -86,8 +116,12 @@ router.put(
 // Update user personal data
 router.put(
 	"/:userId/personal",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
+	validateAuthUserMW,
 	getUserMW,
 	imageUpload.single("file"),
 	validateUserPersonalDataMW,
@@ -100,8 +134,12 @@ router.put(
 // Update user subscription
 router.put(
 	"/:userId/subscription",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
+	validateAuthUserMW,
 	getUserMW,
 	validateNewSubscriptionDataMW,
 	getUserSubscriptionMW,
@@ -112,8 +150,12 @@ router.put(
 // Update user categories
 router.put(
 	"/:userId/categories",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
+	validateAuthUserMW,
 	checkExistingUserMW,
 	validateCategoriesDataMW,
 	getUserCategoriesMW,
@@ -124,8 +166,12 @@ router.put(
 // Delete user
 router.delete(
 	"/:userId",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
+	validateAuthUserMW,
 	getUserMW,
 	deleteCustomerMW,
 	deleteUserMW,

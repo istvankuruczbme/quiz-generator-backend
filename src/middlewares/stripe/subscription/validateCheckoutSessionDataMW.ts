@@ -7,15 +7,14 @@ export default function validateCheckoutSessionDataMW(
 	next: NextFunction
 ) {
 	// Get customer ID and price ID from request
-	const { customerId, priceId, successUrl } = req.body as {
-		customerId: unknown;
+	const { priceId, successUrl } = req.body as {
 		priceId: unknown;
 		successUrl: unknown;
 	};
 
 	try {
 		// Validation
-		validateCheckoutSessionData(customerId, priceId, successUrl);
+		validateCheckoutSessionData(priceId, successUrl);
 
 		// Go to next MW
 		return next();
