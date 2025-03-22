@@ -12,32 +12,32 @@ export default async function uploadUserPhotoMW(req: Request, res: Response, nex
 	// No file
 	if (file == undefined) {
 		// Add photoUrl to res.locals
-		(res.locals.photoUrl as string | null) = null;
+		(res.locals.photoUrl as null) = null;
 
 		// Go to next MW
 		return next();
-	} else {
-		// User already has a photo
-		if (user.photoUrl != null) {
-			try {
-				// Delete file
-				await deleteUserPhoto(user.id);
-			} catch (err) {
-				return next(err);
-			}
-		}
+	}
 
+	// User already has a photo
+	if (user.photoUrl != null) {
 		try {
-			// Upload new file
-			const photoUrl = await uploadUserPhoto(file, user.id);
-
-			// Add photo URL to res.locals
-			(res.locals.photoUrl as string) = photoUrl;
-
-			// Go to next MW
-			return next();
+			// Delete file
+			await deleteUserPhoto(user.id);
 		} catch (err) {
 			return next(err);
 		}
+	}
+
+	try {
+		// Upload new file
+		const photoUrl = await uploadUserPhoto(file, user.id);
+
+		// Add photo URL to res.locals
+		(res.locals.photoUrl as string) = photoUrl;
+
+		// Go to next MW
+		return next();
+	} catch (err) {
+		return next(err);
 	}
 }

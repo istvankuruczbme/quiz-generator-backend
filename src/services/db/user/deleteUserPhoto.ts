@@ -1,8 +1,9 @@
+import { userPhotosBucket } from "../../../assets/storageBucketNames";
 import { supabase } from "../../../config/supabase";
 
 export default async function deleteUserPhoto(userId: string): Promise<void> {
 	// Get user photo
-	const { data, error: listError } = await supabase.storage.from("user_photos").list(userId, {
+	const { data, error: listError } = await supabase.storage.from(userPhotosBucket).list(userId, {
 		limit: 1,
 	});
 
@@ -20,7 +21,7 @@ export default async function deleteUserPhoto(userId: string): Promise<void> {
 
 	// Delete file
 	const { error: removeError } = await supabase.storage
-		.from("user_photos")
+		.from(userPhotosBucket)
 		.remove([`${userId}/${file.name}`]);
 
 	// Check if there was an error

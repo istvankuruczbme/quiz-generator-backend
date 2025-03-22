@@ -8,7 +8,8 @@ export default async function createUser(
 	name: string,
 	email: string,
 	photoUrl: string | null
-): Promise<User | undefined> {
+): Promise<User> {
+	// Create user
 	const [user] = await db
 		.insert(UserTable)
 		.values({
@@ -20,5 +21,9 @@ export default async function createUser(
 		})
 		.returning();
 
+	// Check if user was created
+	if (user == undefined) throw new Error("user/not-created");
+
+	// Return user
 	return user;
 }

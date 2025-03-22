@@ -16,9 +16,6 @@ export default async function createUserMW(req: Request, res: Response, next: Ne
 		// Create user
 		const user = await createUser(id, customerId, name, email, photoUrl);
 
-		// Check if creation was successful
-		if (user == undefined) throw new Error("user/not-created");
-
 		// Add user to res.locals
 		(res.locals.user as User) = user;
 

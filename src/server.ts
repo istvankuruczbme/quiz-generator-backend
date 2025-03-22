@@ -6,6 +6,7 @@ import { stripeWebhookRoute } from "./routes/stripeWebhookRoute";
 import { categoryRoute } from "./routes/categoryRoute";
 import { userRoute } from "./routes/userRoute";
 import errorHandlerMW from "./middlewares/error/errorHandlerMW";
+import { quizRoute } from "./routes/quizRoute";
 
 // Create Fastify instance
 const app = express();
@@ -19,6 +20,7 @@ app.use("/api/products", productRoute);
 app.use("/api/stripe/webhook", stripeWebhookRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/users", userRoute);
+app.use("/api/quizzes", quizRoute);
 
 // Error handler
 app.use(errorHandlerMW);

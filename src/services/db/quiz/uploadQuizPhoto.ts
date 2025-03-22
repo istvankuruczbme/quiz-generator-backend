@@ -1,20 +1,20 @@
-import { userPhotosBucket } from "../../../assets/storageBucketNames";
+import { quizPhotosBucket } from "../../../assets/storageBucketNames";
 import { supabase } from "../../../config/supabase";
 
-export default async function uploadUserPhoto(
+export default async function uploadQuizPhoto(
 	file: Express.Multer.File,
-	userId: string
+	quizId: string
 ): Promise<string> {
 	// Upload file
 	const { data: uploadData, error: uploadError } = await supabase.storage
-		.from(userPhotosBucket)
-		.upload(`${userId}/${file.originalname}`, file.buffer);
+		.from(quizPhotosBucket)
+		.upload(`${quizId}/${file.originalname}`, file.buffer);
 
 	// Check if there was an error
 	if (uploadError != null) throw uploadError;
 
 	// Get file public URL
-	const { data } = supabase.storage.from(userPhotosBucket).getPublicUrl(uploadData.path);
+	const { data } = supabase.storage.from(quizPhotosBucket).getPublicUrl(uploadData.path);
 
 	// Return public URL of file
 	return data.publicUrl;

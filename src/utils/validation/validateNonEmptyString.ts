@@ -1,7 +1,7 @@
-export default function validateNonEmptyString(name: unknown, prefix?: string): void {
-	if (name == undefined) throw new Error(`${prefix || ""}missing`);
+export default function validateNonEmptyString(string: unknown, prefix?: string): void {
+	if (string == undefined) throw new Error(`${prefix || ""}missing`);
 
-	if (typeof name !== "string" || name === "") {
+	if (typeof string !== "string" || string === "") {
 		throw new Error(`${prefix || ""}invalid`);
 	}
 }
