@@ -2,10 +2,7 @@ import { Router } from "express";
 import validateUserDataMW from "../middlewares/db/user/validateUserDataMW";
 import createUserMW from "../middlewares/db/user/createUserMW";
 import returnUserMW from "../middlewares/db/user/returnUserMW";
-import getUserIdFromRequestMW from "../middlewares/db/user/getUserIdFromRequestMW";
-import validateUserIdMW from "../middlewares/db/user/validateUserIdMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
-import checkExistingUserMW from "../middlewares/db/user/checkExistingUserMW";
 import getUserCategoriesMW from "../middlewares/db/userCategory/getUserCategoriesMW";
 import updateUserCategoriesMW from "../middlewares/db/userCategory/updateUserCategoriesMW";
 import sendUserUpdatedResponseMW from "../middlewares/db/user/sendUserUpdatedResponseMW";
@@ -35,9 +32,7 @@ import updateCustomerNameMW from "../middlewares/stripe/customer/updateCustomerN
 import validateAuthorizationHeaderMW from "../middlewares/auth/validateAuthorizationHeaderMW";
 import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
 import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
-import validateAuthUserMW from "../middlewares/auth/validateAuthUserMW";
 import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
-import checkExistingUserFromAuthMW from "../middlewares/auth/checkExistingUserFromAuthMW";
 
 const router = Router();
 
@@ -46,9 +41,7 @@ router.get(
 	"/:userId",
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
-	checkExistingUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
+	getUserFromAuthMW,
 	getUserMW,
 	returnUserMW
 );
@@ -59,9 +52,6 @@ router.get(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
-	validateAuthUserMW,
 	getUserMW,
 	getUserSubscriptionMW,
 	returnSubscriptionMW
@@ -73,10 +63,7 @@ router.get(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
-	validateAuthUserMW,
-	checkExistingUserMW,
+	getUserMW,
 	getUserCategoriesMW,
 	returnUserCategoriesMW
 );
@@ -90,9 +77,6 @@ router.post(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
-	validateAuthUserMW,
 	getUserMW,
 	createCustomerPortalSessionMW,
 	returnCustomerPortalSessionUrlMW
@@ -104,9 +88,6 @@ router.put(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
-	validateAuthUserMW,
 	getUserMW,
 	validateUserEmailMW,
 	updateCustomerEmailMW,
@@ -120,9 +101,6 @@ router.put(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
-	validateAuthUserMW,
 	getUserMW,
 	imageUpload.single("file"),
 	validateUserPersonalDataMW,
@@ -138,9 +116,6 @@ router.put(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
-	validateAuthUserMW,
 	getUserMW,
 	validateNewSubscriptionDataMW,
 	getUserSubscriptionMW,
@@ -154,10 +129,7 @@ router.put(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
-	validateAuthUserMW,
-	checkExistingUserMW,
+	getUserMW,
 	validateCategoriesDataMW,
 	getUserCategoriesMW,
 	updateUserCategoriesMW,
@@ -170,9 +142,6 @@ router.delete(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("PARAMS"),
-	validateUserIdMW,
-	validateAuthUserMW,
 	getUserMW,
 	deleteAuthUserMW,
 	deleteCustomerMW,

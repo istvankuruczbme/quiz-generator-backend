@@ -1,6 +1,4 @@
-export default function validateBearerAuthorizationHeader(
-	authorization: string | string[] | undefined
-): void {
+export default function validateBearerAuthorizationHeader(authorization: string | undefined): void {
 	if (authorization == undefined || typeof authorization !== "string") {
 		throw new Error("auth/header-missing");
 	}

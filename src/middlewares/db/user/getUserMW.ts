@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import getUser from "../../../services/db/user/getUser";
 import { User } from "../../../types/userTypes";
+import { User as AuthUser } from "@supabase/supabase-js";
 
 export default async function getUserMW(_: Request, res: Response, next: NextFunction) {
-	// Get userID from res.locals
-	const { userId } = res.locals as { userId: string };
+	// Get user from auth
+	const { authUser } = res.locals as { authUser: AuthUser };
 
 	try {
 		// Get user by ID
-		const user = await getUser(userId);
+		const user = await getUser(authUser.id);
 
 		// Check existing user
 		if (user == undefined) throw new Error("user/not-found");

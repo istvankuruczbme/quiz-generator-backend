@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import deleteUserFromAuth from "../../services/auth/deleteUserFromAuth";
+import { User } from "../../types/userTypes";
 
 export default async function deleteAuthUserMW(_: Request, res: Response, next: NextFunction) {
-	// Get user ID from res.locals
-	const { userId } = res.locals as { userId: string };
+	// Get user from res.locals
+	const { user } = res.locals as { user: User };
 
 	try {
 		// Delete user from Supabase auth
-		await deleteUserFromAuth(userId);
+		await deleteUserFromAuth(user.id);
 
 		// Go to next MW
 		return next();

@@ -7,10 +7,6 @@ import returnCheckoutSessionUrlMW from "../middlewares/stripe/subscription/retur
 import validateAuthorizationHeaderMW from "../middlewares/auth/validateAuthorizationHeaderMW";
 import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
 import checkExistingUserFromAuthMW from "../middlewares/auth/checkExistingUserFromAuthMW";
-import validateUserIdMW from "../middlewares/db/user/validateUserIdMW";
-import validateAuthUserMW from "../middlewares/auth/validateAuthUserMW";
-import checkExistingUserMW from "../middlewares/db/user/checkExistingUserMW";
-import getUserIdFromRequestMW from "../middlewares/db/user/getUserIdFromRequestMW";
 import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
 
@@ -32,9 +28,6 @@ router.post(
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
 	getUserFromAuthMW,
-	getUserIdFromRequestMW("BODY"),
-	validateUserIdMW,
-	validateAuthUserMW,
 	getUserMW,
 	validateCheckoutSessionDataMW,
 	createCheckoutSessionMW,
