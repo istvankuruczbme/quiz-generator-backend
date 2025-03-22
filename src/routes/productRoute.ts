@@ -12,6 +12,7 @@ import validateAuthUserMW from "../middlewares/auth/validateAuthUserMW";
 import checkExistingUserMW from "../middlewares/db/user/checkExistingUserMW";
 import getUserIdFromRequestMW from "../middlewares/db/user/getUserIdFromRequestMW";
 import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
+import getUserMW from "../middlewares/db/user/getUserMW";
 
 const router = Router();
 
@@ -34,7 +35,7 @@ router.post(
 	getUserIdFromRequestMW("BODY"),
 	validateUserIdMW,
 	validateAuthUserMW,
-	checkExistingUserMW,
+	getUserMW,
 	validateCheckoutSessionDataMW,
 	createCheckoutSessionMW,
 	returnCheckoutSessionUrlMW
