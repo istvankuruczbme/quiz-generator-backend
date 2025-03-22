@@ -1,7 +1,12 @@
-import { integer, pgEnum, pgTable, uuid } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, uuid } from "drizzle-orm/pg-core";
 import { QuizTable } from "./quiz";
 import { relations } from "drizzle-orm";
 import { id } from "../schemaHelpers";
+
+// Status
+export const quizConfigStatusOptions = ["DRAFT", "ACTIVE", "DELETED"] as const;
+export const quizConfigStatusEnum = pgEnum("quiz_config_status", quizConfigStatusOptions);
+export type QuizConfigStatus = (typeof quizConfigStatusOptions)[number];
 
 // Visibilty
 export const quizConfigVisibilityOptions = ["PUBLIC", "PRIVATE"] as const;
@@ -22,8 +27,8 @@ export type QuizConfigQuestionOrder = (typeof quizConfigQuestionOrderOptions)[nu
 // Schema
 export const QuizConfigTable = pgTable("quiz_config", {
 	id,
+	status: quizConfigStatusEnum("status").default("DRAFT").notNull(),
 	visibility: quizConfigVisibilityEnum("visibility").default("PUBLIC").notNull(),
-	maxQuestionCount: integer("max_question_count").notNull(),
 	questionOrder: quizConfigQuestionOrderEnum("question_order").default("NORMAL").notNull(),
 	quizId: uuid("quiz_id")
 		.references(() => QuizTable.id, { onDelete: "cascade" })

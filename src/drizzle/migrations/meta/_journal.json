@@ -29,6 +29,20 @@
       "when": 1740941363970,
       "tag": "0003_moaning_leper_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1742639144541,
+      "tag": "0004_yellow_namora",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1742639270414,
+      "tag": "0005_lively_yellow_claw",
+      "breakpoints": true
     }
   ]
 }
