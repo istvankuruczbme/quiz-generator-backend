@@ -5,9 +5,8 @@ declare namespace NodeJS {
 
 		// Supabase
 		SUPABASE_URL: string;
-		SUPABASE_SERVICE_ROLE: string;
 		SUPABASE_DATABASE_URL: string;
-		SUPABASE_STORAGE_USER_PHOTOS_BUCKET: string;
+		SUPABASE_SERVICE_ROLE_KEY: string;
 
 		// OpenAI
 		OPENAI_API_KEY: string;

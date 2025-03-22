@@ -2,11 +2,9 @@ import { supabase } from "../../../config/supabase";
 
 export default async function deleteUserPhoto(userId: string): Promise<void> {
 	// Get user photo
-	const { data, error: listError } = await supabase.storage
-		.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
-		.list(userId, {
-			limit: 1,
-		});
+	const { data, error: listError } = await supabase.storage.from("user_photos").list(userId, {
+		limit: 1,
+	});
 
 	// Check if there was an error
 	if (listError != null) throw listError;
@@ -22,7 +20,7 @@ export default async function deleteUserPhoto(userId: string): Promise<void> {
 
 	// Delete file
 	const { error: removeError } = await supabase.storage
-		.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
+		.from("user_photos")
 		.remove([`${userId}/${file.name}`]);
 
 	// Check if there was an error

@@ -71,7 +71,7 @@
 // 			messages: [
 // 				{
 // 					role: "developer",
-// 					content: process.env.QUESTION_DEVELOPER_PROMPT!,
+// 					content: "Generate a multiple-choice question from the given text.",
 // 				},
 // 				{
 // 					role: "user",
@@ -239,13 +239,13 @@
 // 		// Upload file
 // 		const path = `userId.${fileData?.filename.split(".")[1]}`;
 // 		const { data: uploadedFile, error: uploadError } = await supabase.storage
-// 			.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
+// 			.from("user_photos")
 // 			.upload(path, fileBuffer);
 // 		if (uploadError) throw uploadError;
 
 // 		// Get file URL
 // 		const { data } = supabase.storage
-// 			.from(process.env.SUPABASE_STORAGE_USER_PHOTOS_BUCKET!)
+// 			.from("user_photos")
 // 			.getPublicUrl(uploadedFile.path);
 // 		return data.publicUrl;
 // 	});
