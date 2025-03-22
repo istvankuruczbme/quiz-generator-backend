@@ -37,6 +37,7 @@ import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
 import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
 import validateAuthUserMW from "../middlewares/auth/validateAuthUserMW";
 import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
+import checkExistingUserFromAuthMW from "../middlewares/auth/checkExistingUserFromAuthMW";
 
 const router = Router();
 
@@ -45,10 +46,9 @@ router.get(
 	"/:userId",
 	validateAuthorizationHeaderMW,
 	getAuthTokenMW,
-	getUserFromAuthMW,
+	checkExistingUserFromAuthMW,
 	getUserIdFromRequestMW("PARAMS"),
 	validateUserIdMW,
-	validateAuthUserMW,
 	getUserMW,
 	returnUserMW
 );
