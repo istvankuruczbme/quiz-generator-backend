@@ -2,7 +2,7 @@ import { User } from "@supabase/supabase-js";
 import { Request, Response, NextFunction } from "express";
 
 export default function validateAuthUserMW(_: Request, res: Response, next: NextFunction) {
-	// Get user from auth and usre ID from res-locals
+	// Get user from auth and user ID from res.locals
 	const { userId, authUser } = res.locals as { userId: string; authUser: User };
 
 	try {

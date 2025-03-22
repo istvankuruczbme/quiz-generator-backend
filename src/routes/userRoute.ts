@@ -36,6 +36,7 @@ import validateAuthorizationHeaderMW from "../middlewares/auth/validateAuthoriza
 import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
 import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
 import validateAuthUserMW from "../middlewares/auth/validateAuthUserMW";
+import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
 
 const router = Router();
 
@@ -173,6 +174,7 @@ router.delete(
 	validateUserIdMW,
 	validateAuthUserMW,
 	getUserMW,
+	deleteAuthUserMW,
 	deleteCustomerMW,
 	deleteUserMW,
 	deleteUserPhotoMW,
