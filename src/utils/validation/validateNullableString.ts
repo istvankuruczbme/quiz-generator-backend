@@ -1,5 +1,5 @@
-export default function validateNullableString(photoUrl: unknown, prefix?: string): void {
-	if (photoUrl === undefined) throw new Error(`${prefix || ""}missing`);
-	if (photoUrl !== null && typeof photoUrl !== "string") throw new Error(`${prefix || ""}invalid`);
-	if (typeof photoUrl === "string" && photoUrl === "") throw new Error(`${prefix || ""}invalid`);
+export default function validateNullableString(string: unknown, prefix?: string): void {
+	if (string === undefined) throw new Error(`${prefix || ""}missing`);
+	if (string !== null && typeof string !== "string") throw new Error(`${prefix || ""}invalid`);
+	if (typeof string === "string" && string === "") throw new Error(`${prefix || ""}invalid`);
 }

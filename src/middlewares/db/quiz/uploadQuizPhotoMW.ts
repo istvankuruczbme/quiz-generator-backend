@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import uploadQuizPhoto from "../../../services/db/quiz/uploadQuizPhoto";
-import { Quiz } from "../../../types/quizTypes";
+import { QuizDB } from "../../../types/quizTypes";
 
 export default async function uploadQuizPhotoMW(req: Request, res: Response, next: NextFunction) {
 	// Get quiz from res.locals
-	const { quiz } = res.locals as { quiz: Quiz };
+	const { quiz } = res.locals as { quiz: QuizDB };
 	// Get file from req.body
 	const { file } = req;
 

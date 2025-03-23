@@ -5,6 +5,7 @@ import { QuestionTable } from "./question";
 import { createdAt, deletedAt, id, updatedAt } from "../schemaHelpers";
 import { QuizCompletionTable } from "./quizCompletion";
 import { CategoryTable } from "./category";
+import { QuizConfigTable } from "./quizConfig";
 
 // Schema
 export const QuizTable = pgTable(
@@ -31,6 +32,7 @@ export const QuizTable = pgTable(
 // Relations
 export const QuizRelations = relations(QuizTable, ({ one, many }) => {
 	return {
+		config: one(QuizConfigTable),
 		category: one(CategoryTable, {
 			fields: [QuizTable.categoryId],
 			references: [CategoryTable.id],

@@ -1,6 +1,6 @@
 import { db } from "../../../drizzle/db";
 import { QuizTable } from "../../../drizzle/schema/quiz";
-import { Quiz } from "../../../types/quizTypes";
+import { QuizDB } from "../../../types/quizTypes";
 
 export default async function createQuiz(
 	title: string,
@@ -8,7 +8,7 @@ export default async function createQuiz(
 	categoryId: string,
 	embedding: number[],
 	userId: string
-): Promise<Quiz> {
+): Promise<QuizDB> {
 	// Create quiz
 	const [quiz] = await db
 		.insert(QuizTable)

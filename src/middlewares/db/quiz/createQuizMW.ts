@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "../../../types/userTypes";
 import createQuiz from "../../../services/db/quiz/createQuiz";
-import { Quiz } from "../../../types/quizTypes";
+import { QuizDB } from "../../../types/quizTypes";
 
 export default async function createQuizMW(req: Request, res: Response, next: NextFunction) {
 	// Get quiz data from req.body
@@ -18,7 +18,7 @@ export default async function createQuizMW(req: Request, res: Response, next: Ne
 		const quiz = await createQuiz(title, description, categoryId, embedding, user.id);
 
 		// Add quiz to res.locals
-		(res.locals.quiz as Quiz) = quiz;
+		(res.locals.quiz as QuizDB) = quiz;
 
 		// Go to next MW
 		return next();
