@@ -2,15 +2,15 @@ import { Request, Response, NextFunction } from "express";
 import createUser from "../../../services/db/user/createUser";
 import { User } from "../../../types/userTypes";
 
-export default async function createUserMW(req: Request, res: Response, next: NextFunction) {
-	// Get user data
-	const { id, name, email, photoUrl } = req.body as {
+export default async function createUserMW(_: Request, res: Response, next: NextFunction) {
+	// Get user data from res.locals
+	const { id, name, email, photoUrl, customerId } = res.locals as {
 		id: string;
 		name: string;
 		email: string;
-		photoUrl: string | null;
+		photoUrl: string;
+		customerId: string;
 	};
-	const { customerId } = res.locals as { customerId: string };
 
 	try {
 		// Create user

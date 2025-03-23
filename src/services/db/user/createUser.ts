@@ -7,7 +7,7 @@ export default async function createUser(
 	customerId: string,
 	name: string,
 	email: string,
-	photoUrl: string | null
+	photoUrl: string
 ): Promise<User> {
 	// Create user
 	const [user] = await db
@@ -17,7 +17,7 @@ export default async function createUser(
 			name,
 			email,
 			customerId,
-			photoUrl,
+			photoUrl: photoUrl || null,
 		})
 		.returning();
 

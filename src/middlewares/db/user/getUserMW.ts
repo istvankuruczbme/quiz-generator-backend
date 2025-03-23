@@ -11,9 +11,6 @@ export default async function getUserMW(_: Request, res: Response, next: NextFun
 		// Get user by ID
 		const user = await getUser(authUser.id);
 
-		// Check existing user
-		if (user == undefined) throw new Error("user/not-found");
-
 		// Add user to res.locals
 		(res.locals.user as User) = user;
 

@@ -69,7 +69,16 @@ router.get(
 );
 
 // Create new user
-router.post("/", validateUserDataMW, createCustomerMW, createUserMW, returnUserMW);
+router.post(
+	"/",
+	validateAuthorizationHeaderMW,
+	getAuthTokenMW,
+	getUserFromAuthMW,
+	validateUserDataMW,
+	createCustomerMW,
+	createUserMW,
+	returnUserMW
+);
 
 // Create a session to customer portal
 router.post(
