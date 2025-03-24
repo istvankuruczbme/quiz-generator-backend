@@ -29,63 +29,29 @@ import sendSubscriptionUpdatedResponseMW from "../middlewares/stripe/subscriptio
 import validateCategoriesDataMW from "../middlewares/db/category/validateCategoriesDataMW";
 import deleteCustomerMW from "../middlewares/stripe/customer/deleteCustomerMW";
 import updateCustomerNameMW from "../middlewares/stripe/customer/updateCustomerNameMW";
-import validateAuthorizationHeaderMW from "../middlewares/auth/validateAuthorizationHeaderMW";
-import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
-import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
 import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
+import authUserMW from "../middlewares/auth/authUserMW";
 
 const router = Router();
 
+// Add authentication middlewares
+router.use(authUserMW);
+
 // Get user
-router.get(
-	"/:userId",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
-	getUserMW,
-	returnUserMW
-);
+router.get("/:userId", getUserMW, returnUserMW);
 
 // Get user subscription
-router.get(
-	"/:userId/subscription",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
-	getUserMW,
-	getUserSubscriptionMW,
-	returnSubscriptionMW
-);
+router.get("/:userId/subscription", getUserMW, getUserSubscriptionMW, returnSubscriptionMW);
 
 // Get user categories
-router.get(
-	"/:userId/categories",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
-	getUserMW,
-	getUserCategoriesMW,
-	returnUserCategoriesMW
-);
+router.get("/:userId/categories", getUserMW, getUserCategoriesMW, returnUserCategoriesMW);
 
 // Create new user
-router.post(
-	"/",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
-	validateUserDataMW,
-	createCustomerMW,
-	createUserMW,
-	returnUserMW
-);
+router.post("/", validateUserDataMW, createCustomerMW, createUserMW, returnUserMW);
 
 // Create a session to customer portal
 router.post(
 	"/:userId/portal",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
 	getUserMW,
 	createCustomerPortalSessionMW,
 	returnCustomerPortalSessionUrlMW
@@ -94,9 +60,6 @@ router.post(
 // Update user email
 router.put(
 	"/:userId/email",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
 	getUserMW,
 	validateUserEmailMW,
 	updateCustomerEmailMW,
@@ -107,9 +70,6 @@ router.put(
 // Update user personal data
 router.put(
 	"/:userId/personal",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
 	getUserMW,
 	imageUpload.single("file"),
 	validateUserPersonalDataMW,
@@ -122,9 +82,6 @@ router.put(
 // Update user subscription
 router.put(
 	"/:userId/subscription",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
 	getUserMW,
 	validateNewSubscriptionDataMW,
 	getUserSubscriptionMW,
@@ -135,9 +92,6 @@ router.put(
 // Update user categories
 router.put(
 	"/:userId/categories",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
 	getUserMW,
 	validateCategoriesDataMW,
 	getUserCategoriesMW,
@@ -148,9 +102,6 @@ router.put(
 // Delete user
 router.delete(
 	"/:userId",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
 	getUserMW,
 	deleteAuthUserMW,
 	deleteCustomerMW,

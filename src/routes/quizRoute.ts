@@ -1,7 +1,4 @@
 import { Router } from "express";
-import validateAuthorizationHeaderMW from "../middlewares/auth/validateAuthorizationHeaderMW";
-import getAuthTokenMW from "../middlewares/auth/getAuthTokenMW";
-import getUserFromAuthMW from "../middlewares/auth/getUserFromAuthMW";
 import { imageUpload } from "../config/multer";
 import validateQuizDataMW from "../middlewares/db/quiz/validateQuizDataMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
@@ -15,38 +12,22 @@ import getUserQuizzesMW from "../middlewares/db/quiz/getUserQuizzesMW";
 import returnQuizzesMW from "../middlewares/db/quiz/returnQuizzesMW";
 import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
 import getQuizMW from "../middlewares/db/quiz/getQuizMW";
+import authUserMW from "../middlewares/auth/authUserMW";
 
 const router = Router();
 
+// Add authentication middlewares
+router.use(authUserMW);
+
 // Get user quizzes
-router.get(
-	"/user/:userId",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
-	getUserMW,
-	getUserQuizzesMW,
-	returnQuizzesMW
-);
+router.get("/user/:userId", getUserMW, getUserQuizzesMW, returnQuizzesMW);
 
 // Get quiz
-router.get(
-	"/:quizId",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
-	getUserMW,
-	validateQuizIdMW,
-	getQuizMW,
-	returnQuizMW
-);
+router.get("/:quizId", getUserMW, validateQuizIdMW, getQuizMW, returnQuizMW);
 
 // Create new quiz
 router.post(
 	"/",
-	validateAuthorizationHeaderMW,
-	getAuthTokenMW,
-	getUserFromAuthMW,
 	getUserMW,
 	imageUpload.single("file"),
 	validateQuizDataMW,

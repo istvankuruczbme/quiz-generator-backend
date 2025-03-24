@@ -10,9 +10,6 @@ export default async function getUserFromAuthMW(_: Request, res: Response, next:
 		// Get user from auth with Supabase
 		const user = await getUserFromAuth(authToken);
 
-		// Check user
-		if (user == null) throw new Error("auth/invalid-token");
-
 		// Add user to res.locals
 		(res.locals.authUser as User) = user;
 
