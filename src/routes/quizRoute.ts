@@ -8,27 +8,30 @@ import createQuizMW from "../middlewares/db/quiz/createQuizMW";
 import updateQuizPhotoMW from "../middlewares/db/quiz/updateQuizPhotoMW";
 import createQuizConfigMW from "../middlewares/db/quizConfig/createQuizConfigMW";
 import returnQuizMW from "../middlewares/db/quiz/returnQuizMW";
-import getUserQuizzesMW from "../middlewares/db/quiz/getUserQuizzesMW";
-import returnQuizzesMW from "../middlewares/db/quiz/returnQuizzesMW";
+import getUserQuizSummariesMW from "../middlewares/db/quiz/getUserQuizSummariesMW";
+import returnQuizSummariesMW from "../middlewares/db/quiz/returnQuizSummariesMW";
 import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
 import getQuizMW from "../middlewares/db/quiz/getQuizMW";
 import authUserMW from "../middlewares/auth/authUserMW";
+import getQuizQueryTypeMW from "../middlewares/db/quiz/getQuizQueryTypeMW";
 
 const router = Router();
 
 // Add authentication middlewares
 router.use(authUserMW);
 
+// Add getUserMW
+router.use(getUserMW);
+
 // Get user quizzes
-router.get("/user/:userId", getUserMW, getUserQuizzesMW, returnQuizzesMW);
+router.get("/user/:userId", getUserQuizSummariesMW, returnQuizSummariesMW);
 
 // Get quiz
-router.get("/:quizId", getUserMW, validateQuizIdMW, getQuizMW, returnQuizMW);
+router.get("/:quizId", validateQuizIdMW, getQuizQueryTypeMW, getQuizMW, returnQuizMW);
 
 // Create new quiz
 router.post(
 	"/",
-	getUserMW,
 	imageUpload.single("file"),
 	validateQuizDataMW,
 	createQuizEmbeddingMW,
