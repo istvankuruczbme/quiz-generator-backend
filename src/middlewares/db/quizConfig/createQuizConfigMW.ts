@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { QuizConfig, QuizDB } from "../../../types/quizTypes";
+import { QuizConfig, Quiz } from "../../../types/quizTypes";
 import createQuizConfig from "../../../services/db/quizConfig/createQuizConfig";
 
 export default async function createQuizConfigMW(_: Request, res: Response, next: NextFunction) {
 	// Get quiz from res.locals
-	const { quiz } = res.locals as { quiz: QuizDB };
+	const { quiz } = res.locals as { quiz: Quiz };
 
 	try {
 		// Create quiz config

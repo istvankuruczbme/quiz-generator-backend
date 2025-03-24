@@ -1,12 +1,27 @@
+import { CategoryName } from "../drizzle/schema/category";
 import { QuizTable } from "../drizzle/schema/quiz";
 import { QuizConfigTable } from "../drizzle/schema/quizConfig";
-import { Category } from "./categoryTypes";
+import { QuestionPublic } from "./questionTypes";
+import { UserPublic } from "./userTypes";
 
-export type QuizDB = typeof QuizTable.$inferSelect;
-export type QuizConfigDB = typeof QuizConfigTable.$inferSelect;
+export type QuizConfig = typeof QuizConfigTable.$inferSelect;
+export type Quiz = typeof QuizTable.$inferSelect;
 
-export type QuizConfig = Omit<QuizConfigDB, "quizId">;
-export type Quiz = Omit<QuizDB, "categoryId" | "userId"> & {
-	config: QuizConfig;
-	category: Category;
+type QuizConfigData = Pick<QuizConfig, "status" | "visibility" | "questionOrder">;
+type QuizData = Pick<
+	Quiz,
+	"id" | "title" | "description" | "photoUrl" | "updatedAt" | "createdAt"
+> & {
+	config: QuizConfigData;
+	category: CategoryName;
+	user: UserPublic;
+};
+
+export type QuizSummary = QuizData & {
+	questionCount: number;
+	completionCount: number;
+};
+
+export type QuizFull = QuizData & {
+	questions: QuestionPublic[];
 };

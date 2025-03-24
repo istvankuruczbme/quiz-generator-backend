@@ -1,7 +1,7 @@
 import { Router } from "express";
 import validateUserDataMW from "../middlewares/db/user/validateUserDataMW";
 import createUserMW from "../middlewares/db/user/createUserMW";
-import returnUserMW from "../middlewares/db/user/returnUserMW";
+import returnUserProfileMW from "../middlewares/db/user/returnUserProfileMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
 import getUserCategoriesMW from "../middlewares/db/userCategory/getUserCategoriesMW";
 import updateUserCategoriesMW from "../middlewares/db/userCategory/updateUserCategoriesMW";
@@ -31,6 +31,7 @@ import deleteCustomerMW from "../middlewares/stripe/customer/deleteCustomerMW";
 import updateCustomerNameMW from "../middlewares/stripe/customer/updateCustomerNameMW";
 import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
 import authUserMW from "../middlewares/auth/authUserMW";
+import getUserProfileMW from "../middlewares/db/user/getUserProfileMW";
 
 const router = Router();
 
@@ -38,7 +39,7 @@ const router = Router();
 router.use(authUserMW);
 
 // Get user
-router.get("/:userId", getUserMW, returnUserMW);
+router.get("/:userId", getUserMW, getUserProfileMW, returnUserProfileMW);
 
 // Get user subscription
 router.get("/:userId/subscription", getUserMW, getUserSubscriptionMW, returnSubscriptionMW);
@@ -47,7 +48,14 @@ router.get("/:userId/subscription", getUserMW, getUserSubscriptionMW, returnSubs
 router.get("/:userId/categories", getUserMW, getUserCategoriesMW, returnUserCategoriesMW);
 
 // Create new user
-router.post("/", validateUserDataMW, createCustomerMW, createUserMW, returnUserMW);
+router.post(
+	"/",
+	validateUserDataMW,
+	createCustomerMW,
+	createUserMW,
+	getUserProfileMW,
+	returnUserProfileMW
+);
 
 // Create a session to customer portal
 router.post(
