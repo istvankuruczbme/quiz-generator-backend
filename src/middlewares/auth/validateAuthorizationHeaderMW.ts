@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import validateBearerAuthorizationHeader from "../../utils/validation/validateBearerAuthorizationHeader";
+import validateBearerAuthorizationHeader from "../../utils/auth/validateBearerAuthorizationHeader";
 
 export default async function validateAuthorizationHeaderMW(
 	req: Request,

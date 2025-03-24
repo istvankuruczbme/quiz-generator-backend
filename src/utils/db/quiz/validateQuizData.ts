@@ -1,5 +1,5 @@
-import validateNonEmptyString from "../../../utils/validation/validateNonEmptyString";
-import validateUUID from "../../../utils/validation/validateUUID";
+import validateNonEmptyString from "../../validation/validateNonEmptyString";
+import validateUUID from "../../validation/validateUUID";
 
 export default function validateQuizData(
 	title: unknown,

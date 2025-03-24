@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import validateCheckoutSessionData from "../../../services/stripe/checkoutSession/validateCheckoutSessionData";
+import validateCheckoutSessionData from "../../../utils/stripe/checkoutSession/validateCheckoutSessionData";
 
 export default function validateCheckoutSessionDataMW(
 	req: Request,

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import validateNewSubscriptionData from "../../../services/stripe/subscription/validateNewSubscriptionData";
+import validateNewSubscriptionData from "../../../utils/stripe/subscription/validateNewSubscriptionData";
 
 export default function validateNewSubscriptionDataMW(
 	req: Request,

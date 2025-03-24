@@ -1,4 +1,4 @@
-import { ProductWithPrice } from "../../types/stripeTypes";
+import { ProductWithPrice } from "../../../types/stripeTypes";
 
 export default function sortSubscriptionsByPrice(
 	subscriptions: ProductWithPrice[]

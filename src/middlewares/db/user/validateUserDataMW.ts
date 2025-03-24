@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import validateUserData from "../../../services/db/user/validateUserData";
+import validateUserData from "../../../utils/db/user/validateUserData";
 import { User } from "@supabase/supabase-js";
 
 export default function validateUserDataMW(_: Request, res: Response, next: NextFunction) {

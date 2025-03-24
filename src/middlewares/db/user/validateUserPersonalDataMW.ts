@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import validateUserPersonalData from "../../../services/db/user/validateUserPersonalData";
+import validateUserPersonalData from "../../../utils/db/user/validateUserPersonalData";
 
 export default function validateUserPersonalDataMW(req: Request, _: Response, next: NextFunction) {
 	// Get personal data

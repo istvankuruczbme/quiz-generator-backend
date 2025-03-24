@@ -1,7 +1,7 @@
 import { stripe } from "../../../config/stripe";
 import addPriceToSubscription from "../subscription/addPriceToSubscription";
-import sortSubscriptionsByPrice from "../../../utils/subscription/sortSubscriptionsByPrice";
 import { ProductWithPrice } from "../../../types/stripeTypes";
+import sortSubscriptionsByPrice from "../../../utils/stripe/subscription/sortSubscriptionsByPrice";
 
 export default async function getProducts(): Promise<ProductWithPrice[]> {
 	// Get subscriptions

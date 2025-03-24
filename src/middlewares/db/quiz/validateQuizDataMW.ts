@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import validateQuizData from "../../../services/db/quiz/validateQuizData";
+import validateQuizData from "../../../utils/db/quiz/validateQuizData";
 
 export default async function validateQuizDataMW(req: Request, _: Response, next: NextFunction) {
 	// Get quiz data

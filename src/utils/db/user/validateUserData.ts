@@ -1,6 +1,6 @@
-import validateEmail from "../../../utils/validation/validateEmail";
-import validateNonEmptyString from "../../../utils/validation/validateNonEmptyString";
-import validateNullableString from "../../../utils/validation/validateNullableString";
+import validateEmail from "../../validation/validateEmail";
+import validateNonEmptyString from "../../validation/validateNonEmptyString";
+import validateNullableString from "../../validation/validateNullableString";
 import validateUserPhoto from "./validateUserPhoto";
 
 export default function validateUserData(name: unknown, email: unknown, photoUrl: unknown): void {

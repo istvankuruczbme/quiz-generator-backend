@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import validateCategoriesData from "../../../services/db/category/validateCategoriesData";
+import validateCategoriesData from "../../../utils/db/category/validateCategoriesData";
 
 export default function validateCategoriesDataMW(req: Request, _: Response, next: NextFunction) {
 	// Get category IDs from request body
