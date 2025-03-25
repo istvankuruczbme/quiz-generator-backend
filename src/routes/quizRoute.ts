@@ -14,6 +14,7 @@ import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
 import getQuizMW from "../middlewares/db/quiz/getQuizMW";
 import authUserMW from "../middlewares/auth/authUserMW";
 import getQuizQueryTypeMW from "../middlewares/db/quiz/getQuizQueryTypeMW";
+import checkQuizAccessMW from "../middlewares/db/quiz/checkQuizAccessMW";
 
 const router = Router();
 
@@ -24,10 +25,17 @@ router.use(authUserMW);
 router.use(getUserMW);
 
 // Get user quizzes
-router.get("/user/:userId", getUserQuizSummariesMW, returnQuizSummariesMW);
+router.get("/my-quizzes", getUserQuizSummariesMW, returnQuizSummariesMW);
 
 // Get quiz
-router.get("/:quizId", validateQuizIdMW, getQuizQueryTypeMW, getQuizMW, returnQuizMW);
+router.get(
+	"/:quizId",
+	validateQuizIdMW,
+	getQuizQueryTypeMW,
+	getQuizMW,
+	checkQuizAccessMW,
+	returnQuizMW
+);
 
 // Create new quiz
 router.post(

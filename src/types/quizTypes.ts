@@ -7,8 +7,8 @@ import { UserPublic } from "./userTypes";
 export type QuizConfig = typeof QuizConfigTable.$inferSelect;
 export type Quiz = typeof QuizTable.$inferSelect;
 
-type QuizConfigData = Pick<QuizConfig, "status" | "visibility" | "questionOrder">;
-type QuizData = Pick<
+export type QuizConfigData = Pick<QuizConfig, "status" | "visibility" | "questionOrder">;
+export type QuizData = Pick<
 	Quiz,
 	"id" | "title" | "description" | "photoUrl" | "updatedAt" | "createdAt"
 > & {
