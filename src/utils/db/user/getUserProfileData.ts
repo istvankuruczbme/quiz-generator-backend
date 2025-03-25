@@ -6,6 +6,7 @@ export default function getUserProfileData(user: User): UserProfile {
 		name: user.name,
 		email: user.email,
 		photoUrl: user.photoUrl,
+		hasSubscription: user.subscriptionId != null,
 		updatedAt: user.updatedAt,
 		createdAt: user.createdAt,
 	};
