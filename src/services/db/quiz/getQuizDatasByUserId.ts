@@ -6,9 +6,8 @@ import { QuizConfigTable } from "../../../drizzle/schema/quizConfig";
 import { UserTable } from "../../../drizzle/schema/user";
 import { QuizData } from "../../../types/quizTypes";
 
-export default async function getQuizData(id: string): Promise<QuizData> {
-	// Get quiz summary
-	const [quizData] = await db
+export default async function getQuizDatasByUserId(userId: string): Promise<QuizData[]> {
+	const quizDatas = await db
 		.select({
 			id: QuizTable.id,
 			category: {
@@ -35,11 +34,7 @@ export default async function getQuizData(id: string): Promise<QuizData> {
 		.innerJoin(CategoryTable, eq(QuizTable.categoryId, CategoryTable.id))
 		.innerJoin(QuizConfigTable, eq(QuizTable.id, QuizConfigTable.quizId))
 		.innerJoin(UserTable, eq(QuizTable.userId, UserTable.id))
-		.where(eq(QuizTable.id, id));
+		.where(eq(QuizTable.userId, userId));
 
-	// Check if quiz exists
-	if (quizData == undefined) throw new Error("quiz/not-found");
-
-	// Return quiz summary
-	return quizData;
+	return quizDatas;
 }

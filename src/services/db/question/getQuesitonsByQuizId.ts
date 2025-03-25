@@ -5,7 +5,10 @@ import { QuestionPointsTable } from "../../../drizzle/schema/questionPoints";
 import { QuestionPublic } from "../../../types/questionTypes";
 import getAnswerOptionsByQuestionId from "../answerOption/getAnswerOptionsByQuestionId";
 
-export default async function getQuesitonsByQuizId(quizId: string): Promise<QuestionPublic[]> {
+export default async function getQuesitonsByQuizId(
+	quizId: string,
+	isPrivate = false
+): Promise<QuestionPublic[]> {
 	// Get questions
 	const questions = await db
 		.select({
@@ -25,7 +28,7 @@ export default async function getQuesitonsByQuizId(quizId: string): Promise<Ques
 
 	// Get answer options
 	const answerOptions = await Promise.all(
-		questions.map(async (question) => await getAnswerOptionsByQuestionId(question.id))
+		questions.map(async (question) => await getAnswerOptionsByQuestionId(question.id, isPrivate))
 	);
 
 	// Return the full structure
