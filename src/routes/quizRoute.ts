@@ -5,7 +5,7 @@ import getUserMW from "../middlewares/db/user/getUserMW";
 import uploadQuizPhotoMW from "../middlewares/db/quiz/uploadQuizPhotoMW";
 import createQuizEmbeddingMW from "../middlewares/db/quiz/createQuizEmbeddingMW";
 import createQuizMW from "../middlewares/db/quiz/createQuizMW";
-import updateQuizPhotoMW from "../middlewares/db/quiz/updateQuizPhotoMW";
+import updateQuizPhotoUrlMW from "../middlewares/db/quiz/updateQuizPhotoUrlMW";
 import createQuizConfigMW from "../middlewares/db/quizConfig/createQuizConfigMW";
 import returnQuizMW from "../middlewares/db/quiz/returnQuizMW";
 import getUserQuizSummariesMW from "../middlewares/db/quiz/getUserQuizSummariesMW";
@@ -45,7 +45,7 @@ router.post(
 	createQuizEmbeddingMW,
 	createQuizMW,
 	uploadQuizPhotoMW,
-	updateQuizPhotoMW,
+	updateQuizPhotoUrlMW,
 	createQuizConfigMW,
 	returnQuizMW
 );

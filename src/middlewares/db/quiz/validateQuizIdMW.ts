@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import validateUUID from "../../../utils/validation/validateUUID";
 
-export default function validateQuizIdMW(req: Request, res: Response, next: NextFunction) {
+export default function validateQuizIdMW(req: Request, _: Response, next: NextFunction) {
 	// Get quiz ID from request params
 	const { quizId } = req.params;
 

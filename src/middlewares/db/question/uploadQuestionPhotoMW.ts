@@ -1,12 +1,16 @@
 import { Request, Response, NextFunction } from "express";
-import uploadQuizPhoto from "../../../services/db/quiz/uploadQuizPhoto";
-import { Quiz } from "../../../types/quizTypes";
+import { Question } from "../../../types/questionTypes";
+import uploadQuestionPhoto from "../../../services/db/question/uploadQuestionPhoto";
 
-export default async function uploadQuizPhotoMW(req: Request, res: Response, next: NextFunction) {
+export default async function uploadQuestionPhotoMW(
+	req: Request,
+	res: Response,
+	next: NextFunction
+) {
 	// Get file from req.body
 	const { file } = req;
-	// Get quiz from res.locals
-	const { quiz } = res.locals as { quiz: Quiz };
+	// Get question from res.locals
+	const { question } = res.locals as { question: Question };
 
 	// Check file
 	if (file == undefined) {
@@ -19,7 +23,7 @@ export default async function uploadQuizPhotoMW(req: Request, res: Response, nex
 
 	try {
 		// Upload photo
-		const photoUrl = await uploadQuizPhoto(file, quiz.id);
+		const photoUrl = await uploadQuestionPhoto(file, question.id);
 
 		// Add photo URL to res.locals
 		(res.locals.photoUrl as string) = photoUrl;

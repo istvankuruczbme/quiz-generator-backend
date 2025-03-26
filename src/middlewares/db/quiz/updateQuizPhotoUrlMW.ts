@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Quiz } from "../../../types/quizTypes";
 import updateQuizPhotoUrl from "../../../services/db/quiz/updateQuizPhotoUrl";
 
-export default async function updateQuizPhotoMW(_: Request, res: Response, next: NextFunction) {
+export default async function updateQuizPhotoUrlMW(_: Request, res: Response, next: NextFunction) {
 	// Get quiz and photo URL from res.locals
 	const { quiz, photoUrl } = res.locals as { quiz: Quiz; photoUrl: string | null };
 

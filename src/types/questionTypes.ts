@@ -3,10 +3,10 @@ import { QuestionPointsTable } from "../drizzle/schema/questionPoints";
 import { AnswerOptionPrivate, AnswerOptionPublic } from "./answerOptionTypes";
 
 export type QuestionPoints = typeof QuestionPointsTable.$inferSelect;
-export type Quesiton = typeof QuestionTable.$inferSelect;
+export type Question = typeof QuestionTable.$inferSelect;
 
 export type QuestionPointsData = Omit<QuestionPoints, "id" | "questionId">;
-export type QuestionData = Omit<Quesiton, "quizId">;
+export type QuestionData = Omit<Question, "quizId">;
 
 export type QuestionPublic = QuestionData & {
 	points: QuestionPointsData;
