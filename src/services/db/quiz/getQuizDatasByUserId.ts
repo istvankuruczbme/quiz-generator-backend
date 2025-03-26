@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { db } from "../../../drizzle/db";
 import { CategoryTable } from "../../../drizzle/schema/category";
 import { QuizTable } from "../../../drizzle/schema/quiz";
@@ -34,7 +34,7 @@ export default async function getQuizDatasByUserId(userId: string): Promise<Quiz
 		.innerJoin(CategoryTable, eq(QuizTable.categoryId, CategoryTable.id))
 		.innerJoin(QuizConfigTable, eq(QuizTable.id, QuizConfigTable.quizId))
 		.innerJoin(UserTable, eq(QuizTable.userId, UserTable.id))
-		.where(eq(QuizTable.userId, userId));
+		.where(and(eq(QuizTable.userId, userId), isNull(QuizTable.deletedAt)));
 
 	return quizDatas;
 }

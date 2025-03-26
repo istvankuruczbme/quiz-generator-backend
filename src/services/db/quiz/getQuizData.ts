@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { db } from "../../../drizzle/db";
 import { CategoryTable } from "../../../drizzle/schema/category";
 import { QuizTable } from "../../../drizzle/schema/quiz";
@@ -35,7 +35,7 @@ export default async function getQuizData(id: string): Promise<QuizData> {
 		.innerJoin(CategoryTable, eq(QuizTable.categoryId, CategoryTable.id))
 		.innerJoin(QuizConfigTable, eq(QuizTable.id, QuizConfigTable.quizId))
 		.innerJoin(UserTable, eq(QuizTable.userId, UserTable.id))
-		.where(eq(QuizTable.id, id));
+		.where(and(eq(QuizTable.id, id), isNull(QuizTable.deletedAt)));
 
 	// Check if quiz exists
 	if (quizData == undefined) throw new Error("quiz/not-found");
