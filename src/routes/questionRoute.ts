@@ -10,6 +10,7 @@ import createAnswerOptionsMW from "../middlewares/db/answerOption/createAnswerOp
 import uploadQuestionPhotoMW from "../middlewares/db/question/uploadQuestionPhotoMW";
 import updateQuestionPhotoUrlMW from "../middlewares/db/question/updateQuestionPhotoUrlMW";
 import returnQuestionMW from "../middlewares/db/question/returnQuestionMW";
+import validateQuestionDataMW from "../middlewares/db/question/validateQuestionDataMW";
 
 const router = Router({ mergeParams: true });
 
@@ -24,7 +25,7 @@ router.post(
 	"/",
 	validateQuizIdMW,
 	imageUpload.single("file"),
-	validateQuestionData,
+	validateQuestionDataMW,
 	createQuestionMW,
 	uploadQuestionPhotoMW,
 	updateQuestionPhotoUrlMW,

@@ -4,22 +4,17 @@ import validateQuestionPoints from "../../../utils/db/questionPoints/validateQue
 
 export default function validateQuestionDataMW(req: Request, _: Response, next: NextFunction) {
 	// Get question data from request body
-	const {
-		text,
-		order,
-		answerOptions,
-		points: { correct, wrong, empty },
-	} = req.body as {
+	const { text, order, answerOptions, points } = req.body as {
 		text: unknown;
 		order: unknown;
 		answerOptions: unknown;
-		points: { correct: unknown; wrong: unknown; empty: unknown };
+		points: unknown;
 	};
 
 	try {
 		// Validation
 		validateQuestionData(text, order, answerOptions);
-		validateQuestionPoints(correct, wrong, empty);
+		validateQuestionPoints(points);
 
 		// Go to next MW
 		return next();

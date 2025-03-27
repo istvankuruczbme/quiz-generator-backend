@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "../../../drizzle/db";
 import { QuestionTable } from "../../../drizzle/schema/question";
 import { QuestionPointsTable } from "../../../drizzle/schema/questionPoints";
@@ -24,7 +24,8 @@ export default async function getQuesitonsByQuizId(
 		})
 		.from(QuestionTable)
 		.innerJoin(QuestionPointsTable, eq(QuestionTable.id, QuestionPointsTable.questionId))
-		.where(eq(QuestionTable.quizId, quizId));
+		.where(eq(QuestionTable.quizId, quizId))
+		.orderBy(asc(QuestionTable.order));
 
 	// Get answer options
 	const answerOptions = await Promise.all(

@@ -7,7 +7,11 @@ export default function validateQuestionData(
 	order: unknown,
 	answerOptions: unknown
 ): void {
-	validateNonEmptyString(text);
-	validateInteger(order);
-	validateAnswerOptionsData(answerOptions);
+	validateNonEmptyString(text, "question/text-");
+
+	validateNonEmptyString("question/order-");
+	validateInteger(parseFloat(order as string), "question/order");
+
+	validateNonEmptyString(answerOptions, "question/answer-options-");
+	validateAnswerOptionsData(JSON.parse(answerOptions as string));
 }

@@ -8,13 +8,18 @@ export default async function createQuestionPointsMW(
 	next: NextFunction
 ) {
 	// Get question points data from request body
-	const {
-		points: { correct, wrong, empty },
-	} = req.body as {
-		points: { correct: number; wrong: number; empty: number };
+	const { points } = req.body as {
+		points: string;
 	};
 	// Get question from res.locals
 	const { question } = res.locals as { question: Question };
+
+	// Get point values
+	const { correct, wrong, empty } = JSON.parse(points) as {
+		correct: number;
+		wrong: number;
+		empty: number;
+	};
 
 	try {
 		// Create question points
