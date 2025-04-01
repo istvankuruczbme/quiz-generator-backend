@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { QuizFullPrivate, QuizFullPublic, QuizSummary } from "../../../types/quizTypes";
+import { QuizFullPrivate, QuizSummary } from "../../../types/quizTypes";
 import { User } from "../../../types/userTypes";
 
 export default async function checkQuizAccessMW(_: Request, res: Response, next: NextFunction) {
 	// Get user and quiz from res.locals
 	const { user, quiz } = res.locals as {
 		user: User;
-		quiz: QuizSummary | QuizFullPublic | QuizFullPrivate;
+		quiz: QuizSummary | QuizFullPrivate;
 	};
 
 	// Check access

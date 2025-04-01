@@ -13,8 +13,12 @@ import returnQuizSummariesMW from "../middlewares/db/quiz/returnQuizSummariesMW"
 import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
 import getQuizMW from "../middlewares/db/quiz/getQuizMW";
 import authUserMW from "../middlewares/auth/authUserMW";
-import getQuizQueryTypeMW from "../middlewares/db/quiz/getQuizQueryTypeMW";
 import checkQuizAccessMW from "../middlewares/db/quiz/checkQuizAccessMW";
+import validateQuestionsOrderDataMW from "../middlewares/db/question/validateQuestionsOrderDataMW";
+import validateQuizQuestionsMW from "../middlewares/db/quiz/validateQuizQuestionsMW";
+import updateQuestionsOrderMW from "../middlewares/db/question/updateQuestionsOrderMW";
+import sendQuizUpdatedResponseMW from "../middlewares/db/quiz/sendQuizUpdatedResponseMW";
+import getQuizSummaryMW from "../middlewares/db/quiz/getQuizSummaryMW";
 
 const router = Router();
 
@@ -28,14 +32,10 @@ router.use(getUserMW);
 router.get("/my-quizzes", getUserQuizSummariesMW, returnQuizSummariesMW);
 
 // Get quiz
-router.get(
-	"/:quizId",
-	validateQuizIdMW,
-	getQuizQueryTypeMW,
-	getQuizMW,
-	checkQuizAccessMW,
-	returnQuizMW
-);
+router.get("/:quizId", validateQuizIdMW, getQuizMW, checkQuizAccessMW, returnQuizMW);
+
+// Get quiz summary
+router.get("/:quizId/summary", validateQuizIdMW, getQuizSummaryMW, checkQuizAccessMW, returnQuizMW);
 
 // Create new quiz
 router.post(
@@ -48,6 +48,17 @@ router.post(
 	updateQuizPhotoUrlMW,
 	createQuizConfigMW,
 	returnQuizMW
+);
+
+// Update order of questions
+router.put(
+	"/:quizId/questions",
+	validateQuizIdMW,
+	getQuizMW,
+	validateQuestionsOrderDataMW,
+	validateQuizQuestionsMW,
+	updateQuestionsOrderMW,
+	sendQuizUpdatedResponseMW
 );
 
 export { router as quizRoute };

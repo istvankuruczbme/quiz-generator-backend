@@ -22,9 +22,7 @@ export type QuizSummary = QuizData & {
 	completionCount: number;
 };
 
-export type QuizFullPublic = QuizData & {
-	questions: QuestionPublic[];
-};
 export type QuizFullPrivate = QuizData & {
 	questions: QuestionPrivate[];
+	completionCount: number;
 };

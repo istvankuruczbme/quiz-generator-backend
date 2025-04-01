@@ -2,13 +2,11 @@ import { asc, eq } from "drizzle-orm";
 import { db } from "../../../drizzle/db";
 import { QuestionTable } from "../../../drizzle/schema/question";
 import { QuestionPointsTable } from "../../../drizzle/schema/questionPoints";
-import { QuestionPublic } from "../../../types/questionTypes";
+import { QuestionPrivate } from "../../../types/questionTypes";
 import getAnswerOptionsByQuestionId from "../answerOption/getAnswerOptionsByQuestionId";
+import { AnswerOptionPrivate } from "../../../types/answerOptionTypes";
 
-export default async function getQuesitonsByQuizId(
-	quizId: string,
-	isPrivate = false
-): Promise<QuestionPublic[]> {
+export default async function getQuestionsByQuizId(quizId: string): Promise<QuestionPrivate[]> {
 	// Get questions
 	const questions = await db
 		.select({
@@ -29,12 +27,12 @@ export default async function getQuesitonsByQuizId(
 
 	// Get answer options
 	const answerOptions = await Promise.all(
-		questions.map(async (question) => await getAnswerOptionsByQuestionId(question.id, isPrivate))
+		questions.map(async (question) => await getAnswerOptionsByQuestionId(question.id, false))
 	);
 
 	// Return the full structure
 	return questions.map((question, i) => ({
 		...question,
-		answerOptions: answerOptions[i] || [],
+		answerOptions: (answerOptions[i] || []) as AnswerOptionPrivate[],
 	}));
 }
