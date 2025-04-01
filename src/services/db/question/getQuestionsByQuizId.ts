@@ -6,7 +6,10 @@ import { QuestionPrivate } from "../../../types/questionTypes";
 import getAnswerOptionsByQuestionId from "../answerOption/getAnswerOptionsByQuestionId";
 import { AnswerOptionPrivate } from "../../../types/answerOptionTypes";
 
-export default async function getQuestionsByQuizId(quizId: string): Promise<QuestionPrivate[]> {
+export default async function getQuestionsByQuizId(
+	quizId: string,
+	isPrivate = false
+): Promise<QuestionPrivate[]> {
 	// Get questions
 	const questions = await db
 		.select({
@@ -27,7 +30,7 @@ export default async function getQuestionsByQuizId(quizId: string): Promise<Ques
 
 	// Get answer options
 	const answerOptions = await Promise.all(
-		questions.map(async (question) => await getAnswerOptionsByQuestionId(question.id, false))
+		questions.map(async (question) => await getAnswerOptionsByQuestionId(question.id, isPrivate))
 	);
 
 	// Return the full structure

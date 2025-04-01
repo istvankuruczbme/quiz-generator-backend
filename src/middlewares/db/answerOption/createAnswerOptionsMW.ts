@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { AnswerOptionInput } from "../../../types/answerOptionTypes";
 import createAnswerOption from "../../../services/db/answerOption/createAnswerOption";
 import { QuestionPrivate } from "../../../types/questionTypes";
+import { AnswerOptionPrivate } from "../../../types/answerOptionTypes";
 
 export default async function createAnswerOptionsMW(
 	req: Request,
@@ -16,7 +16,7 @@ export default async function createAnswerOptionsMW(
 	try {
 		// Create answer options
 		const answerOptionsCreated = await Promise.all(
-			(JSON.parse(answerOptions) as AnswerOptionInput[]).map(
+			(JSON.parse(answerOptions) as AnswerOptionPrivate[]).map(
 				async (option) => await createAnswerOption(option.text, option.isCorrect, question.id)
 			)
 		);

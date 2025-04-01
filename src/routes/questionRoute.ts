@@ -19,6 +19,10 @@ import getQuizMW from "../middlewares/db/quiz/getQuizMW";
 import validateQuizQuestionMW from "../middlewares/db/question/validateQuizQuestionMW";
 import validateQuizWriteActionMW from "../middlewares/db/quiz/validateQuizWriteActionMW";
 import reorderQuizQuestionsMW from "../middlewares/db/quiz/reorderQuizQuestionsMW";
+import updateQuestionMW from "../middlewares/db/question/updateQuestionMW";
+import updateQuestionPointsMW from "../middlewares/db/questionPoints/updateQuestionPointsMW";
+import updateAnswerOptionsMW from "../middlewares/db/answerOption/updateAnswerOptionsMW";
+import sendQuestionUpdatedResponseMW from "../middlewares/db/question/sendQuestionUpdatedResponseMW";
 
 const router = Router({ mergeParams: true });
 
@@ -42,7 +46,26 @@ router.post(
 	returnQuestionMW
 );
 
-// Delete a question
+// Update question
+router.put(
+	"/:questionId",
+	validateQuizIdMW,
+	getQuizMW,
+	validateQuizWriteActionMW,
+	validateQuestionIdMW,
+	getQuestionMW,
+	validateQuizQuestionMW,
+	imageUpload.single("file"),
+	validateQuestionDataMW,
+	uploadQuestionPhotoMW,
+	updateQuestionMW,
+	updateQuestionPhotoUrlMW,
+	updateQuestionPointsMW,
+	updateAnswerOptionsMW,
+	sendQuestionUpdatedResponseMW
+);
+
+// Delete question
 router.delete(
 	"/:questionId",
 	validateQuizIdMW,

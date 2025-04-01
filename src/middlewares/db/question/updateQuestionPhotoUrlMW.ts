@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Question } from "../../../types/questionTypes";
-import updateQuestionPhotoUrl from "../../../services/db/question/updateQuestionPhotoUrl";
+import updateQuestion from "../../../services/db/question/updateQuestion";
 
 export default async function updateQuestionPhotoUrlMW(
 	req: Request,
@@ -15,7 +15,7 @@ export default async function updateQuestionPhotoUrlMW(
 
 	try {
 		// Update photo URL of question
-		await updateQuestionPhotoUrl(question.id, photoUrl);
+		await updateQuestion(question.id, { photoUrl });
 
 		// Update question in res.locals
 		(res.locals.question as Question).photoUrl = photoUrl;
