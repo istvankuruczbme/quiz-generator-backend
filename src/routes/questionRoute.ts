@@ -12,10 +12,13 @@ import returnQuestionMW from "../middlewares/db/question/returnQuestionMW";
 import validateQuestionDataMW from "../middlewares/db/question/validateQuestionDataMW";
 import validateQuestionIdMW from "../middlewares/db/question/validateQuestionIdMW";
 import getQuestionMW from "../middlewares/db/question/getQuestionMW";
-import deleteQuestionPointsMW from "../middlewares/db/questionPoints/deleteQuestionPointsMW";
 import deleteQuestionMW from "../middlewares/db/question/deleteQuestionMW";
 import deleteQuestionPhotoMW from "../middlewares/db/question/deleteQuestionPhotoMW";
 import sendQuestionDeletedResponseMW from "../middlewares/db/question/sendQuestionDeletedResponseMW";
+import getQuizMW from "../middlewares/db/quiz/getQuizMW";
+import validateQuizQuestionMW from "../middlewares/db/question/validateQuizQuestionMW";
+import validateQuizWriteActionMW from "../middlewares/db/quiz/validateQuizWriteActionMW";
+import reorderQuizQuestionsMW from "../middlewares/db/quiz/reorderQuizQuestionsMW";
 
 const router = Router({ mergeParams: true });
 
@@ -42,12 +45,15 @@ router.post(
 // Delete a question
 router.delete(
 	"/:questionId",
+	validateQuizIdMW,
+	getQuizMW,
+	validateQuizWriteActionMW,
 	validateQuestionIdMW,
 	getQuestionMW,
-	// check if deleting the question is possbile
+	validateQuizQuestionMW,
 	deleteQuestionMW,
 	deleteQuestionPhotoMW,
-	// reorder questions
+	reorderQuizQuestionsMW,
 	sendQuestionDeletedResponseMW
 );
 

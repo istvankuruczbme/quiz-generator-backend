@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import getQuestion from "../../../services/db/question/getQuestion";
-import { QuestionPrivate, QuestionPublic } from "../../../types/questionTypes";
+import { QuestionPublic } from "../../../types/questionTypes";
 
 export default async function getQuestionMW(req: Request, res: Response, next: NextFunction) {
 	// Get question ID from request params
@@ -11,7 +11,7 @@ export default async function getQuestionMW(req: Request, res: Response, next: N
 		const question = await getQuestion(questionId);
 
 		// Add question to res.locals
-		(res.locals.question as QuestionPrivate | QuestionPublic) = question;
+		(res.locals.question as QuestionPublic) = question;
 
 		// Go to next MW
 		return next();
