@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import upadteUserPersonalData from "../../../services/db/user/upadteUserPersonalData";
 import { User } from "../../../types/userTypes";
+import updateUser from "../../../services/db/user/updateUser";
 
 export default async function updateUserPersonalDataMW(
 	req: Request,
@@ -14,7 +14,7 @@ export default async function updateUserPersonalDataMW(
 
 	try {
 		// Update user personal data in DB
-		await upadteUserPersonalData(user.id, name, photoUrl);
+		await updateUser(user.id, { name, photoUrl });
 
 		// Go to next MW
 		return next();

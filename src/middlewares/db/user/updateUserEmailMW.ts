@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import updateUserEmail from "../../../services/db/user/updateUserEmail";
 import { User } from "../../../types/userTypes";
+import updateUser from "../../../services/db/user/updateUser";
 
 export default async function updateUserEmailMW(req: Request, res: Response, next: NextFunction) {
 	// Get user from res.locals
@@ -10,7 +10,7 @@ export default async function updateUserEmailMW(req: Request, res: Response, nex
 
 	try {
 		// Update user email in DB
-		await updateUserEmail(user.id, email);
+		await updateUser(user.id, { email });
 
 		// Go to next MW
 		return next();
