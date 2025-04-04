@@ -6,5 +6,5 @@ export default function validateQuizWriteAction(quiz: QuizFullPrivate, user: Use
 	if (quiz.user.id !== user.id) throw new Error("quiz/not-found");
 
 	// Check if quiz is in DRAFT state
-	if (quiz.config.status !== "DRAFT") throw new Error("quiz/not-modifiable");
+	if (quiz.config.state !== "DRAFT") throw new Error("quiz/not-modifiable");
 }

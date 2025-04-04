@@ -1,5 +1,5 @@
 {
-  "id": "5ef1ef43-e5ea-41fe-9bc6-46f776662167",
+  "id": "fad92e71-4c88-4a23-add9-c050d1881c75",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -463,6 +463,14 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "state": {
+          "name": "state",
+          "type": "quiz_config_state",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'DRAFT'"
+        },
         "visibility": {
           "name": "visibility",
           "type": "quiz_config_visibility",
@@ -470,12 +478,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'PUBLIC'"
-        },
-        "max_question_count": {
-          "name": "max_question_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
         },
         "question_order": {
           "name": "question_order",
@@ -522,8 +524,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "customer_id": {
           "name": "customer_id",
@@ -546,6 +547,12 @@
         "photo_url": {
           "name": "photo_url",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subscription_id": {
+          "name": "subscription_id",
+          "type": "char(28)",
           "primaryKey": false,
           "notNull": false
         },
@@ -681,6 +688,22 @@
         "Food",
         "Travel",
         "General Knowledge"
+      ]
+    },
+    "public.quiz_config_question_order": {
+      "name": "quiz_config_question_order",
+      "schema": "public",
+      "values": [
+        "NORMAL",
+        "RANDOM"
+      ]
+    },
+    "public.quiz_config_state": {
+      "name": "quiz_config_state",
+      "schema": "public",
+      "values": [
+        "DRAFT",
+        "ACTIVE"
       ]
     },
     "public.quiz_config_visibility": {

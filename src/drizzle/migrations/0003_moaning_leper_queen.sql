@@ -1,1 +1,0 @@
-ALTER TABLE "user" ALTER COLUMN "subscription_id" SET DATA TYPE char(28);

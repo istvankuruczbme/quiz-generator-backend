@@ -21,7 +21,7 @@ export default async function getQuizData(id: string): Promise<QuizData> {
 			updatedAt: QuizTable.updatedAt,
 			createdAt: QuizTable.createdAt,
 			config: {
-				status: QuizConfigTable.status,
+				state: QuizConfigTable.state,
 				visibility: QuizConfigTable.visibility,
 				questionOrder: QuizConfigTable.questionOrder,
 			},

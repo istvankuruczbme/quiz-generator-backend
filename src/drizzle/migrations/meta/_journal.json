@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1740553840290,
-      "tag": "0000_elite_centennial",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1740909321261,
-      "tag": "0001_moaning_cloak",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1740917080922,
-      "tag": "0002_cool_scarecrow",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1740941363970,
-      "tag": "0003_moaning_leper_queen",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1742639144541,
-      "tag": "0004_yellow_namora",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1742639270414,
-      "tag": "0005_lively_yellow_claw",
+      "when": 1743777035459,
+      "tag": "0000_overrated_young_avengers",
       "breakpoints": true
     }
   ]

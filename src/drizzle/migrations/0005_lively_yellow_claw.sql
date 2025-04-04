@@ -1,1 +1,0 @@
-ALTER TABLE "quiz_config" DROP COLUMN "max_question_count";

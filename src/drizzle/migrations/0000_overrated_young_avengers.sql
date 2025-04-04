@@ -1,4 +1,7 @@
 CREATE TYPE "public"."category_name" AS ENUM('History', 'Geography', 'Science', 'Literature', 'Art', 'Music', 'Movies', 'Sports', 'Technology', 'Politics', 'Food', 'Travel', 'General Knowledge');--> statement-breakpoint
+CREATE TYPE "public"."quiz_config_question_order" AS ENUM('NORMAL', 'RANDOM');--> statement-breakpoint
+CREATE TYPE "public"."quiz_config_state" AS ENUM('DRAFT', 'ACTIVE');--> statement-breakpoint
+CREATE TYPE "public"."quiz_config_visibility" AS ENUM('PUBLIC', 'PRIVATE');--> statement-breakpoint
 CREATE TABLE "answer_option" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"text" text NOT NULL,
@@ -56,18 +59,19 @@ CREATE TABLE "quiz_completion_marked_answer_option" (
 --> statement-breakpoint
 CREATE TABLE "quiz_config" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"state" "quiz_config_state" DEFAULT 'DRAFT' NOT NULL,
 	"visibility" "quiz_config_visibility" DEFAULT 'PUBLIC' NOT NULL,
-	"max_question_count" integer NOT NULL,
 	"question_order" "quiz_config_question_order" DEFAULT 'NORMAL' NOT NULL,
 	"quiz_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "user" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"customer_id" char(18) NOT NULL,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"photo_url" text,
+	"subscription_id" char(28),
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp,
