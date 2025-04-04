@@ -19,6 +19,9 @@ import updateQuestionsOrderMW from "../middlewares/db/question/updateQuestionsOr
 import sendQuizUpdatedResponseMW from "../middlewares/db/quiz/sendQuizUpdatedResponseMW";
 import getQuizSummaryMW from "../middlewares/db/quiz/getQuizSummaryMW";
 import validateUserQuizMW from "../middlewares/db/quiz/validateUserQuizMW";
+import validateQuizWriteActionMW from "../middlewares/db/quiz/validateQuizWriteActionMW";
+import validateQuizConfigDataMW from "../middlewares/db/quizConfig/validateQuizConfigDataMW";
+import updateQuizConfigMW from "../middlewares/db/quizConfig/updateQuizConfigMW";
 
 const router = Router();
 
@@ -40,6 +43,7 @@ router.get("/:quizId/summary", validateQuizIdMW, getQuizSummaryMW, returnQuizMW)
 // Create new quiz
 router.post(
 	"/",
+	// Check if user is under quiz count limit (based on his subscription)
 	imageUpload.single("file"),
 	validateQuizDataMW,
 	createQuizEmbeddingMW,
@@ -50,11 +54,23 @@ router.post(
 	returnQuizMW
 );
 
+// Update quiz config
+router.put(
+	"/:quizId/config",
+	validateQuizIdMW,
+	getQuizMW,
+	validateQuizWriteActionMW,
+	validateQuizConfigDataMW,
+	updateQuizConfigMW,
+	sendQuizUpdatedResponseMW
+);
+
 // Update order of questions
 router.put(
 	"/:quizId/questions",
 	validateQuizIdMW,
 	getQuizMW,
+	validateQuizWriteActionMW,
 	validateQuestionsOrderDataMW,
 	validateQuizQuestionsMW,
 	updateQuestionsOrderMW,

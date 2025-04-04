@@ -4,8 +4,14 @@ import { Category } from "./categoryTypes";
 import { QuestionPrivate, QuestionPublic } from "./questionTypes";
 import { UserPublic } from "./userTypes";
 
+// DB select
 export type QuizConfig = typeof QuizConfigTable.$inferSelect;
 export type Quiz = typeof QuizTable.$inferSelect;
+
+// DB insert
+export type QuizConfigUpdatableProperties = Partial<
+	Pick<QuizConfig, "visibility" | "questionOrder">
+>;
 
 export type QuizConfigData = Pick<QuizConfig, "state" | "visibility" | "questionOrder">;
 export type QuizData = Pick<

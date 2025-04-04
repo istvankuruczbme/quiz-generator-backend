@@ -36,6 +36,7 @@ router.use(getUserMW);
 router.post(
 	"/",
 	validateQuizIdMW,
+	// Check if user is under question limit (based on his subscription)
 	imageUpload.single("file"),
 	validateQuestionDataMW,
 	createQuestionMW,
