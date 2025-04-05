@@ -3,7 +3,7 @@ import { QuestionPrivate } from "../../../types/questionTypes";
 import updateQuestion from "../../../services/db/question/updateQuestion";
 
 export default async function updateQuestionMW(req: Request, res: Response, next: NextFunction) {
-	// Get question and photo URL from res.locals
+	// Get question from res.locals
 	const { question } = res.locals as {
 		question: QuestionPrivate;
 	};
