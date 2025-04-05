@@ -28,6 +28,9 @@ import deleteQuizPhotoMW from "../middlewares/db/quiz/deleteQuizPhotoMW";
 import sendQuizDeletedResponseMW from "../middlewares/db/quiz/sendQuizDeletedResponseMW";
 import deleteQuizQuestionPhotosMW from "../middlewares/db/quiz/deleteQuizQuestionPhotosMW";
 import removeQuizPhotoUrlMW from "../middlewares/db/quiz/removeQuizPhotoUrlMW";
+import getNumberOfQuizzesCreatedByUserMW from "../middlewares/db/quiz/getNumberOfQuizzesCreatedByUserMW";
+import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
+import validateNewQuizAccessMW from "../middlewares/db/quiz/validateNewQuizAccessMW";
 
 const router = Router();
 
@@ -49,7 +52,9 @@ router.get("/:quizId/summary", validateQuizIdMW, getQuizSummaryMW, returnQuizMW)
 // Create new quiz
 router.post(
 	"/",
-	// Check if user is under quiz count limit (based on his subscription)
+	getUserSubscriptionMW,
+	getNumberOfQuizzesCreatedByUserMW,
+	validateNewQuizAccessMW,
 	imageUpload.single("file"),
 	validateQuizDataMW,
 	createQuizEmbeddingMW,

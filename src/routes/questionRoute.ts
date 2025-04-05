@@ -24,6 +24,8 @@ import updateQuestionPointsMW from "../middlewares/db/questionPoints/updateQuest
 import updateAnswerOptionsMW from "../middlewares/db/answerOption/updateAnswerOptionsMW";
 import sendQuestionUpdatedResponseMW from "../middlewares/db/question/sendQuestionUpdatedResponseMW";
 import removeQuestionPhotoUrlMW from "../middlewares/db/question/removeQuestionPhotoUrlMW";
+import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
+import validateNewQuestionAccessMW from "../middlewares/db/question/validateNewQuestionAccessMW";
 
 const router = Router({ mergeParams: true });
 
@@ -37,6 +39,9 @@ router.use(getUserMW);
 router.post(
 	"/",
 	validateQuizIdMW,
+	getQuizMW,
+	getUserSubscriptionMW,
+	validateNewQuestionAccessMW,
 	// Check if user is under question limit (based on his subscription)
 	imageUpload.single("file"),
 	validateQuestionDataMW,
