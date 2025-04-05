@@ -4,19 +4,19 @@ import { QuizTable } from "./quiz";
 import { UserCategoryTable } from "./userCategory";
 
 export const categoryNameOptions = [
-	"History",
-	"Geography",
-	"Science",
-	"Literature",
-	"Art",
-	"Music",
-	"Movies",
-	"Sports",
-	"Technology",
-	"Politics",
-	"Food",
-	"Travel",
-	"General Knowledge",
+	"history",
+	"geography",
+	"science",
+	"literature",
+	"art",
+	"music",
+	"movies",
+	"sports",
+	"technology",
+	"politics",
+	"food",
+	"travel",
+	"general knowledge",
 ] as const;
 export const categoryNameEnum = pgEnum("category_name", categoryNameOptions);
 export type CategoryName = (typeof categoryNameOptions)[number];
