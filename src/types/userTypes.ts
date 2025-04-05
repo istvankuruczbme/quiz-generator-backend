@@ -5,7 +5,7 @@ export type User = typeof UserTable.$inferSelect;
 
 // DB insert
 export type UserUpdatableProperties = Partial<
-	Pick<User, "name" | "photoUrl" | "email" | "updatedAt" | "deletedAt">
+	Pick<User, "name" | "photoUrl" | "email" | "customerId" | "updatedAt" | "deletedAt">
 >;
 
 export type UserPublic = Pick<User, "id" | "name" | "photoUrl">;

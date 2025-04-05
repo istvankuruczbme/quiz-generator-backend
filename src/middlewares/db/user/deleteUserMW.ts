@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import deleteUser from "../../../services/db/user/deleteUser";
 import { User } from "../../../types/userTypes";
+import updateUser from "../../../services/db/user/updateUser";
 
 export default async function deleteUserMW(_: Request, res: Response, next: NextFunction) {
 	// Get user from res.locals
@@ -8,7 +8,11 @@ export default async function deleteUserMW(_: Request, res: Response, next: Next
 
 	try {
 		// Delete user
-		await deleteUser(user.id);
+		await updateUser(user.id, {
+			email: `${user.email}-deleted-${user.id}@quiz-generator.com`,
+			customerId: "cus_00000000000000",
+			deletedAt: new Date(),
+		});
 
 		// Go to next MW
 		return next();

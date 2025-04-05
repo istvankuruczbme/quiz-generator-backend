@@ -114,7 +114,7 @@ router.delete(
 	deleteAuthUserMW,
 	deleteCustomerMW,
 	deleteUserMW,
-	deleteUserPhotoMW,
+	// deleteUserPhotoMW,
 	deleteUserCategoriesMW,
 	sendUserDeletedResponseMW
 );
