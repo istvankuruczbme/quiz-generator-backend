@@ -8,6 +8,20 @@
       "when": 1743777035459,
       "tag": "0000_overrated_young_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1743850327095,
+      "tag": "0001_early_vapor",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1743850589968,
+      "tag": "0002_magenta_nomad",
+      "breakpoints": true
     }
   ]
 }
