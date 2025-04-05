@@ -4,11 +4,11 @@ import { ProductWithPrice } from "../../../types/stripeTypes";
 
 export default async function getProductsMW(_: Request, res: Response, next: NextFunction) {
 	try {
-		// Get subscriptions
-		const subscriptions = await getProducts();
+		// Get products
+		const products = await getProducts();
 
-		// Add subscriptions to res.locals
-		(res.locals.subscriptions as ProductWithPrice[]) = subscriptions;
+		// Add products to res.locals
+		(res.locals.products as ProductWithPrice[]) = products;
 
 		// Go to next MW
 		return next();
