@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { User } from "../../../types/userTypes";
+import { UserProfile } from "../../../types/userTypes";
 
 export default function returnUserProfileMW(_: Request, res: Response) {
 	// Get user from res.locals
-	const { user } = res.locals as { user: User };
+	const { userProfile } = res.locals as { userProfile: UserProfile };
 
 	// Return user
-	res.status(200).json(user);
+	res.status(200).json(userProfile);
 }
