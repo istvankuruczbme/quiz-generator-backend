@@ -27,6 +27,7 @@ import deleteQuizMW from "../middlewares/db/quiz/deleteQuizMW";
 import deleteQuizPhotoMW from "../middlewares/db/quiz/deleteQuizPhotoMW";
 import sendQuizDeletedResponseMW from "../middlewares/db/quiz/sendQuizDeletedResponseMW";
 import deleteQuizQuestionPhotosMW from "../middlewares/db/quiz/deleteQuizQuestionPhotosMW";
+import removeQuizPhotoUrlMW from "../middlewares/db/quiz/removeQuizPhotoUrlMW";
 
 const router = Router();
 
@@ -94,6 +95,17 @@ router.put(
 	validateQuestionsOrderDataMW,
 	validateQuizQuestionsMW,
 	updateQuestionsOrderMW,
+	sendQuizUpdatedResponseMW
+);
+
+// Delete quiz photo
+router.delete(
+	"/:quizId/photo",
+	validateQuizIdMW,
+	getQuizMW,
+	validateQuizWriteActionMW,
+	deleteQuizPhotoMW,
+	removeQuizPhotoUrlMW,
 	sendQuizUpdatedResponseMW
 );
 

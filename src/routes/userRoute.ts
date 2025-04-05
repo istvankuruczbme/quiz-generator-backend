@@ -32,6 +32,7 @@ import updateCustomerNameMW from "../middlewares/stripe/customer/updateCustomerN
 import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
 import authUserMW from "../middlewares/auth/authUserMW";
 import getUserProfileMW from "../middlewares/db/user/getUserProfileMW";
+import removeUserPhotoUrlMW from "../middlewares/db/user/removeUserPhotoUrlMW";
 
 const router = Router();
 
@@ -107,6 +108,15 @@ router.put(
 	sendUserUpdatedResponseMW
 );
 
+// Delete user photo
+router.delete(
+	"/:userId/photo",
+	getUserMW,
+	deleteUserPhotoMW,
+	removeUserPhotoUrlMW,
+	sendUserUpdatedResponseMW
+);
+
 // Delete user
 router.delete(
 	"/:userId",
@@ -114,7 +124,6 @@ router.delete(
 	deleteAuthUserMW,
 	deleteCustomerMW,
 	deleteUserMW,
-	// deleteUserPhotoMW,
 	deleteUserCategoriesMW,
 	sendUserDeletedResponseMW
 );

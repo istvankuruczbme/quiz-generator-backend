@@ -23,6 +23,7 @@ import updateQuestionMW from "../middlewares/db/question/updateQuestionMW";
 import updateQuestionPointsMW from "../middlewares/db/questionPoints/updateQuestionPointsMW";
 import updateAnswerOptionsMW from "../middlewares/db/answerOption/updateAnswerOptionsMW";
 import sendQuestionUpdatedResponseMW from "../middlewares/db/question/sendQuestionUpdatedResponseMW";
+import removeQuestionPhotoUrlMW from "../middlewares/db/question/removeQuestionPhotoUrlMW";
 
 const router = Router({ mergeParams: true });
 
@@ -63,6 +64,20 @@ router.put(
 	updateQuestionPhotoUrlMW,
 	updateQuestionPointsMW,
 	updateAnswerOptionsMW,
+	sendQuestionUpdatedResponseMW
+);
+
+// Delete question photo
+router.delete(
+	"/:questionId/photo",
+	validateQuizIdMW,
+	getQuizMW,
+	validateQuizWriteActionMW,
+	validateQuestionIdMW,
+	getQuestionMW,
+	validateQuizQuestionMW,
+	deleteQuestionPhotoMW,
+	removeQuestionPhotoUrlMW,
 	sendQuestionUpdatedResponseMW
 );
 

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { QuizFullPrivate } from "../../../types/quizTypes";
-import deleteQuizPhoto from "../../../services/db/quiz/deleteQuizPhoto";
+import updateQuiz from "../../../services/db/quiz/updateQuiz";
 
-export default async function deleteQuizPhotoMW(_: Request, res: Response, next: NextFunction) {
+export default async function removeQuizPhotoUrlMW(_: Request, res: Response, next: NextFunction) {
 	// Get quiz from res.locals
 	const { quiz } = res.locals as { quiz: QuizFullPrivate };
 
@@ -10,10 +10,10 @@ export default async function deleteQuizPhotoMW(_: Request, res: Response, next:
 	if (quiz.photoUrl == null) return next();
 
 	try {
-		// Delete quiz photo
-		await deleteQuizPhoto(quiz.id);
+		// Update quiz
+		await updateQuiz(quiz.id, { photoUrl: null });
 
-		// Go to next MW
+		// Go ot next MW
 		return next();
 	} catch (err) {
 		return next(err);

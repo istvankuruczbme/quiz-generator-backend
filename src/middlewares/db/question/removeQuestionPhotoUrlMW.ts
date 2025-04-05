@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { QuestionPublic } from "../../../types/questionTypes";
-import deleteQuestionPhoto from "../../../services/db/question/deleteQuestionPhoto";
+import updateQuestion from "../../../services/db/question/updateQuestion";
 
-export default async function deleteQuestionPhotoMW(_: Request, res: Response, next: NextFunction) {
+export default async function removeQuestionPhotoUrlMW(
+	_: Request,
+	res: Response,
+	next: NextFunction
+) {
 	// Get question from res.locals
 	const { question } = res.locals as { question: QuestionPublic };
 
@@ -10,8 +14,8 @@ export default async function deleteQuestionPhotoMW(_: Request, res: Response, n
 	if (question.photoUrl == null) return next();
 
 	try {
-		// Delete question photo
-		await deleteQuestionPhoto(question.id);
+		// Update question
+		await updateQuestion(question.id, { photoUrl: null });
 
 		// Go to next MW
 		return next();
