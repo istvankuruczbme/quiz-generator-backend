@@ -22,6 +22,7 @@ import validateUserQuizMW from "../middlewares/db/quiz/validateUserQuizMW";
 import validateQuizWriteActionMW from "../middlewares/db/quiz/validateQuizWriteActionMW";
 import validateQuizConfigDataMW from "../middlewares/db/quizConfig/validateQuizConfigDataMW";
 import updateQuizConfigMW from "../middlewares/db/quizConfig/updateQuizConfigMW";
+import updateQuizMW from "../middlewares/db/quiz/updateQuizMW";
 
 const router = Router();
 
@@ -52,6 +53,21 @@ router.post(
 	updateQuizPhotoUrlMW,
 	createQuizConfigMW,
 	returnQuizMW
+);
+
+// Update quiz data
+router.put(
+	"/:quizId",
+	validateQuizIdMW,
+	getQuizMW,
+	validateQuizWriteActionMW,
+	imageUpload.single("file"),
+	validateQuizDataMW,
+	createQuizEmbeddingMW,
+	uploadQuizPhotoMW,
+	updateQuizMW,
+	updateQuizPhotoUrlMW,
+	sendQuizUpdatedResponseMW
 );
 
 // Update quiz config

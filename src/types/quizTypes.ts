@@ -12,6 +12,12 @@ export type Quiz = typeof QuizTable.$inferSelect;
 export type QuizConfigUpdatableProperties = Partial<
 	Pick<QuizConfig, "visibility" | "questionOrder">
 >;
+export type QuizUpdatableProperties = Partial<
+	Pick<
+		Quiz,
+		"title" | "description" | "photoUrl" | "embedding" | "categoryId" | "updatedAt" | "deletedAt"
+	>
+>;
 
 export type QuizConfigData = Pick<QuizConfig, "state" | "visibility" | "questionOrder">;
 export type QuizData = Pick<
