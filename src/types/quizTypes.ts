@@ -10,7 +10,7 @@ export type Quiz = typeof QuizTable.$inferSelect;
 
 // DB insert
 export type QuizConfigUpdatableProperties = Partial<
-	Pick<QuizConfig, "visibility" | "questionOrder">
+	Pick<QuizConfig, "state" | "visibility" | "questionOrder">
 >;
 export type QuizUpdatableProperties = Partial<
 	Pick<
@@ -34,6 +34,10 @@ export type QuizSummary = QuizData & {
 	completionCount: number;
 };
 
+export type QuizFullPublic = QuizData & {
+	questions: QuestionPublic[];
+	completionCount: number;
+};
 export type QuizFullPrivate = QuizData & {
 	questions: QuestionPrivate[];
 	completionCount: number;

@@ -1,17 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import Stripe from "stripe";
-import subscriptionFeatures, { ProductId } from "../../../assets/subscriptionFeatures";
+import { QuizFullPrivate } from "../../../types/quizTypes";
 import getProductIdFromSubscription from "../../../utils/stripe/subscription/getProductIdFromSubscription";
+import subscriptionFeatures from "../../../assets/subscriptionFeatures";
 
-export default async function validateNewQuizAccessMW(
+export default function validateCreateQuestionAccessMW(
 	_: Request,
 	res: Response,
 	next: NextFunction
 ) {
-	// Get subscription of user and quiz count from res.locals
-	const { subscription, quizCount } = res.locals as {
+	// Get subscription of user and quiz from res.locals
+	const { subscription, quiz } = res.locals as {
 		subscription: Stripe.Subscription;
-		quizCount: number;
+		quiz: QuizFullPrivate;
 	};
 
 	try {
@@ -19,10 +20,12 @@ export default async function validateNewQuizAccessMW(
 		const productId = getProductIdFromSubscription(subscription);
 
 		// Get max quiz count for this product
-		const maxQuizCount = subscriptionFeatures[productId].maxQuizCount;
+		const maxQuestionCount = subscriptionFeatures[productId].maxQuestionCountPerQuiz;
 
 		// Check if user is under the limit
-		if (quizCount >= maxQuizCount) throw new Error("user/max-number-of-quizzes-reached");
+		if (quiz.questions.length >= maxQuestionCount) {
+			throw new Error("quiz/max-number-of-questions-reached");
+		}
 
 		// Go to next MW
 		return next();

@@ -18,7 +18,6 @@ import validateQuizQuestionsMW from "../middlewares/db/quiz/validateQuizQuestion
 import updateQuestionsOrderMW from "../middlewares/db/question/updateQuestionsOrderMW";
 import sendQuizUpdatedResponseMW from "../middlewares/db/quiz/sendQuizUpdatedResponseMW";
 import getQuizSummaryMW from "../middlewares/db/quiz/getQuizSummaryMW";
-import validateUserQuizMW from "../middlewares/db/quiz/validateUserQuizMW";
 import validateQuizWriteActionMW from "../middlewares/db/quiz/validateQuizWriteActionMW";
 import validateQuizConfigDataMW from "../middlewares/db/quizConfig/validateQuizConfigDataMW";
 import updateQuizConfigMW from "../middlewares/db/quizConfig/updateQuizConfigMW";
@@ -30,7 +29,9 @@ import deleteQuizQuestionPhotosMW from "../middlewares/db/quiz/deleteQuizQuestio
 import removeQuizPhotoUrlMW from "../middlewares/db/quiz/removeQuizPhotoUrlMW";
 import getNumberOfQuizzesCreatedByUserMW from "../middlewares/db/quiz/getNumberOfQuizzesCreatedByUserMW";
 import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
-import validateNewQuizAccessMW from "../middlewares/db/quiz/validateNewQuizAccessMW";
+import validateCreateQuizAccessMW from "../middlewares/db/quiz/validateCreateQuizAccessMW";
+import finishQuizMW from "../middlewares/db/quiz/finishQuizMW";
+import validateQuizReadActionMW from "../middlewares/db/quiz/validateQuizReadActionMW";
 
 const router = Router();
 
@@ -44,17 +45,23 @@ router.use(getUserMW);
 router.get("/my-quizzes", getUserQuizSummariesMW, returnQuizSummariesMW);
 
 // Get quiz with private data
-router.get("/:quizId", validateQuizIdMW, getQuizMW, validateUserQuizMW, returnQuizMW);
+router.get("/:quizId", validateQuizIdMW, getQuizMW, validateQuizWriteActionMW, returnQuizMW);
 
 // Get quiz summary
-router.get("/:quizId/summary", validateQuizIdMW, getQuizSummaryMW, returnQuizMW);
+router.get(
+	"/:quizId/summary",
+	validateQuizIdMW,
+	getQuizSummaryMW,
+	validateQuizReadActionMW,
+	returnQuizMW
+);
 
 // Create new quiz
 router.post(
 	"/",
 	getUserSubscriptionMW,
 	getNumberOfQuizzesCreatedByUserMW,
-	validateNewQuizAccessMW,
+	validateCreateQuizAccessMW,
 	imageUpload.single("file"),
 	validateQuizDataMW,
 	createQuizEmbeddingMW,
@@ -100,6 +107,16 @@ router.put(
 	validateQuestionsOrderDataMW,
 	validateQuizQuestionsMW,
 	updateQuestionsOrderMW,
+	sendQuizUpdatedResponseMW
+);
+
+// Finish quiz
+router.put(
+	"/:quizId/finish",
+	validateQuizIdMW,
+	getQuizMW,
+	validateQuizWriteActionMW,
+	finishQuizMW,
 	sendQuizUpdatedResponseMW
 );
 
