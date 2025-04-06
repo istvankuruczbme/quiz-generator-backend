@@ -8,6 +8,7 @@ import { userRoute } from "./routes/userRoute";
 import { quizRoute } from "./routes/quizRoute";
 import { questionRoute } from "./routes/questionRoute";
 import errorHandlerMW from "./middlewares/error/errorHandlerMW";
+import freeTokenizer from "./utils/tokenizer/freeTokenizer";
 
 // Create Fastify instance
 const app = express();
@@ -28,6 +29,13 @@ app.use("/api/quizzes/:quizId/questions", questionRoute);
 app.use(errorHandlerMW);
 
 // Run the server
-app.listen(process.env.PORT!, () => {
+const server = app.listen(process.env.PORT!, () => {
 	console.log("Listening on port", process.env.PORT!);
+});
+
+// Clean up encoder on shutdown
+process.on("SIGINT", () => {
+	console.log("Shutting down...");
+	freeTokenizer();
+	server.close(() => process.exit(0));
 });

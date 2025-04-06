@@ -1,7 +1,7 @@
 import { Router } from "express";
 import authUserMW from "../middlewares/auth/authUserMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
-import { imageUpload } from "../config/multer";
+import { imageUpload, pdfUpload } from "../config/multer";
 import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
 import createQuestionMW from "../middlewares/db/question/createQuestionMW";
 import createQuestionPointsMW from "../middlewares/db/questionPoints/createQuestionPointsMW";
@@ -26,6 +26,9 @@ import sendQuestionUpdatedResponseMW from "../middlewares/db/question/sendQuesti
 import removeQuestionPhotoUrlMW from "../middlewares/db/question/removeQuestionPhotoUrlMW";
 import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
 import validateCreateQuestionAccessMW from "../middlewares/db/question/validateCreateQuestionAccessMW";
+import getPdfTextMW from "../middlewares/pdf/getPdfTextMW";
+import returnPdfTextMW from "../middlewares/pdf/returnPdfTextMW";
+import tokenizeTextMW from "../middlewares/pdf/tokenizeTextMW";
 
 const router = Router({ mergeParams: true });
 
@@ -42,7 +45,6 @@ router.post(
 	getQuizMW,
 	getUserSubscriptionMW,
 	validateCreateQuestionAccessMW,
-	// Check if user is under question limit (based on his subscription)
 	imageUpload.single("file"),
 	validateQuestionDataMW,
 	createQuestionMW,
@@ -51,6 +53,17 @@ router.post(
 	createQuestionPointsMW,
 	createAnswerOptionsMW,
 	returnQuestionMW
+);
+
+// Generate questions from document
+router.post(
+	"/generate",
+	validateQuizIdMW,
+	getQuizMW,
+	pdfUpload.single("file"),
+	getPdfTextMW,
+	tokenizeTextMW,
+	returnPdfTextMW
 );
 
 // Update question
