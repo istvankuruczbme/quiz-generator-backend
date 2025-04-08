@@ -7,12 +7,11 @@ import deleteAnswerOption from "../../../services/db/answerOption/deleteAnswerOp
 
 export default function updateAnswerOptionsMW(req: Request, res: Response, next: NextFunction) {
 	// Get answer options from request body
-	const { answerOptions: answerOptionsRaw } = req.body as { answerOptions: string };
+	const { answerOptions } = req.body as { answerOptions: AnswerOptionPrivate[] };
 	// Get question from res.locals
 	const { question } = res.locals as { question: QuestionPrivate };
 
-	// Parse answer options
-	const answerOptions = JSON.parse(answerOptionsRaw) as AnswerOptionPrivate[];
+	// Get answer option IDs
 	const answerOptionIds = answerOptions.map((option) => option.id);
 
 	// Get question answer option IDs

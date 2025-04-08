@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import getTextFromPdf from "../../utils/pdf/getTextFromPdf";
+import getDocumentText from "../../../../utils/db/question/generation/getDocumentText";
 
-export default async function getPdfTextMW(req: Request, res: Response, next: NextFunction) {
+export default async function getDocumentTextMW(req: Request, res: Response, next: NextFunction) {
 	// Get file from req.body
 	const { file } = req as { file: Express.Multer.File };
 
 	try {
-		// Get text from PDF
-		const text = await getTextFromPdf(file.buffer);
+		// Extract text from document
+		const text = await getDocumentText(file);
 
 		// Add text to res.locals
 		(res.locals.text as string) = text;

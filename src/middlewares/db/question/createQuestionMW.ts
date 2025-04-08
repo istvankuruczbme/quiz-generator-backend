@@ -6,14 +6,14 @@ export default async function createQuestionMW(req: Request, res: Response, next
 	// Get question data from request body
 	const { text, order } = req.body as {
 		text: string;
-		order: string;
+		order: number;
 	};
 	// Get quiz ID from request params
 	const { quizId } = req.params as { quizId: string };
 
 	try {
 		// Create question
-		const question = await createQuestion(text, parseInt(order), quizId);
+		const question = await createQuestion(text, order, quizId);
 
 		// Add question to res.locals
 		(res.locals.question as Question) = question;

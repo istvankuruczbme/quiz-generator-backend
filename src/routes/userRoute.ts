@@ -33,6 +33,7 @@ import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
 import authUserMW from "../middlewares/auth/authUserMW";
 import getUserProfileMW from "../middlewares/db/user/getUserProfileMW";
 import removeUserPhotoUrlMW from "../middlewares/db/user/removeUserPhotoUrlMW";
+import parseRequestBodyMW from "../middlewares/helper/parseRequestBodyMW";
 
 const router = Router();
 
@@ -81,6 +82,7 @@ router.put(
 	"/:userId/personal",
 	getUserMW,
 	imageUpload.single("file"),
+	parseRequestBodyMW,
 	validateUserPersonalDataMW,
 	updateCustomerNameMW,
 	uploadUserPhotoMW,

@@ -13,14 +13,23 @@ const imageUpload = multer({
 
 const MAX_PDF_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
-const pdfUpload = multer({
+const quizFileUpload = multer({
 	storage: multer.memoryStorage(),
 	fileFilter(_: Request, file: Express.Multer.File, cb: FileFilterCallback) {
 		// Check if file exists
 		if (file == undefined) return cb(new Error("file/missing"));
 
+		// Allowed mime types
+		const allowedMimeTypes = [
+			"application/pdf", // PDF
+			"application/msword", // DOC
+			"application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
+			// "text/markdown", // TXT
+			"text/plain", // TXT
+		];
+
 		// Check mime type
-		if (file.mimetype !== "application/pdf") return cb(new Error("file/invalid-type"));
+		if (!allowedMimeTypes.includes(file.mimetype)) return cb(new Error("file/invalid-type"));
 
 		cb(null, true);
 	},
@@ -29,4 +38,4 @@ const pdfUpload = multer({
 	},
 });
 
-export { imageUpload, pdfUpload };
+export { imageUpload, quizFileUpload };

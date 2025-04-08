@@ -32,6 +32,8 @@ import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW"
 import validateCreateQuizAccessMW from "../middlewares/db/quiz/validateCreateQuizAccessMW";
 import finishQuizMW from "../middlewares/db/quiz/finishQuizMW";
 import validateQuizReadActionMW from "../middlewares/db/quiz/validateQuizReadActionMW";
+import getSubscriptionFeaturesMW from "../middlewares/stripe/subscription/getSubscriptionFeaturesMW";
+import parseRequestBodyMW from "../middlewares/helper/parseRequestBodyMW";
 
 const router = Router();
 
@@ -60,9 +62,11 @@ router.get(
 router.post(
 	"/",
 	getUserSubscriptionMW,
+	getSubscriptionFeaturesMW,
 	getNumberOfQuizzesCreatedByUserMW,
 	validateCreateQuizAccessMW,
 	imageUpload.single("file"),
+	parseRequestBodyMW,
 	validateQuizDataMW,
 	createQuizEmbeddingMW,
 	createQuizMW,
@@ -79,6 +83,7 @@ router.put(
 	getQuizMW,
 	validateQuizWriteActionMW,
 	imageUpload.single("file"),
+	parseRequestBodyMW,
 	validateQuizDataMW,
 	createQuizEmbeddingMW,
 	uploadQuizPhotoMW,

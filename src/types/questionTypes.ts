@@ -15,6 +15,15 @@ export type QuestionPointsUpdatableProperties = Partial<
 export type QuestionPointsData = Omit<QuestionPoints, "id" | "questionId">;
 export type QuestionData = Omit<Question, "quizId">;
 
+type OpenAIAnswerOptionResponse = {
+	text: string;
+	isCorrect: boolean;
+};
+export type OpenAIQuestionResponse = {
+	text: string;
+	answerOptions: OpenAIAnswerOptionResponse[];
+};
+
 export type QuestionPublic = QuestionData & {
 	points: QuestionPointsData;
 	answerOptions: AnswerOptionPublic[];

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import authUserMW from "../middlewares/auth/authUserMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
-import { imageUpload, pdfUpload } from "../config/multer";
+import { imageUpload, quizFileUpload } from "../config/multer";
 import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
 import createQuestionMW from "../middlewares/db/question/createQuestionMW";
 import createQuestionPointsMW from "../middlewares/db/questionPoints/createQuestionPointsMW";
@@ -26,9 +26,16 @@ import sendQuestionUpdatedResponseMW from "../middlewares/db/question/sendQuesti
 import removeQuestionPhotoUrlMW from "../middlewares/db/question/removeQuestionPhotoUrlMW";
 import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
 import validateCreateQuestionAccessMW from "../middlewares/db/question/validateCreateQuestionAccessMW";
-import getPdfTextMW from "../middlewares/pdf/getPdfTextMW";
-import returnPdfTextMW from "../middlewares/pdf/returnPdfTextMW";
-import tokenizeTextMW from "../middlewares/pdf/tokenizeTextMW";
+import getDocumentTextMW from "../middlewares/db/question/generation/getDocumentTextMW";
+import createChunksMW from "../middlewares/db/question/generation/createChunksMW";
+import validateQuestionsGenerationDataMW from "../middlewares/db/question/generation/validateQuestionsGenerationDataMW";
+import selectChunksMW from "../middlewares/db/question/generation/selectChunksMW";
+import generateQuestionsMW from "../middlewares/db/question/generation/generateQuestionsMW";
+import getSubscriptionFeaturesMW from "../middlewares/stripe/subscription/getSubscriptionFeaturesMW";
+import parseRequestBodyMW from "../middlewares/helper/parseRequestBodyMW";
+import createGeneratedQuestionsMW from "../middlewares/db/question/generation/createGeneratedQuestionsMW";
+import uploadQuizDocumentMW from "../middlewares/db/quiz/uploadQuizDocumentMW";
+import sendQuizUpdatedResponseMW from "../middlewares/db/quiz/sendQuizUpdatedResponseMW";
 
 const router = Router({ mergeParams: true });
 
@@ -44,8 +51,10 @@ router.post(
 	validateQuizIdMW,
 	getQuizMW,
 	getUserSubscriptionMW,
+	getSubscriptionFeaturesMW,
 	validateCreateQuestionAccessMW,
 	imageUpload.single("file"),
+	parseRequestBodyMW,
 	validateQuestionDataMW,
 	createQuestionMW,
 	uploadQuestionPhotoMW,
@@ -60,10 +69,18 @@ router.post(
 	"/generate",
 	validateQuizIdMW,
 	getQuizMW,
-	pdfUpload.single("file"),
-	getPdfTextMW,
-	tokenizeTextMW,
-	returnPdfTextMW
+	getUserSubscriptionMW,
+	getSubscriptionFeaturesMW,
+	quizFileUpload.single("file"),
+	parseRequestBodyMW,
+	validateQuestionsGenerationDataMW,
+	uploadQuizDocumentMW,
+	getDocumentTextMW,
+	createChunksMW,
+	selectChunksMW,
+	generateQuestionsMW,
+	createGeneratedQuestionsMW,
+	sendQuizUpdatedResponseMW
 );
 
 // Update question
@@ -76,6 +93,7 @@ router.put(
 	getQuestionMW,
 	validateQuizQuestionMW,
 	imageUpload.single("file"),
+	parseRequestBodyMW,
 	validateQuestionDataMW,
 	uploadQuestionPhotoMW,
 	updateQuestionMW,

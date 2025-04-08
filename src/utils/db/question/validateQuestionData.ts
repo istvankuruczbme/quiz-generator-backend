@@ -8,10 +8,7 @@ export default function validateQuestionData(
 	answerOptions: unknown
 ): void {
 	validateNonEmptyString(text, "question/text-");
-
-	validateNonEmptyString("question/order-");
-	validateInteger(parseFloat(order as string), "question/order");
-
-	validateNonEmptyString(answerOptions, "question/answer-options-");
-	validateAnswerOptionsData(JSON.parse(answerOptions as string));
+	validateInteger(order, "question/order");
+	if ((order as number) < 1) throw new Error("question/order-invalid");
+	validateAnswerOptionsData(answerOptions);
 }

@@ -9,14 +9,14 @@ export default async function createAnswerOptionsMW(
 	next: NextFunction
 ) {
 	// Get answer options from request body
-	const { answerOptions } = req.body as { answerOptions: string };
+	const { answerOptions } = req.body as { answerOptions: AnswerOptionPrivate[] };
 	// Get question from res.locals
 	const { question } = res.locals as { question: QuestionPrivate };
 
 	try {
 		// Create answer options
 		const answerOptionsCreated = await Promise.all(
-			(JSON.parse(answerOptions) as AnswerOptionPrivate[]).map(
+			answerOptions.map(
 				async (option) => await createAnswerOption(option.text, option.isCorrect, question.id)
 			)
 		);
