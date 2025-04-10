@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { imageUpload } from "../config/multer";
 import validateQuizDataMW from "../middlewares/db/quiz/validateQuizDataMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
 import uploadQuizPhotoMW from "../middlewares/db/quiz/uploadQuizPhotoMW";
@@ -33,7 +32,7 @@ import validateCreateQuizAccessMW from "../middlewares/db/quiz/validateCreateQui
 import finishQuizMW from "../middlewares/db/quiz/finishQuizMW";
 import validateQuizReadActionMW from "../middlewares/db/quiz/validateQuizReadActionMW";
 import getSubscriptionFeaturesMW from "../middlewares/stripe/subscription/getSubscriptionFeaturesMW";
-import parseRequestBodyMW from "../middlewares/helper/parseRequestBodyMW";
+import imageUploadMW from "../middlewares/helper/imageUploadMW";
 
 const router = Router();
 
@@ -65,8 +64,7 @@ router.post(
 	getSubscriptionFeaturesMW,
 	getNumberOfQuizzesCreatedByUserMW,
 	validateCreateQuizAccessMW,
-	imageUpload.single("file"),
-	parseRequestBodyMW,
+	imageUploadMW,
 	validateQuizDataMW,
 	createQuizEmbeddingMW,
 	createQuizMW,
@@ -82,8 +80,7 @@ router.put(
 	validateQuizIdMW,
 	getQuizMW,
 	validateQuizWriteActionMW,
-	imageUpload.single("file"),
-	parseRequestBodyMW,
+	imageUploadMW,
 	validateQuizDataMW,
 	createQuizEmbeddingMW,
 	uploadQuizPhotoMW,

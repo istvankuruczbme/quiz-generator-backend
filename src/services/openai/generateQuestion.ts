@@ -4,7 +4,8 @@ import { OpenAIQuestionResponse } from "../../types/questionTypes";
 
 export default async function generateQuestion(
 	text: string,
-	answerOptionCount: number
+	answerOptionCount: number,
+	temperature?: number
 ): Promise<OpenAIQuestionResponse> {
 	// Create a completion to generate question
 	const completion = await openai.chat.completions.create({
@@ -20,6 +21,7 @@ export default async function generateQuestion(
 			},
 		],
 		response_format: questionResponseFormat,
+		temperature: temperature || 0.5,
 	});
 	// console.log(completion);
 

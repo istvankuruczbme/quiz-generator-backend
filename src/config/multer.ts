@@ -1,5 +1,6 @@
 import { Request } from "express";
 import multer, { FileFilterCallback } from "multer";
+import path from "path";
 
 const imageUpload = multer({
 	storage: multer.memoryStorage(),
@@ -19,12 +20,26 @@ const quizFileUpload = multer({
 		// Check if file exists
 		if (file == undefined) return cb(new Error("file/missing"));
 
+		// Check files without valid mime type
+		if (file.mimetype === "application/octet-stream") {
+			// Get extension of file
+			const extension = path.extname(file.originalname).toLocaleLowerCase();
+
+			// Update file mime type
+			switch (extension) {
+				case ".md":
+					file.mimetype = "text/markdown";
+					break;
+				default:
+					return cb(new Error("file/invalid-type"));
+			}
+		}
+
 		// Allowed mime types
 		const allowedMimeTypes = [
 			"application/pdf", // PDF
-			"application/msword", // DOC
 			"application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
-			// "text/markdown", // TXT
+			"text/markdown", // MD
 			"text/plain", // TXT
 		];
 

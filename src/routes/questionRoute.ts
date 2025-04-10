@@ -1,7 +1,6 @@
 import { Router } from "express";
 import authUserMW from "../middlewares/auth/authUserMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
-import { imageUpload, quizFileUpload } from "../config/multer";
 import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
 import createQuestionMW from "../middlewares/db/question/createQuestionMW";
 import createQuestionPointsMW from "../middlewares/db/questionPoints/createQuestionPointsMW";
@@ -32,10 +31,14 @@ import validateQuestionsGenerationDataMW from "../middlewares/db/question/genera
 import selectChunksMW from "../middlewares/db/question/generation/selectChunksMW";
 import generateQuestionsMW from "../middlewares/db/question/generation/generateQuestionsMW";
 import getSubscriptionFeaturesMW from "../middlewares/stripe/subscription/getSubscriptionFeaturesMW";
-import parseRequestBodyMW from "../middlewares/helper/parseRequestBodyMW";
 import createGeneratedQuestionsMW from "../middlewares/db/question/generation/createGeneratedQuestionsMW";
 import uploadQuizDocumentMW from "../middlewares/db/quiz/uploadQuizDocumentMW";
 import sendQuizUpdatedResponseMW from "../middlewares/db/quiz/sendQuizUpdatedResponseMW";
+import imageUploadMW from "../middlewares/helper/imageUploadMW";
+import quizFileUploadMW from "../middlewares/helper/quizFileUploadMW";
+import detectTextLanguageMW from "../middlewares/db/question/generation/detectTextLanguageMW";
+import getTokenLimitMW from "../middlewares/db/question/generation/getTokenLimitMW";
+import validateExistingGenerationFileMW from "../utils/db/question/generation/validateExistingGenerationFileMW";
 
 const router = Router({ mergeParams: true });
 
@@ -53,8 +56,7 @@ router.post(
 	getUserSubscriptionMW,
 	getSubscriptionFeaturesMW,
 	validateCreateQuestionAccessMW,
-	imageUpload.single("file"),
-	parseRequestBodyMW,
+	imageUploadMW,
 	validateQuestionDataMW,
 	createQuestionMW,
 	uploadQuestionPhotoMW,
@@ -71,11 +73,13 @@ router.post(
 	getQuizMW,
 	getUserSubscriptionMW,
 	getSubscriptionFeaturesMW,
-	quizFileUpload.single("file"),
-	parseRequestBodyMW,
+	validateExistingGenerationFileMW,
+	quizFileUploadMW,
 	validateQuestionsGenerationDataMW,
 	uploadQuizDocumentMW,
 	getDocumentTextMW,
+	detectTextLanguageMW,
+	getTokenLimitMW,
 	createChunksMW,
 	selectChunksMW,
 	generateQuestionsMW,
@@ -92,8 +96,7 @@ router.put(
 	validateQuestionIdMW,
 	getQuestionMW,
 	validateQuizQuestionMW,
-	imageUpload.single("file"),
-	parseRequestBodyMW,
+	imageUploadMW,
 	validateQuestionDataMW,
 	uploadQuestionPhotoMW,
 	updateQuestionMW,

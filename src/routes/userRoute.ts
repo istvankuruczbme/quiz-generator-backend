@@ -6,7 +6,6 @@ import getUserMW from "../middlewares/db/user/getUserMW";
 import getUserCategoriesMW from "../middlewares/db/userCategory/getUserCategoriesMW";
 import updateUserCategoriesMW from "../middlewares/db/userCategory/updateUserCategoriesMW";
 import sendUserUpdatedResponseMW from "../middlewares/db/user/sendUserUpdatedResponseMW";
-import { imageUpload } from "../config/multer";
 import validateUserPersonalDataMW from "../middlewares/db/user/validateUserPersonalDataMW";
 import updateUserPersonalDataMW from "../middlewares/db/user/updateUserPersonalDataMW";
 import uploadUserPhotoMW from "../middlewares/db/user/uploadUserPhotoMW";
@@ -33,7 +32,7 @@ import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
 import authUserMW from "../middlewares/auth/authUserMW";
 import getUserProfileMW from "../middlewares/db/user/getUserProfileMW";
 import removeUserPhotoUrlMW from "../middlewares/db/user/removeUserPhotoUrlMW";
-import parseRequestBodyMW from "../middlewares/helper/parseRequestBodyMW";
+import imageUploadMW from "../middlewares/helper/imageUploadMW";
 
 const router = Router();
 
@@ -81,8 +80,7 @@ router.put(
 router.put(
 	"/:userId/personal",
 	getUserMW,
-	imageUpload.single("file"),
-	parseRequestBodyMW,
+	imageUploadMW,
 	validateUserPersonalDataMW,
 	updateCustomerNameMW,
 	uploadUserPhotoMW,

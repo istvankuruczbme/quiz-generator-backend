@@ -11,7 +11,7 @@ export default function validateQuestionsGenerationDataMW(
 	// Get quiz and subscription features from res.locals
 	const {
 		quiz,
-		subscriptionFeatures: { maxQuestionCount },
+		subscriptionFeatures: { maxQuestionCount, maxAnswerOptionCount },
 	} = res.locals as {
 		quiz: QuizFullPrivate;
 		subscriptionFeatures: SubscriptionFeatures;
@@ -19,21 +19,28 @@ export default function validateQuestionsGenerationDataMW(
 	// Get data from request body
 	const {
 		strategy,
+		creativity,
 		questionCount: questionCountUser,
 		answerOptionCount,
 	} = req.body as {
 		strategy: unknown;
+		creativity: unknown;
 		questionCount: unknown;
 		answerOptionCount: unknown;
 	};
 
 	try {
 		// Validaton
-		validateQuestionsGenerationData(strategy, questionCountUser, answerOptionCount);
+		validateQuestionsGenerationData(strategy, creativity, questionCountUser, answerOptionCount);
 
 		// Validate question count
 		if ((questionCountUser as number) > maxQuestionCount - quiz.questions.length) {
 			throw new Error("quiz/questions/generation-question-count-invalid");
+		}
+
+		// Validate answer option count
+		if ((answerOptionCount as number) > maxAnswerOptionCount) {
+			throw new Error("quiz/questions/generation-answer-option-count-invalid");
 		}
 
 		// Go to next MW
