@@ -7,7 +7,7 @@ export default function parseRequestBodyMW(req: Request, _: Response, next: Next
 	try {
 		// Validation
 		if (data == undefined || typeof data !== "string") {
-			throw new Error("request-body-is-invalid");
+			throw new Error("request/body-invalid");
 		}
 
 		// Update request body with parsed JSON

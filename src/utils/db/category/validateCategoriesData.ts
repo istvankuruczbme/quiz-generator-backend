@@ -8,6 +8,6 @@ export default function validateCategoriesData(categoryIds: unknown): void {
 
 	for (const id of categoryIds) {
 		if (id == undefined) throw new Error("user/category-ids-missing");
-		validateUUID(id, "user/category-ids-");
+		validateUUID(id, "user/category-");
 	}
 }

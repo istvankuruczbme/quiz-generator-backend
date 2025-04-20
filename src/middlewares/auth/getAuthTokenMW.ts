@@ -9,7 +9,7 @@ export default function getAuthTokenMW(req: Request, res: Response, next: NextFu
 
 	try {
 		// Check token
-		if (token == undefined) throw new Error("auth/token-missing");
+		if (token == undefined) throw new Error("auth/unauthorized");
 
 		// Add token to res.locals
 		(res.locals.authToken as string) = token;

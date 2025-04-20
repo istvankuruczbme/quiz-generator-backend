@@ -12,17 +12,17 @@ export default function validateAnswerOptionsData(answerOptions: unknown): void 
 	// Check elements of answer options
 	for (const option of answerOptions as unknown[]) {
 		if (typeof option !== "object" || option == null) {
-			throw new Error("question/invalid-answer-option");
+			throw new Error("question/answer-option-invalid");
 		}
 
-		if (!("id" in option)) throw new Error("question/answer-option/id-missing");
-		validateUUID(option.id, "question/answer-option/");
+		if (!("id" in option)) throw new Error("question/answer-option-invalid");
+		validateUUID(option.id, "question/answer-option-");
 
-		if (!("text" in option)) throw new Error("question/answer-option/text-missing");
-		validateNonEmptyString(option.text, "question/answer-option/text-");
+		if (!("text" in option)) throw new Error("question/answer-option-invalid");
+		validateNonEmptyString(option.text, "question/answer-option-");
 
-		if (!("isCorrect" in option)) throw new Error("question/answer-option/isCorrect-missing");
-		validateBoolean(option.isCorrect, "question/answer-option/isCorrect-");
+		if (!("isCorrect" in option)) throw new Error("question/answer-option-invalid");
+		validateBoolean(option.isCorrect, "question/answer-option-");
 	}
 
 	// Check number of correct answers

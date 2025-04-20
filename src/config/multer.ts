@@ -6,7 +6,7 @@ const imageUpload = multer({
 	storage: multer.memoryStorage(),
 	fileFilter: (_: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
 		// Check mime type
-		if (!file.mimetype.startsWith("image/")) return cb(new Error("file/invalid-type"));
+		if (!file.mimetype.startsWith("image/")) return cb(new Error("file/not-an-image"));
 
 		cb(null, true);
 	},
@@ -31,7 +31,7 @@ const quizFileUpload = multer({
 					file.mimetype = "text/markdown";
 					break;
 				default:
-					return cb(new Error("file/invalid-type"));
+					return cb(new Error("file/not-a-text-file"));
 			}
 		}
 
@@ -44,7 +44,7 @@ const quizFileUpload = multer({
 		];
 
 		// Check mime type
-		if (!allowedMimeTypes.includes(file.mimetype)) return cb(new Error("file/invalid-type"));
+		if (!allowedMimeTypes.includes(file.mimetype)) return cb(new Error("file/not-a-text-file"));
 
 		cb(null, true);
 	},

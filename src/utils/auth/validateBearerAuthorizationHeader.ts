@@ -3,5 +3,5 @@ export default function validateBearerAuthorizationHeader(authorization: string 
 		throw new Error("auth/header-missing");
 	}
 
-	if (!authorization.startsWith("Bearer")) throw new Error("auth/invalid-header");
+	if (!authorization.startsWith("Bearer")) throw new Error("auth/unauthorized");
 }

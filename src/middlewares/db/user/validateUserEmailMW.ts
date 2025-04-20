@@ -7,7 +7,7 @@ export default function validateUserEmailMW(req: Request, _: Response, next: Nex
 
 	try {
 		// Validation
-		validateEmail(email, "user/");
+		validateEmail(email, "auth/");
 
 		// Go to next MW
 		return next();

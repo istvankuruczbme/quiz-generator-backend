@@ -6,7 +6,7 @@ export default function getTextLanguage(text: string): string {
 	const language = franc(text);
 
 	// Check und response
-	if (!languages.includes(language)) throw new Error("quiz/questions/generation-invalid-language");
+	if (!languages.includes(language)) throw new Error("quiz/questions/generation-language-invalid");
 
 	// Return language
 	return language;

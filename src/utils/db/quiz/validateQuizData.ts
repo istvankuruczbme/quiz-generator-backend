@@ -8,5 +8,5 @@ export default function validateQuizData(
 ): void {
 	validateNonEmptyString(title, "quiz/title-");
 	validateNonEmptyString(description, "quiz/description-");
-	validateUUID(categoryId);
+	validateUUID(categoryId, "quiz/category-");
 }

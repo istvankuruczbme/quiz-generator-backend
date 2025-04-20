@@ -29,7 +29,7 @@ export default async function generateQuestion(
 	const rawQuestion = completion.choices[0]?.message.content;
 
 	// Check if question exists
-	if (rawQuestion == undefined) throw new Error("No response from OpenAI API.");
+	if (rawQuestion == undefined) throw new Error("quiz/generation/no-openai-response");
 
 	return JSON.parse(rawQuestion) as OpenAIQuestionResponse;
 }

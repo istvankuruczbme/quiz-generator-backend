@@ -7,10 +7,10 @@ export default function getProductIdFromSubscription(subscription: Stripe.Subscr
 
 	// Validation
 	if (productId == undefined || typeof productId !== "string") {
-		throw new Error("user/subscription/product-id-missing");
+		throw new Error("subscription/product-id-missing");
 	}
 	if (!Object.keys(subscriptionFeatures).includes(productId)) {
-		throw new Error("user/subscription/invalid-product-id");
+		throw new Error("subscription/invalid-product-id");
 	}
 
 	// Return product ID

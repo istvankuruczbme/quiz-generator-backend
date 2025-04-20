@@ -22,7 +22,7 @@ export default async function createCheckoutSessionMW(
 		const session = await createCheckoutSession(user.customerId, priceId, successUrl);
 
 		// Check session URL
-		if (session.url == null) throw new Error("checkout/url-missing");
+		if (session.url == null) throw new Error("checkout-session/url-missing");
 
 		// Add session URL to res.locals
 		(res.locals.session as Stripe.Checkout.Session) = session;

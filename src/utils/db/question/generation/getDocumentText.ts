@@ -18,6 +18,6 @@ export default async function getDocumentText(file: Express.Multer.File): Promis
 			return getTxtText(file.buffer);
 
 		default:
-			throw new Error("quiz/questions/invalid-file-type");
+			throw new Error("quiz/generation/file-invalid-type");
 	}
 }

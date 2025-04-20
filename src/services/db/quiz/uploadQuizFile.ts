@@ -11,5 +11,13 @@ export default async function uploadQuizFile(
 		.upload(`${quizId}/${file.originalname}`, file.buffer);
 
 	// Check if there was an error
-	if (error != null) throw error;
+	if (error != null) {
+		// Check duplicate file error
+		if ("statusCode" in error && error.statusCode === "409") {
+			throw new Error("quiz/generation/file-exists");
+		}
+
+		// Throw original error
+		throw error;
+	}
 }

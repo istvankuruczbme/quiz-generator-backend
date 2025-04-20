@@ -8,5 +8,5 @@ export default async function validateQuizQuestion(
 	const quiz = await getQuizByQuestionId(questionId);
 
 	// Check same ID
-	if (quiz.id !== quizId) throw new Error("quiz/question-not-found");
+	if (quiz.id !== quizId) throw new Error("quiz/questions/question-not-found");
 }
