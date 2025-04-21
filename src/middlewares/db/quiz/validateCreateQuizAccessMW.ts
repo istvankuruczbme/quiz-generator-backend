@@ -9,7 +9,7 @@ export default async function validateCreateQuizAccessMW(
 	// Get quiz count and subscription features from res.locals
 	const {
 		quizCount,
-		subscriptionFeatures: { maxQuizCount },
+		subscriptionFeatures: { maxQuizCountPerPeriod },
 	} = res.locals as {
 		quizCount: number;
 		subscriptionFeatures: SubscriptionFeatures;
@@ -17,7 +17,7 @@ export default async function validateCreateQuizAccessMW(
 
 	try {
 		// Check if user is under the limit
-		if (quizCount >= maxQuizCount) throw new Error("user/max-number-of-quizzes-reached");
+		if (quizCount >= maxQuizCountPerPeriod) throw new Error("user/max-number-of-quizzes-reached");
 
 		// Go to next MW
 		return next();

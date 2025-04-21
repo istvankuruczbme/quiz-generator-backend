@@ -8,7 +8,7 @@ export type Product = {
 		amount: number;
 		currency: string;
 	};
-	maxQuizCount: number;
+	maxQuizCountPerPeriod: number;
 	maxQuestionCount: number;
 	maxAnswerOptionCount: number;
 };

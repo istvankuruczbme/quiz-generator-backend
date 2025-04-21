@@ -26,7 +26,7 @@ import deleteQuizPhotoMW from "../middlewares/db/quiz/deleteQuizPhotoMW";
 import sendQuizDeletedResponseMW from "../middlewares/db/quiz/sendQuizDeletedResponseMW";
 import deleteQuizQuestionPhotosMW from "../middlewares/db/quiz/deleteQuizQuestionPhotosMW";
 import removeQuizPhotoUrlMW from "../middlewares/db/quiz/removeQuizPhotoUrlMW";
-import getNumberOfQuizzesCreatedByUserMW from "../middlewares/db/quiz/getNumberOfQuizzesCreatedByUserMW";
+import getNumberOfQuizzesCreatedByUserInPeriodMW from "../middlewares/db/quiz/getNumberOfQuizzesCreatedByUserInPeriodMW";
 import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
 import validateCreateQuizAccessMW from "../middlewares/db/quiz/validateCreateQuizAccessMW";
 import finishQuizMW from "../middlewares/db/quiz/finishQuizMW";
@@ -62,7 +62,7 @@ router.post(
 	"/",
 	getUserSubscriptionMW,
 	getSubscriptionFeaturesMW,
-	getNumberOfQuizzesCreatedByUserMW,
+	getNumberOfQuizzesCreatedByUserInPeriodMW,
 	validateCreateQuizAccessMW,
 	imageUploadMW,
 	validateQuizDataMW,

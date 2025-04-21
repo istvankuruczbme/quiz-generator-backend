@@ -13,7 +13,7 @@ export default function formatProductData(product: ProductWithPrice): Product {
 			amount: product.default_price.unit_amount as number,
 			currency: product.default_price.currency,
 		},
-		maxQuizCount: subscriptionFeatures[product.id as ProductId].maxQuizCount,
+		maxQuizCountPerPeriod: subscriptionFeatures[product.id as ProductId].maxQuizCountPerPeriod,
 		maxQuestionCount: subscriptionFeatures[product.id as ProductId].maxQuestionCount,
 		maxAnswerOptionCount: subscriptionFeatures[product.id as ProductId].maxAnswerOptionCount,
 	};
