@@ -1,5 +1,6 @@
 import { QuestionGenerationStrategy } from "../../../../assets/questionGenerationStrategies";
-import pickRandomNElements from "../../../array/pickRandomNElements";
+import selectRandomElements from "../../../array/selectRandomElements";
+import selectChunksByTfidfScore from "./selectChunksByTfidfScore";
 
 export default function selectChunks(
 	chunks: string[],
@@ -11,6 +12,8 @@ export default function selectChunks(
 
 	switch (strategy) {
 		case "RANDOM":
-			return pickRandomNElements(chunks, n);
+			return selectRandomElements(chunks, n);
+		case "TFIDF":
+			return selectChunksByTfidfScore(chunks, n);
 	}
 }

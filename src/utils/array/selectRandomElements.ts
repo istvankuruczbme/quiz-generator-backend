@@ -1,6 +1,6 @@
 import shuffleArray from "./shuffleArray";
 
-export default function pickRandomNElements<T>(array: T[], n: number): T[] {
+export default function selectRandomElements<T>(array: T[], n = 1): T[] {
 	// Shuffle array
 	const shuffledArray = shuffleArray(array);
 
