@@ -1,4 +1,4 @@
-const questionGenerationStrategies = ["RANDOM", "TFIDF"] as const;
+const questionGenerationStrategies = ["RANDOM", "TFIDF", "EMBEDDING"] as const;
 
 export type QuestionGenerationStrategy = (typeof questionGenerationStrategies)[number];
 
