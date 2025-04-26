@@ -1,9 +1,15 @@
-import createEmbeddings from "../../../../services/embeddingServer/createEmbeddings";
+import createEmbeddings from "../../../../services/openai/createEmbeddings";
 import calculateVectorNorm from "../../../math/calculateVectorNorm";
+import groupChunksForEmbedding from "../../../tokenizer/groupChunksForEmbedding";
 
 export default async function selectChunksByEmbedding(chunks: string[], n = 1) {
+	// Group chunks
+	const chunksArray = groupChunksForEmbedding(chunks);
+
 	// Create embedding for every chunk
-	const embeddings = await createEmbeddings(chunks);
+	const embeddings = await Promise.all(
+		chunksArray.map(async (chunks) => (await createEmbeddings(chunks)).flat()).flat()
+	);
 
 	// Calculate norm for every embedding vector
 	const norms = embeddings.map((embedding, i) => ({

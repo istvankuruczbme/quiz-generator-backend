@@ -12,9 +12,6 @@ declare namespace NodeJS {
 		OPENAI_API_KEY: string;
 		QUESTION_DEVELOPER_PROMPT: string;
 
-		// Python embedding server
-		EMBEDDING_SERVER_URL: string;
-
 		// Stripe
 		STRIPE_PUBLIC_KEY: string;
 		STRIPE_SECRET_KEY: string;
