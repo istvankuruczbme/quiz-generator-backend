@@ -1,6 +1,6 @@
 const languageTokenLimits = {
 	hun: 500,
-	eng: 300,
+	eng: 250,
 } as const;
 
 export const languages = Object.keys(languageTokenLimits);

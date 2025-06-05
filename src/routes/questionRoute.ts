@@ -76,7 +76,7 @@ router.post(
 	validateExistingGenerationFileMW,
 	quizFileUploadMW,
 	validateQuestionsGenerationDataMW,
-	// uploadQuizDocumentMW,
+	uploadQuizDocumentMW,
 	getDocumentTextMW,
 	detectTextLanguageMW,
 	getTokenLimitMW,

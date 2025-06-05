@@ -1,20 +1,24 @@
+// Loading environment variables
 import "dotenv/config";
+// Packages
 import express from "express";
 import cors from "cors";
+// Routes
 import { productRoute } from "./routes/productRoute";
 import { stripeWebhookRoute } from "./routes/stripeWebhookRoute";
 import { categoryRoute } from "./routes/categoryRoute";
 import { userRoute } from "./routes/userRoute";
 import { quizRoute } from "./routes/quizRoute";
 import { questionRoute } from "./routes/questionRoute";
+// Functions
 import errorHandlerMW from "./middlewares/error/errorHandlerMW";
 import freeTokenizer from "./utils/tokenizer/freeTokenizer";
 
-// Create Fastify instance
+// Create Express app
 const app = express();
 
 // Middlewares
-app.use(express.json()); // Convert JSON requests
+app.use(express.json()); // Parse JSON requests
 app.use(cors({ origin: process.env.CLIENT_URL })); // Enable requests only from the client
 
 // Routes
