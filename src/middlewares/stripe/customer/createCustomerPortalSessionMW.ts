@@ -13,7 +13,7 @@ export default async function createCustomerPortalSessionMW(
 
 	try {
 		// Create customer portal session
-		const session = await createCustomerPortalSession(user.customerId);
+		const session = await createCustomerPortalSession(user.customerId ?? "");
 
 		// Add session to res.locals
 		(res.locals.session as Stripe.BillingPortal.Session) = session;

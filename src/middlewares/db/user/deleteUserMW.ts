@@ -9,7 +9,6 @@ export default async function deleteUserMW(_: Request, res: Response, next: Next
 	try {
 		// Delete user
 		await updateUser(user.id, {
-			email: `${user.email}-deleted-${user.id}@quiz-generator.com`,
 			customerId: "cus_00000000000000",
 			deletedAt: new Date(),
 		});

@@ -8,7 +8,7 @@ export default async function deleteCustomerMW(_: Request, res: Response, next: 
 
 	try {
 		// Delete customer from Stripe
-		await deleteCustomer(user.customerId);
+		await deleteCustomer(user.customerId ?? "");
 
 		// Go to next MW
 		return next();

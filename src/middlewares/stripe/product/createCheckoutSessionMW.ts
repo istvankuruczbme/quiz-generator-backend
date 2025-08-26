@@ -19,7 +19,7 @@ export default async function createCheckoutSessionMW(
 
 	try {
 		// Create session
-		const session = await createCheckoutSession(user.customerId, priceId, successUrl);
+		const session = await createCheckoutSession(user.customerId ?? "", priceId, successUrl);
 
 		// Check session URL
 		if (session.url == null) throw new Error("checkout-session/url-missing");

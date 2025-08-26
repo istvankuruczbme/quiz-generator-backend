@@ -10,7 +10,6 @@ import validateUserPersonalDataMW from "../middlewares/db/user/validateUserPerso
 import updateUserPersonalDataMW from "../middlewares/db/user/updateUserPersonalDataMW";
 import uploadUserPhotoMW from "../middlewares/db/user/uploadUserPhotoMW";
 import validateUserEmailMW from "../middlewares/db/user/validateUserEmailMW";
-import updateUserEmailMW from "../middlewares/db/user/updateUserEmailMW";
 import returnUserCategoriesMW from "../middlewares/db/userCategory/returnUserCategoriesMW";
 import deleteUserMW from "../middlewares/db/user/deleteUserMW";
 import deleteUserCategoriesMW from "../middlewares/db/userCategory/deleteUserCategoriesMW";
@@ -49,14 +48,14 @@ router.get("/:userId/subscription", getUserMW, getUserSubscriptionMW, returnSubs
 router.get("/:userId/categories", getUserMW, getUserCategoriesMW, returnUserCategoriesMW);
 
 // Create new user
-router.post(
-	"/",
-	validateUserDataMW,
-	createCustomerMW,
-	createUserMW,
-	getUserProfileMW,
-	returnUserProfileMW
-);
+// router.post(
+// 	"/",
+// 	validateUserDataMW,
+// 	createCustomerMW,
+// 	createUserMW,
+// 	getUserProfileMW,
+// 	returnUserProfileMW
+// );
 
 // Create a session to customer portal
 router.post(
@@ -67,14 +66,13 @@ router.post(
 );
 
 // Update user email
-router.put(
-	"/:userId/email",
-	getUserMW,
-	validateUserEmailMW,
-	updateCustomerEmailMW,
-	updateUserEmailMW,
-	sendUserUpdatedResponseMW
-);
+// router.put(
+// 	"/:userId/email",
+// 	getUserMW,
+// 	validateUserEmailMW,
+// 	updateCustomerEmailMW,
+// 	sendUserUpdatedResponseMW
+// );
 
 // Update user personal data
 router.put(

@@ -14,7 +14,7 @@ export default async function updateCustomerNameMW(
 
 	try {
 		// Update user name in Stripe
-		await updateCustomerName(user.customerId, name);
+		await updateCustomerName(user.customerId ?? "", name);
 
 		// Go to next MW
 		return next();

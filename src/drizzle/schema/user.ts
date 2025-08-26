@@ -10,10 +10,9 @@ export const UserTable = pgTable(
 	"user",
 	{
 		id: uuid("id").primaryKey(),
-		customerId: char("customer_id", { length: 18 }).notNull(),
 		name: text("name").notNull(),
-		email: text("email").notNull().unique(),
 		photoUrl: text("photo_url"),
+		customerId: char("customer_id", { length: 18 }),
 		subscriptionId: char("subscription_id", { length: 28 }),
 		updatedAt,
 		createdAt,

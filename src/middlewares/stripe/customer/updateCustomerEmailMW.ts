@@ -14,7 +14,7 @@ export default async function updateCustomerEmailMW(
 
 	try {
 		// Update customer email in Stripe
-		await updateCustomerEmail(user.customerId, email);
+		await updateCustomerEmail(user.customerId ?? "", email);
 
 		// Go to next MW
 		return next();
