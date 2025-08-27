@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../types/userTypes";
+import { UserSelect } from "../../types/userTypes";
 import cancelSubscription from "../../services/subscription/cancelSubscription";
 
 export default async function cancelUserSubscriptionMW(
@@ -8,7 +8,7 @@ export default async function cancelUserSubscriptionMW(
 	next: NextFunction
 ) {
 	// Get user from res.locals
-	const { user } = res.locals as { user: User };
+	const { user } = res.locals as { user: UserSelect };
 
 	// Check if the user has a subscription
 	if (user.subscriptionId == null) return next();

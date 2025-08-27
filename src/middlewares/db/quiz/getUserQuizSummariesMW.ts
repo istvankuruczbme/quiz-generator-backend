@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 import { QuizSummary } from "../../../types/quizTypes";
 import getQuizSummariesByUserId from "../../../services/db/quiz/getQuizSummariesByUserId";
 
@@ -9,7 +9,7 @@ export default async function getUserQuizSummariesMW(
 	next: NextFunction
 ) {
 	// Get user from res.locals
-	const { user } = res.locals as { user: User };
+	const { user } = res.locals as { user: UserSelect };
 
 	try {
 		// Get quiz summaries of user

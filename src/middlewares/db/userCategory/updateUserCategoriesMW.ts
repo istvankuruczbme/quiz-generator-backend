@@ -3,7 +3,7 @@ import { Category } from "../../../types/categoryTypes";
 import getDifferentArrayElements from "../../../utils/array/getDifferentArrayElements";
 import addUserCategories from "../../../services/db/userCategory/addUserCategories";
 import deleteUserCategories from "../../../services/db/userCategory/deleteUserCategories";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 
 export default async function updateUserCategoriesMW(
 	req: Request,
@@ -14,7 +14,7 @@ export default async function updateUserCategoriesMW(
 	const { categoryIds } = req.body as { categoryIds: string[] };
 
 	// Get user and user categories from res.locals
-	const { user, userCategories } = res.locals as { user: User; userCategories: Category[] };
+	const { user, userCategories } = res.locals as { user: UserSelect; userCategories: Category[] };
 	const userCategoryIds = userCategories.map((category) => category.id);
 
 	try {

@@ -1,14 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 import deleteCustomer from "../../../services/stripe/customer/deleteCustomer";
 
 export default async function deleteCustomerMW(_: Request, res: Response, next: NextFunction) {
 	// Get user from res.locals
-	const { user } = res.locals as { user: User };
+	const { user } = res.locals as { user: UserSelect };
+
+	// Check customer ID
+	if (!user.customerId) return next();
 
 	try {
 		// Delete customer from Stripe
-		await deleteCustomer(user.customerId ?? "");
+		await deleteCustomer(user.customerId);
 
 		// Go to next MW
 		return next();

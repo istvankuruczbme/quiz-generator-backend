@@ -26,7 +26,7 @@ export type QuizData = Pick<
 > & {
 	config: QuizConfigData;
 	category: Category;
-	user: UserPublic;
+	user: UserSelectPublic;
 };
 
 export type QuizSummary = QuizData & {

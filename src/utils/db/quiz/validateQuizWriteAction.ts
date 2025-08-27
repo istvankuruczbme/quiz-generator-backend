@@ -1,7 +1,7 @@
 import { QuizFullPrivate } from "../../../types/quizTypes";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 
-export default function validateQuizWriteAction(quiz: QuizFullPrivate, user: User): void {
+export default function validateQuizWriteAction(quiz: QuizFullPrivate, user: UserSelect): void {
 	// Check if quiz was made by the user
 	if (quiz.user.id !== user.id) throw new Error("quiz/not-found");
 

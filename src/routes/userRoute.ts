@@ -1,15 +1,12 @@
 import { Router } from "express";
-import validateUserDataMW from "../middlewares/db/user/validateUserDataMW";
-import createUserMW from "../middlewares/db/user/createUserMW";
 import returnUserProfileMW from "../middlewares/db/user/returnUserProfileMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
 import getUserCategoriesMW from "../middlewares/db/userCategory/getUserCategoriesMW";
 import updateUserCategoriesMW from "../middlewares/db/userCategory/updateUserCategoriesMW";
 import sendUserUpdatedResponseMW from "../middlewares/db/user/sendUserUpdatedResponseMW";
-import validateUserPersonalDataMW from "../middlewares/db/user/validateUserPersonalDataMW";
-import updateUserPersonalDataMW from "../middlewares/db/user/updateUserPersonalDataMW";
+import validateUpdateUserDataMW from "../middlewares/db/user/validateUpdateUserDataMW";
+import updateUserMW from "../middlewares/db/user/updateUserMW";
 import uploadUserPhotoMW from "../middlewares/db/user/uploadUserPhotoMW";
-import validateUserEmailMW from "../middlewares/db/user/validateUserEmailMW";
 import returnUserCategoriesMW from "../middlewares/db/userCategory/returnUserCategoriesMW";
 import deleteUserMW from "../middlewares/db/user/deleteUserMW";
 import deleteUserCategoriesMW from "../middlewares/db/userCategory/deleteUserCategoriesMW";
@@ -18,10 +15,8 @@ import sendUserDeletedResponseMW from "../middlewares/db/user/sendUserDeletedRes
 import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
 import updateSubscriptionPriceMW from "../middlewares/stripe/subscription/updateSubscriptionPriceMW";
 import returnSubscriptionMW from "../middlewares/stripe/subscription/returnSubscriptionMW";
-import createCustomerMW from "../middlewares/stripe/customer/createCustomerMW";
 import createCustomerPortalSessionMW from "../middlewares/stripe/customer/createCustomerPortalSessionMW";
 import returnCustomerPortalSessionUrlMW from "../middlewares/stripe/customer/returnCustomerPortalSessionUrlMW";
-import updateCustomerEmailMW from "../middlewares/stripe/customer/updateCustomerEmailMW";
 import validateNewSubscriptionDataMW from "../middlewares/stripe/subscription/validateNewSubscriptionDataMW";
 import sendSubscriptionUpdatedResponseMW from "../middlewares/stripe/subscription/sendSubscriptionUpdatedResponseMW";
 import validateCategoriesDataMW from "../middlewares/db/category/validateCategoriesDataMW";
@@ -30,7 +25,6 @@ import updateCustomerNameMW from "../middlewares/stripe/customer/updateCustomerN
 import deleteAuthUserMW from "../middlewares/auth/deleteAuthUserMW";
 import authUserMW from "../middlewares/auth/authUserMW";
 import getUserProfileMW from "../middlewares/db/user/getUserProfileMW";
-import removeUserPhotoUrlMW from "../middlewares/db/user/removeUserPhotoUrlMW";
 import imageUploadMW from "../middlewares/helper/imageUploadMW";
 
 const router = Router();
@@ -47,16 +41,6 @@ router.get("/:userId/subscription", getUserMW, getUserSubscriptionMW, returnSubs
 // Get user categories
 router.get("/:userId/categories", getUserMW, getUserCategoriesMW, returnUserCategoriesMW);
 
-// Create new user
-// router.post(
-// 	"/",
-// 	validateUserDataMW,
-// 	createCustomerMW,
-// 	createUserMW,
-// 	getUserProfileMW,
-// 	returnUserProfileMW
-// );
-
 // Create a session to customer portal
 router.post(
 	"/:userId/portal",
@@ -65,25 +49,17 @@ router.post(
 	returnCustomerPortalSessionUrlMW
 );
 
-// Update user email
-// router.put(
-// 	"/:userId/email",
-// 	getUserMW,
-// 	validateUserEmailMW,
-// 	updateCustomerEmailMW,
-// 	sendUserUpdatedResponseMW
-// );
-
 // Update user personal data
 router.put(
 	"/:userId/personal",
 	getUserMW,
 	imageUploadMW,
-	validateUserPersonalDataMW,
+	validateUpdateUserDataMW,
 	updateCustomerNameMW,
 	uploadUserPhotoMW,
-	updateUserPersonalDataMW,
-	sendUserUpdatedResponseMW
+	updateUserMW,
+	getUserProfileMW,
+	returnUserProfileMW
 );
 
 // Update user subscription
@@ -106,15 +82,6 @@ router.put(
 	sendUserUpdatedResponseMW
 );
 
-// Delete user photo
-router.delete(
-	"/:userId/photo",
-	getUserMW,
-	deleteUserPhotoMW,
-	removeUserPhotoUrlMW,
-	sendUserUpdatedResponseMW
-);
-
 // Delete user
 router.delete(
 	"/:userId",
@@ -122,6 +89,7 @@ router.delete(
 	deleteAuthUserMW,
 	deleteCustomerMW,
 	deleteUserMW,
+	// delete user photo
 	deleteUserCategoriesMW,
 	sendUserDeletedResponseMW
 );

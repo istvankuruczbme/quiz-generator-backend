@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import deleteAllUserCategories from "../../../services/db/userCategory/deleteAllUserCategories";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 
 export default async function deleteUserCategoriesMW(
 	_: Request,
@@ -8,7 +8,7 @@ export default async function deleteUserCategoriesMW(
 	next: NextFunction
 ) {
 	// Get user from res.locals
-	const { user } = res.locals as { user: User };
+	const { user } = res.locals as { user: UserSelect };
 
 	try {
 		// Delete user catgeories

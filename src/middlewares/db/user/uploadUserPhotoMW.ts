@@ -1,39 +1,30 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 import deleteUserPhoto from "../../../services/db/user/deleteUserPhoto";
 import uploadUserPhoto from "../../../services/db/user/uploadUserPhoto";
+import { UpdateUserData } from "../../../utils/db/user/validation/schemas/upadteUserSchema";
 
 export default async function uploadUserPhotoMW(req: Request, res: Response, next: NextFunction) {
-	// Get user from res.locals
-	const { user } = res.locals as { user: User };
+	// Get user and user data
+	const { user, userData } = res.locals as { user: UserSelect; userData: UpdateUserData };
 	// Get file from request body
 	const { file } = req as { file: Express.Multer.File | undefined };
 
 	// No file
-	if (file == undefined) {
-		// Add photoUrl to res.locals
-		(res.locals.photoUrl as null) = null;
-
-		// Go to next MW
-		return next();
-	}
-
-	// User already has a photo
-	if (user.photoUrl != null) {
-		try {
-			// Delete file
-			await deleteUserPhoto(user.id);
-		} catch (err) {
-			return next(err);
-		}
-	}
+	if (!file) return next();
 
 	try {
+		// Delete user photo (if he has)
+		if (user.photoUrl) await deleteUserPhoto(user.id);
+
 		// Upload new file
 		const photoUrl = await uploadUserPhoto(file, user.id);
 
-		// Add photo URL to res.locals
-		(res.locals.photoUrl as string) = photoUrl;
+		// Update user data with photo URL
+		(res.locals.userData as UpdateUserData) = {
+			...userData,
+			photoUrl,
+		};
 
 		// Go to next MW
 		return next();

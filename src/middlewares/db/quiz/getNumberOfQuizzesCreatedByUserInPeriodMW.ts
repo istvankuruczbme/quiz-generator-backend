@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 import getNumberOfQuizzesByUserIdSinceTime from "../../../services/db/quiz/getNumberOfQuizzesByUserIdSinceTime";
 import Stripe from "stripe";
 
@@ -9,7 +9,10 @@ export default async function getNumberOfQuizzesCreatedByUserInPeriodMW(
 	next: NextFunction
 ) {
 	// Get user and subscription from res.locals
-	const { user, subscription } = res.locals as { user: User; subscription: Stripe.Subscription };
+	const { user, subscription } = res.locals as {
+		user: UserSelect;
+		subscription: Stripe.Subscription;
+	};
 
 	// Get when the current billing period has started
 	const periodStart = new Date(subscription.current_period_start * 1000);

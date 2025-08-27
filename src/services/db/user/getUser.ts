@@ -1,8 +1,8 @@
 import AppError from "../../../classes/AppError";
 import { db } from "../../../drizzle/db";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 
-export default async function getUser(id: string): Promise<User> {
+export default async function getUser(id: string): Promise<UserSelect> {
 	// Get user
 	const user = await db.query.UserTable.findFirst({
 		where: (user, { eq }) => eq(user.id, id),

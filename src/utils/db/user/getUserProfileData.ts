@@ -1,6 +1,6 @@
-import { User, UserProfile } from "../../../types/userTypes";
+import { UserSelect, UserProfile } from "../../../types/userTypes";
 
-export default function getUserProfileData(user: User): UserProfile {
+export default function getUserProfileData(user: UserSelect): UserProfile {
 	return {
 		id: user.id,
 		name: user.name,

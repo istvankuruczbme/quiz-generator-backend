@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import getUserCategories from "../../../services/db/userCategory/getUserCategories";
 import { Category } from "../../../types/categoryTypes";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 
 export default async function getUserCategoriesMW(_: Request, res: Response, next: NextFunction) {
 	// Get user from res.locals
-	const { user } = res.locals as { user: User };
+	const { user } = res.locals as { user: UserSelect };
 
 	try {
 		// Get user category IDs

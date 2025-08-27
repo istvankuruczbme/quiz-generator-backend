@@ -1,7 +1,7 @@
 import { QuizSummary } from "../../../types/quizTypes";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 
-export default function validateQuizReadAction(quiz: QuizSummary, user: User): void {
+export default function validateQuizReadAction(quiz: QuizSummary, user: UserSelect): void {
 	if (quiz.user.id === user.id) return;
 
 	if (quiz.config.state !== "ACTIVE" || quiz.config.visibility !== "PUBLIC") {

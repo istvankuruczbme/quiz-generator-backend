@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 import createQuiz from "../../../services/db/quiz/createQuiz";
 import { Quiz } from "../../../types/quizTypes";
 
@@ -11,7 +11,7 @@ export default async function createQuizMW(req: Request, res: Response, next: Ne
 		categoryId: string;
 	};
 	// Get user and embedding from res.locals
-	const { user, embedding } = res.locals as { user: User; embedding: number[] };
+	const { user, embedding } = res.locals as { user: UserSelect; embedding: number[] };
 
 	try {
 		// Create quiz

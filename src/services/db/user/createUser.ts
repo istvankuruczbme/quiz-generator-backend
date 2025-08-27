@@ -1,6 +1,6 @@
 import { db } from "../../../drizzle/db";
 import { UserTable } from "../../../drizzle/schema/user";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 
 export default async function createUser(
 	id: string,

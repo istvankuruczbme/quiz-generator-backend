@@ -1,11 +1,15 @@
 import Stripe from "stripe";
 import { stripe } from "../../../config/stripe";
 
-export default async function createCheckoutSession(
-	customerId: string,
-	priceId: string,
-	successUrl?: string
-): Promise<Stripe.Checkout.Session> {
+export default async function createCheckoutSession(checkoutSessionData: {
+	customerId: string;
+	priceId: string;
+	successUrl?: string;
+}): Promise<Stripe.Checkout.Session> {
+	// Get checkout session data
+	const { customerId, priceId, successUrl } = checkoutSessionData;
+
+	// Create session
 	const session = await stripe.checkout.sessions.create({
 		customer: customerId,
 		mode: "subscription",
@@ -19,5 +23,6 @@ export default async function createCheckoutSession(
 		cancel_url: `${process.env.CLIENT_URL}/profile/subscription?cancel`,
 	});
 
+	// Return session
 	return session;
 }

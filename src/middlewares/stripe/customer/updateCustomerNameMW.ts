@@ -1,20 +1,25 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../../types/userTypes";
+import { UserSelect } from "../../../types/userTypes";
 import updateCustomerName from "../../../services/stripe/customer/updateCustomerName";
+import { UpdateUserData } from "../../../utils/db/user/validation/schemas/upadteUserSchema";
 
 export default async function updateCustomerNameMW(
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) {
-	// Get user from res.locals
-	const { user } = res.locals as { user: User };
-	// Get user's new name
-	const { name } = req.body as { name: string };
+	// Get user and user data
+	const {
+		user,
+		userData: { name },
+	} = res.locals as { user: UserSelect; userData: UpdateUserData };
+
+	// Check customer ID and new name
+	if (!user.customerId || !name) return next();
 
 	try {
 		// Update user name in Stripe
-		await updateCustomerName(user.customerId ?? "", name);
+		await updateCustomerName(user.customerId, name);
 
 		// Go to next MW
 		return next();
