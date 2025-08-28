@@ -1,6 +1,6 @@
 import { QuizTable } from "../drizzle/schema/quiz";
 import { QuizConfigTable } from "../drizzle/schema/quizConfig";
-import { Category } from "./categoryTypes";
+import { CategorySelect } from "./categoryTypes";
 import { QuestionPrivate, QuestionPublic } from "./questionTypes";
 import { UserPublic } from "./userTypes";
 
@@ -25,7 +25,7 @@ export type QuizData = Pick<
 	"id" | "title" | "description" | "photoUrl" | "updatedAt" | "createdAt"
 > & {
 	config: QuizConfigData;
-	category: Category;
+	category: CategorySelect;
 	user: UserSelectPublic;
 };
 

@@ -1,3 +1,5 @@
 import { CategoryTable } from "../drizzle/schema/category";
 
-export type Category = typeof CategoryTable.$inferSelect;
+// #region DB types
+export type CategorySelect = typeof CategoryTable.$inferSelect;
+//#endregion

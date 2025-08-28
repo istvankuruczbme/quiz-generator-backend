@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import getUserCategories from "../../../services/db/userCategory/getUserCategories";
-import { Category } from "../../../types/categoryTypes";
+import getCategoriesByUserId from "../../../services/db/userCategory/getCategoriesByUserId";
+import { CategorySelect } from "../../../types/categoryTypes";
 import { UserSelect } from "../../../types/userTypes";
 
 export default async function getUserCategoriesMW(_: Request, res: Response, next: NextFunction) {
@@ -9,10 +9,10 @@ export default async function getUserCategoriesMW(_: Request, res: Response, nex
 
 	try {
 		// Get user category IDs
-		const categories = await getUserCategories(user.id);
+		const categories = await getCategoriesByUserId(user.id);
 
-		// Add category IDs to res.locals
-		(res.locals.userCategories as Category[]) = categories;
+		// Add categories to res.locals
+		(res.locals.userCategories as CategorySelect[]) = categories;
 
 		// Go to next MW
 		return next();

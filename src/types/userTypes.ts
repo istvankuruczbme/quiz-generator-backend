@@ -4,7 +4,10 @@ import { UserTable } from "../drizzle/schema/user";
 export type UserSelect = typeof UserTable.$inferSelect;
 export type UserInsert = typeof UserTable.$inferSelect;
 export type UserUpdate = Partial<
-	Pick<UserSelect, "name" | "photoUrl" | "customerId" | "updatedAt" | "deletedAt">
+	Pick<
+		UserSelect,
+		"name" | "photoUrl" | "customerId" | "subscriptionId" | "updatedAt" | "deletedAt"
+	>
 >;
 // #endregion
 

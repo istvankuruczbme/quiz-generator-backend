@@ -8,7 +8,7 @@ export default async function uploadUserPhotoMW(req: Request, res: Response, nex
 	// Get user and user data
 	const { user, userData } = res.locals as { user: UserSelect; userData: UpdateUserData };
 	// Get file from request body
-	const { file } = req as { file: Express.Multer.File | undefined };
+	const { file } = req as { file?: Express.Multer.File };
 
 	// No file
 	if (!file) return next();
