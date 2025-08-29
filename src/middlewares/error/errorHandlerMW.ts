@@ -10,7 +10,7 @@ export default function errorHandlerMW(
 	next: NextFunction
 ) {
 	// Log error
-	console.log("Error\n:", error);
+	console.log("Error:\n", error);
 
 	// Check if the response was already sent
 	if (res.headersSent) return next(error);

@@ -1,4 +1,5 @@
 import { userPhotosBucket } from "../../../assets/storageBucketNames";
+import AppError from "../../../classes/AppError";
 import { supabase } from "../../../config/supabase";
 
 export default async function deleteUserPhoto(userId: string): Promise<void> {
@@ -8,7 +9,9 @@ export default async function deleteUserPhoto(userId: string): Promise<void> {
 	});
 
 	// Check if there was an error
-	if (listError != null) throw listError;
+	if (listError) {
+		throw new AppError({ message: "Error getting user photo.", details: listError.message });
+	}
 
 	// Check if user photo exists
 	if (data == null || data.length === 0) return;
@@ -20,10 +23,12 @@ export default async function deleteUserPhoto(userId: string): Promise<void> {
 	if (file == undefined) return;
 
 	// Delete file
-	const { error: removeError } = await supabase.storage
+	const { error: deleteError } = await supabase.storage
 		.from(userPhotosBucket)
 		.remove([`${userId}/${file.name}`]);
 
 	// Check if there was an error
-	if (removeError != null) throw removeError;
+	if (deleteError) {
+		throw new AppError({ message: "Error deleting user photo.", details: deleteError.message });
+	}
 }

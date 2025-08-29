@@ -9,7 +9,9 @@ export default async function deleteUserMW(_: Request, res: Response, next: Next
 	try {
 		// Delete user
 		await updateUser(user.id, {
-			customerId: "cus_00000000000000",
+			customerId: null,
+			subscriptionId: null,
+			photoUrl: null,
 			deletedAt: new Date(),
 		});
 
