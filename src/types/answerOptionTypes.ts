@@ -1,12 +1,15 @@
 import { AnswerOptionTable } from "../drizzle/schema/answerOption";
 
-// DB select
-export type AnswerOption = typeof AnswerOptionTable.$inferSelect;
+// #region DB types
+export type AnswerOptionSelect = typeof AnswerOptionTable.$inferSelect;
+export type AnswerOptionInsert = typeof AnswerOptionTable.$inferInsert;
+export type AnswerOptionUpdate = Partial<Omit<AnswerOptionSelect, "id" | "questionId">>;
+//#endregion
 
-// DB insert
-export type AnswerOptionUpdatableProperties = Partial<Pick<AnswerOption, "text" | "isCorrect">>;
+// #region Answer option public
+export type AnswerOptionPublic = Omit<AnswerOptionSelect, "questionId" | "isCorrect">;
+//#endregion
 
-export type AnswerOptionData = Omit<AnswerOption, "questionId">;
-
-export type AnswerOptionPrivate = AnswerOptionData;
-export type AnswerOptionPublic = Omit<AnswerOptionData, "isCorrect">;
+// #region Answer option private
+export type AnswerOptionPrivate = Omit<AnswerOptionSelect, "questionId">;
+//#endregion

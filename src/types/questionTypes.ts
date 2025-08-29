@@ -1,19 +1,29 @@
 import { QuestionTable } from "../drizzle/schema/question";
 import { QuestionPointsTable } from "../drizzle/schema/questionPoints";
 import { AnswerOptionPrivate, AnswerOptionPublic } from "./answerOptionTypes";
+import { QuestionPoints } from "./questionPointsTypes";
 
-// DB select
-export type QuestionPoints = typeof QuestionPointsTable.$inferSelect;
-export type Question = typeof QuestionTable.$inferSelect;
+// #region DB types
+export type QuestionSelect = typeof QuestionTable.$inferSelect;
+export type QuestionInsert = typeof QuestionTable.$inferInsert;
+export type QuestionUpdate = Partial<Omit<QuestionSelect, "id" | "quizId">>;
+//#endregion
+
+// #region Question public
+export type QuestionPublic = Omit<QuestionSelect, "quizId"> & {
+	points: QuestionPoints;
+	answerOptions: AnswerOptionPublic[];
+};
+//#endregion
+
+// #region Question private
+export type QuestionPrivate = Omit<QuestionSelect, "quizId"> & {
+	points: QuestionPoints;
+	answerOptions: AnswerOptionPrivate[];
+};
+//#endregion
 
 // DB insert
-export type QuestionUpdatableProperties = Partial<Pick<Question, "text" | "photoUrl" | "order">>;
-export type QuestionPointsUpdatableProperties = Partial<
-	Pick<QuestionPoints, "correct" | "wrong" | "empty">
->;
-
-export type QuestionPointsData = Omit<QuestionPoints, "id" | "questionId">;
-export type QuestionData = Omit<Question, "quizId">;
 
 type OpenAIAnswerOptionResponse = {
 	text: string;
@@ -22,13 +32,4 @@ type OpenAIAnswerOptionResponse = {
 export type OpenAIQuestionResponse = {
 	text: string;
 	answerOptions: OpenAIAnswerOptionResponse[];
-};
-
-export type QuestionPublic = QuestionData & {
-	points: QuestionPointsData;
-	answerOptions: AnswerOptionPublic[];
-};
-export type QuestionPrivate = QuestionData & {
-	points: QuestionPointsData;
-	answerOptions: AnswerOptionPrivate[];
 };
