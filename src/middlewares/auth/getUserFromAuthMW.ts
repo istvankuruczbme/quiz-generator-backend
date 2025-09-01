@@ -16,6 +16,6 @@ export default async function getUserFromAuthMW(_: Request, res: Response, next:
 		// Go to next MW
 		return next();
 	} catch (err) {
-		return next(new Error("auth/unauthorized"));
+		return next();
 	}
 }

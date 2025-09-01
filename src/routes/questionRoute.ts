@@ -8,21 +8,14 @@ import createAnswerOptionsMW from "../middlewares/db/answerOption/createAnswerOp
 import uploadQuestionPhotoMW from "../middlewares/db/question/uploadQuestionPhotoMW";
 import updateQuestionPhotoUrlMW from "../middlewares/db/question/updateQuestionPhotoUrlMW";
 import returnQuestionMW from "../middlewares/db/question/returnQuestionMW";
-import validateQuestionDataMW from "../middlewares/db/question/validateQuestionDataMW";
 import validateQuestionIdMW from "../middlewares/db/question/validateQuestionIdMW";
-import getQuestionMW from "../middlewares/db/question/getQuestionMW";
 import deleteQuestionMW from "../middlewares/db/question/deleteQuestionMW";
 import deleteQuestionPhotoMW from "../middlewares/db/question/deleteQuestionPhotoMW";
 import sendQuestionDeletedResponseMW from "../middlewares/db/question/sendQuestionDeletedResponseMW";
-import getQuizMW from "../middlewares/db/quiz/getQuizMW";
-import validateQuizQuestionMW from "../middlewares/db/question/validateQuizQuestionMW";
-import validateQuizWriteActionMW from "../middlewares/db/quiz/validateQuizWriteActionMW";
 import reorderQuizQuestionsMW from "../middlewares/db/quiz/reorderQuizQuestionsMW";
 import updateQuestionMW from "../middlewares/db/question/updateQuestionMW";
 import updateQuestionPointsMW from "../middlewares/db/questionPoints/updateQuestionPointsMW";
 import updateAnswerOptionsMW from "../middlewares/db/answerOption/updateAnswerOptionsMW";
-import sendQuestionUpdatedResponseMW from "../middlewares/db/question/sendQuestionUpdatedResponseMW";
-import removeQuestionPhotoUrlMW from "../middlewares/db/question/removeQuestionPhotoUrlMW";
 import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
 import validateCreateQuestionAccessMW from "../middlewares/db/question/validateCreateQuestionAccessMW";
 import getDocumentTextMW from "../middlewares/db/question/generation/getDocumentTextMW";
@@ -33,44 +26,44 @@ import generateQuestionsMW from "../middlewares/db/question/generation/generateQ
 import getSubscriptionFeaturesMW from "../middlewares/stripe/subscription/getSubscriptionFeaturesMW";
 import createGeneratedQuestionsMW from "../middlewares/db/question/generation/createGeneratedQuestionsMW";
 import uploadQuizDocumentMW from "../middlewares/db/quiz/uploadQuizDocumentMW";
-import sendQuizUpdatedResponseMW from "../middlewares/db/quiz/sendQuizUpdatedResponseMW";
 import imageUploadMW from "../middlewares/helper/imageUploadMW";
 import quizFileUploadMW from "../middlewares/helper/quizFileUploadMW";
 import detectTextLanguageMW from "../middlewares/db/question/generation/detectTextLanguageMW";
 import getTokenLimitMW from "../middlewares/db/question/generation/getTokenLimitMW";
 import validateExistingGenerationFileMW from "../utils/db/question/generation/validateExistingGenerationFileMW";
+import getQuizPrivateMW from "../middlewares/db/quiz/getQuizPrivateMW";
+import returnQuizMW from "../middlewares/db/quiz/returnQuizMW";
+import validateCreateQuestionDataMW from "../middlewares/db/question/validateCreateQuestionDataMW";
+import formatCreatedQuestionMW from "../middlewares/db/question/formatCreatedQuestionMW";
+import getQuestionPrivateMW from "../middlewares/db/question/getQuestionPrivateMW";
+import validateUpdateQuestionDataMW from "../middlewares/db/question/validateUpdateQuestionDataMW";
+import formatUpdatedQuestionMW from "../middlewares/db/question/formatUpdatedQuestionMW";
 
 const router = Router({ mergeParams: true });
 
-// Add authentication middlewares
-router.use(authUserMW);
-
-// Add getUserMW
-router.use(getUserMW);
+// Add MWs
+router.use(authUserMW, getUserMW, validateQuizIdMW, getQuizPrivateMW);
 
 // Create new question
 router.post(
 	"/",
-	validateQuizIdMW,
-	getQuizMW,
 	getUserSubscriptionMW,
 	getSubscriptionFeaturesMW,
 	validateCreateQuestionAccessMW,
 	imageUploadMW,
-	validateQuestionDataMW,
+	validateCreateQuestionDataMW,
 	createQuestionMW,
 	uploadQuestionPhotoMW,
 	updateQuestionPhotoUrlMW,
 	createQuestionPointsMW,
 	createAnswerOptionsMW,
+	formatCreatedQuestionMW,
 	returnQuestionMW
 );
 
 // Generate questions from document
 router.post(
 	"/generate",
-	validateQuizIdMW,
-	getQuizMW,
 	getUserSubscriptionMW,
 	getSubscriptionFeaturesMW,
 	validateExistingGenerationFileMW,
@@ -84,51 +77,29 @@ router.post(
 	selectChunksMW,
 	generateQuestionsMW,
 	createGeneratedQuestionsMW,
-	sendQuizUpdatedResponseMW
+	returnQuizMW
 );
 
 // Update question
 router.put(
 	"/:questionId",
-	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
 	validateQuestionIdMW,
-	getQuestionMW,
-	validateQuizQuestionMW,
+	getQuestionPrivateMW,
 	imageUploadMW,
-	validateQuestionDataMW,
+	validateUpdateQuestionDataMW,
 	uploadQuestionPhotoMW,
 	updateQuestionMW,
-	updateQuestionPhotoUrlMW,
 	updateQuestionPointsMW,
 	updateAnswerOptionsMW,
-	sendQuestionUpdatedResponseMW
-);
-
-// Delete question photo
-router.delete(
-	"/:questionId/photo",
-	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
-	validateQuestionIdMW,
-	getQuestionMW,
-	validateQuizQuestionMW,
-	deleteQuestionPhotoMW,
-	removeQuestionPhotoUrlMW,
-	sendQuestionUpdatedResponseMW
+	formatUpdatedQuestionMW,
+	returnQuestionMW
 );
 
 // Delete question
 router.delete(
 	"/:questionId",
-	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
 	validateQuestionIdMW,
-	getQuestionMW,
-	validateQuizQuestionMW,
+	getQuestionPrivateMW,
 	deleteQuestionMW,
 	deleteQuestionPhotoMW,
 	reorderQuizQuestionsMW,

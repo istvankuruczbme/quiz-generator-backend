@@ -1,15 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import { QuestionPrivate } from "../../../types/questionTypes";
-import { AnswerOptionPrivate } from "../../../types/answerOptionTypes";
-import createAnswerOption from "../../../services/db/answerOption/createAnswerOption";
 import updateAnswerOption from "../../../services/db/answerOption/updateAnswerOption";
-import deleteAnswerOption from "../../../services/db/answerOption/deleteAnswerOption";
+import { UpdateQuestionData } from "../../../utils/db/question/validation/schemas/updateQuestionSchema";
+import createAnswerOptions from "../../../services/db/answerOption/createAnswerOptions";
+import deleteAnswerOptions from "../../../services/db/answerOption/deleteAnswerOptions";
+import { AnswerOptionPrivate } from "../../../types/answerOptionTypes";
 
-export default function updateAnswerOptionsMW(req: Request, res: Response, next: NextFunction) {
-	// Get answer options from request body
-	const { answerOptions } = req.body as { answerOptions: AnswerOptionPrivate[] };
-	// Get question from res.locals
-	const { question } = res.locals as { question: QuestionPrivate };
+export default async function updateAnswerOptionsMW(_: Request, res: Response, next: NextFunction) {
+	// Get question and question data
+	const {
+		question,
+		questionData: { answerOptions },
+	} = res.locals as { question: QuestionPrivate; questionData: UpdateQuestionData };
+
+	// Check answer options
+	if (!answerOptions) return next();
 
 	// Get answer option IDs
 	const answerOptionIds = answerOptions.map((option) => option.id);
@@ -30,19 +35,45 @@ export default function updateAnswerOptionsMW(req: Request, res: Response, next:
 
 	try {
 		// Add answer options
-		answerOptionsToAdd.forEach(async (option) => {
-			await createAnswerOption(option.text, option.isCorrect, question.id);
-		});
+		const newAnswerOptionsData = answerOptionsToAdd.map((option) => ({
+			text: option.text,
+			isCorrect: option.isCorrect,
+			questionId: question.id,
+		}));
+		const newAnswerOptions =
+			newAnswerOptionsData.length > 0 ? await createAnswerOptions(newAnswerOptionsData) : [];
 
 		// Update answer options
-		answerOptionsToUpdate.forEach(async (option) => {
-			await updateAnswerOption(option.id, { text: option.text, isCorrect: option.isCorrect });
-		});
+		const updatedAnswerOptions = await Promise.all(
+			answerOptionsToUpdate.map(async (option) => {
+				const updatedOption = await updateAnswerOption(option.id, {
+					text: option.text,
+					isCorrect: option.isCorrect,
+				});
+				return updatedOption;
+			})
+		);
 
 		// Delete answer options
-		answerOptionsToDelete.forEach(async (option) => {
-			await deleteAnswerOption(option.id);
-		});
+		const deleteAnswerOptionIds = answerOptionsToDelete.map((option) => option.id);
+		if (deleteAnswerOptionIds.length > 0) {
+			await deleteAnswerOptions(deleteAnswerOptionIds);
+		}
+
+		// Add answer options to res.locals
+		(res.locals.updatedAnswerOptions as AnswerOptionPrivate[]) = [
+			...question.answerOptions,
+			...newAnswerOptions,
+		]
+			.map((option) => {
+				const updatedOption = updatedAnswerOptions.find((o) => o.id === option.id);
+				if (updatedOption) {
+					const { questionId, ...restUpdatedOption } = updatedOption;
+					return restUpdatedOption;
+				}
+				return option;
+			})
+			.filter((option) => !deleteAnswerOptionIds.includes(option.id));
 
 		// Go to next MW
 		return next();

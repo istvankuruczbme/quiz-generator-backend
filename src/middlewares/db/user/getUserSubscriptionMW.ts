@@ -2,18 +2,19 @@ import { Request, Response, NextFunction } from "express";
 import { UserSelect } from "../../../types/userTypes";
 import getSubscription from "../../../services/stripe/subscription/getSubscription";
 import Stripe from "stripe";
+import AppError from "../../../classes/AppError";
 
 export default async function getUserSubscriptionMW(_: Request, res: Response, next: NextFunction) {
 	// Get user from res.locals
 	const { user } = res.locals as { user: UserSelect };
 
-	// Check if the user has a subscription
-	if (user.subscriptionId == null) {
-		return next(new Error("user/subscription-missing"));
-	}
-
 	try {
-		// Get user's subscription
+		// No subscription
+		if (!user.subscriptionId) {
+			throw new AppError({ message: "User has no subscription.", status: 404 });
+		}
+
+		// Get subscription
 		const subscription = await getSubscription(user.subscriptionId);
 
 		// Add subscription tor res.locals

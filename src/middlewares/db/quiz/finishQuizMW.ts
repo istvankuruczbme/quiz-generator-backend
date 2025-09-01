@@ -1,14 +1,19 @@
 import { Request, Response, NextFunction } from "express";
-import { QuizFullPrivate } from "../../../types/quizTypes";
+import { QuizPrivate } from "../../../types/quizTypes";
 import updateQuizConfigByQuizId from "../../../services/db/quizConfig/updateQuizConfigByQuizId";
 
 export default async function finishQuizMW(_: Request, res: Response, next: NextFunction) {
-	// Get quiz from res.locals
-	const { quiz } = res.locals as { quiz: QuizFullPrivate };
+	// Get quiz
+	const { quiz } = res.locals as { quiz: QuizPrivate };
 
 	try {
 		// Update quiz config
-		await updateQuizConfigByQuizId(quiz.id, { state: "ACTIVE" });
+		const { state, visibility, questionOrder } = await updateQuizConfigByQuizId(quiz.id, {
+			state: "ACTIVE",
+		});
+
+		// Update quiz config in res.locals
+		(res.locals.quiz as QuizPrivate).config = { state, visibility, questionOrder };
 
 		// Go to next MW
 		return next();

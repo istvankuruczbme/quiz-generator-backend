@@ -1,4 +1,5 @@
 import { quizPhotosBucket } from "../../../assets/storageBucketNames";
+import AppError from "../../../classes/AppError";
 import { supabase } from "../../../config/supabase";
 
 export default async function uploadQuizPhoto(
@@ -11,7 +12,7 @@ export default async function uploadQuizPhoto(
 		.upload(`${quizId}/${file.originalname}`, file.buffer);
 
 	// Check if there was an error
-	if (uploadError != null) throw uploadError;
+	if (uploadError) throw new AppError({ message: "Error uploading quiz photo." });
 
 	// Get file public URL
 	const { data } = supabase.storage.from(quizPhotosBucket).getPublicUrl(uploadData.path);

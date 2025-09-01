@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import AppError from "../../classes/AppError";
 
 export default function getAuthTokenMW(req: Request, res: Response, next: NextFunction) {
 	// Get Authorization header
@@ -9,7 +10,7 @@ export default function getAuthTokenMW(req: Request, res: Response, next: NextFu
 
 	try {
 		// Check token
-		if (token == undefined) throw new Error("auth/unauthorized");
+		if (!token) throw new AppError({ message: "Unauthorized request", status: 403 });
 
 		// Add token to res.locals
 		(res.locals.authToken as string) = token;

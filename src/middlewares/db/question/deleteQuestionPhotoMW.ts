@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { QuestionPublic } from "../../../types/questionTypes";
+import { QuestionPrivate, QuestionPublic } from "../../../types/questionTypes";
 import deleteQuestionPhoto from "../../../services/db/question/deleteQuestionPhoto";
 
 export default async function deleteQuestionPhotoMW(_: Request, res: Response, next: NextFunction) {
-	// Get question from res.locals
-	const { question } = res.locals as { question: QuestionPublic };
+	// Get question
+	const { question } = res.locals as { question: QuestionPrivate };
 
 	// Check if question has a photo URL
-	if (question.photoUrl == null) return next();
+	if (!question.photoUrl) return next();
 
 	try {
 		// Delete question photo

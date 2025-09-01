@@ -1,4 +1,5 @@
 import { questionPhotosBucket } from "../../../assets/storageBucketNames";
+import AppError from "../../../classes/AppError";
 import { supabase } from "../../../config/supabase";
 
 export default async function deleteQuestionPhoto(questionId: string): Promise<void> {
@@ -10,22 +11,24 @@ export default async function deleteQuestionPhoto(questionId: string): Promise<v
 		});
 
 	// Check if there was an error
-	if (listError != null) throw listError;
+	if (listError) {
+		throw new AppError({ message: "Error getting question photo.", details: listError.message });
+	}
 
 	// Check if question photo exists
-	if (data == null || data.length === 0) return;
+	if (!data || data.length === 0) return;
 
 	// Get question photo
 	const file = data[0];
 
 	// Check if question photo exists
-	if (file == undefined) return;
+	if (!file) return;
 
 	// Delete file
-	const { error: removeError } = await supabase.storage
+	const { error: deleteError } = await supabase.storage
 		.from(questionPhotosBucket)
 		.remove([`${questionId}/${file.name}`]);
 
 	// Check if there was an error
-	if (removeError != null) throw removeError;
+	if (deleteError != null) throw new AppError({ message: "Error deleting question photo." });
 }

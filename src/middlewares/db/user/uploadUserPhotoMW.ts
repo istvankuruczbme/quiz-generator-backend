@@ -10,12 +10,14 @@ export default async function uploadUserPhotoMW(req: Request, res: Response, nex
 	// Get file from request body
 	const { file } = req as { file?: Express.Multer.File };
 
-	// No file
-	if (!file) return next();
-
 	try {
-		// Delete user photo (if he has)
-		if (user.photoUrl) await deleteUserPhoto(user.id);
+		// Delete user photo
+		if (user.photoUrl && (file || userData.photoUrl === null)) {
+			await deleteUserPhoto(user.id);
+		}
+
+		// No file
+		if (!file) return next();
 
 		// Upload new file
 		const photoUrl = await uploadUserPhoto(file, user.id);

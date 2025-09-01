@@ -1,39 +1,33 @@
 import { Request, Response, NextFunction } from "express";
 import uploadQuizPhoto from "../../../services/db/quiz/uploadQuizPhoto";
-import { Quiz } from "../../../types/quizTypes";
+import { QuizPrivate } from "../../../types/quizTypes";
 import deleteQuizPhoto from "../../../services/db/quiz/deleteQuizPhoto";
+import { CreateQuizData } from "../../../utils/db/quiz/validation/schemas/createQuizSchema";
+import { UpdateQuizData } from "../../../utils/db/quiz/validation/schemas/updateQuizSchema";
 
 export default async function uploadQuizPhotoMW(req: Request, res: Response, next: NextFunction) {
-	// Get file from req.body
+	// Get quiz and quizData
+	const { quiz, quizData } = res.locals as {
+		quiz: QuizPrivate;
+		quizData: CreateQuizData | UpdateQuizData;
+	};
+	// Get file
 	const { file } = req;
-	// Get quiz from res.locals
-	const { quiz } = res.locals as { quiz: Quiz };
-
-	// No file
-	if (file == undefined) {
-		// Add photoUrl to res.locals
-		(res.locals.photoUrl as null) = null;
-
-		// Go to next MW
-		return next();
-	}
-
-	// Check if quiz already has a photo
-	if (quiz.photoUrl != null) {
-		try {
-			// Delete quiz photo
-			await deleteQuizPhoto(quiz.id);
-		} catch (err) {
-			return next(err);
-		}
-	}
 
 	try {
+		// Delete photo
+		if (quiz.photoUrl && (file || quizData.photoUrl === null)) {
+			await deleteQuizPhoto(quiz.id);
+		}
+
+		// No file
+		if (!file) return next();
+
 		// Upload photo
 		const photoUrl = await uploadQuizPhoto(file, quiz.id);
 
-		// Add photo URL to res.locals
-		(res.locals.photoUrl as string) = photoUrl;
+		// Update quiz data in res.local
+		(res.locals.quizData as CreateQuizData | UpdateQuizData).photoUrl = photoUrl;
 
 		// Go to next MW
 		return next();

@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { QuizFullPrivate } from "../../../types/quizTypes";
+import { QuizPrivate } from "../../../types/quizTypes";
 import deleteQuizPhoto from "../../../services/db/quiz/deleteQuizPhoto";
 
 export default async function deleteQuizPhotoMW(_: Request, res: Response, next: NextFunction) {
-	// Get quiz from res.locals
-	const { quiz } = res.locals as { quiz: QuizFullPrivate };
+	// Get quiz
+	const { quiz } = res.locals as { quiz: QuizPrivate };
 
 	// Check if quiz has a photo URL
-	if (quiz.photoUrl == null) return next();
+	if (!quiz.photoUrl) return next();
 
 	try {
 		// Delete quiz photo

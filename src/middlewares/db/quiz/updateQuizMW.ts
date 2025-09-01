@@ -1,20 +1,22 @@
 import { Request, Response, NextFunction } from "express";
-import { QuizFullPrivate } from "../../../types/quizTypes";
+import { QuizPrivate, QuizSelect } from "../../../types/quizTypes";
 import updateQuiz from "../../../services/db/quiz/updateQuiz";
+import { UpdateQuizData } from "../../../utils/db/quiz/validation/schemas/updateQuizSchema";
 
-export default async function updateQuizMW(req: Request, res: Response, next: NextFunction) {
-	// Get quiz and embedding from res.locals
-	const { quiz, embedding } = res.locals as { quiz: QuizFullPrivate; embedding: number[] };
-	// Get quiz data from request body
-	const { title, description, categoryId } = req.body as {
-		title: string;
-		description: string;
-		categoryId: string;
+export default async function updateQuizMW(_: Request, res: Response, next: NextFunction) {
+	// Get quiz, quiz data and embedding
+	const { quiz, quizData, embedding } = res.locals as {
+		quiz: QuizPrivate;
+		quizData: UpdateQuizData;
+		embedding?: number[];
 	};
 
 	try {
 		// Update quiz
-		await updateQuiz(quiz.id, { title, description, embedding, categoryId });
+		const updatedQuiz = await updateQuiz(quiz.id, { ...quizData, embedding });
+
+		// Add updated quiz to res.locals
+		(res.locals.updatedQuiz as QuizSelect) = updatedQuiz;
 
 		// Go to next MW
 		return next();

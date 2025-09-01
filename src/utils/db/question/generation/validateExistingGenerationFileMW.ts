@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { QuizFullPrivate } from "../../../../types/quizTypes";
+import { QuizPrivate } from "../../../../types/quizTypes";
 import getQuizDocuments from "../../../../services/db/quiz/getQuizDocuments";
 import { SubscriptionFeatures } from "../../../../assets/subscriptionFeatures";
+import AppError from "../../../../classes/AppError";
 
 export default async function validateExistingGenerationFileMW(
 	_: Request,
@@ -10,7 +11,7 @@ export default async function validateExistingGenerationFileMW(
 ) {
 	// Get quiz and subscription features from res.locas
 	const { quiz, subscriptionFeatures } = res.locals as {
-		quiz: QuizFullPrivate;
+		quiz: QuizPrivate;
 		subscriptionFeatures: SubscriptionFeatures;
 	};
 
@@ -18,7 +19,7 @@ export default async function validateExistingGenerationFileMW(
 		// Validation
 		const documents = await getQuizDocuments(quiz.id);
 		if (documents.length - 1 >= subscriptionFeatures.maxDocCountPerQuiz) {
-			throw new Error("quiz/questions/generation-doc-count-limit-reached");
+			throw new AppError({ message: "Document limit reached for this quiz.", status: 400 });
 		}
 
 		// Go to next MW

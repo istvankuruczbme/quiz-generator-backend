@@ -14,13 +14,13 @@ export default async function deleteUserPhoto(userId: string): Promise<void> {
 	}
 
 	// Check if user photo exists
-	if (data == null || data.length === 0) return;
+	if (!data || data.length === 0) return;
 
 	// Get user photo
 	const file = data[0];
 
 	// Check if user photo exists
-	if (file == undefined) return;
+	if (!file) return;
 
 	// Delete file
 	const { error: deleteError } = await supabase.storage

@@ -1,4 +1,4 @@
-import { User, UserPublic } from "../../../types/userTypes";
+import { UserSelect, UserPublic } from "../../../types/userTypes";
 
 export default function getUserPublicData(user: UserSelect): UserPublic {
 	return {

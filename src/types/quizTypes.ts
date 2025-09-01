@@ -1,5 +1,5 @@
 import { QuizTable } from "../drizzle/schema/quiz";
-import { Category } from "./categoryTypes";
+import { CategorySelect } from "./categoryTypes";
 import { QuestionPrivate, QuestionPublic } from "./questionTypes";
 import { QuizConfig } from "./quizConfigTypes";
 import { UserPublic } from "./userTypes";
@@ -13,7 +13,7 @@ export type QuizUpdate = Partial<Omit<QuizSelect, "id" | "userId" | "createdAt">
 // #region Quiz data
 type QuizData = Omit<QuizSelect, "categoryId" | "userId" | "deletedAt"> & {
 	config: QuizConfig;
-	category: Category;
+	category: CategorySelect;
 	user: UserPublic;
 };
 //#endregion

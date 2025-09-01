@@ -1,39 +1,26 @@
 import { Request, Response, NextFunction } from "express";
-import { Question, QuestionPrivate } from "../../../types/questionTypes";
+import { QuestionSelect } from "../../../types/questionTypes";
 import createQuestionPoints from "../../../services/db/questionPoints/createQuestionPoints";
+import { CreateQuestionData } from "../../../utils/db/question/validation/schemas/createQuestionSchema";
+import { QuestionPointsSelect } from "../../../types/questionPointsTypes";
 
 export default async function createQuestionPointsMW(
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) {
-	// Get question points data from request body
+	// Get question and question data
 	const {
-		points: { correct, wrong, empty },
-	} = req.body as {
-		points: {
-			correct: number;
-			wrong: number;
-			empty: number;
-		};
-	};
-	// Get question from res.locals
-	const { question } = res.locals as { question: Question };
+		question,
+		questionData: { points },
+	} = res.locals as { question: QuestionSelect; questionData: CreateQuestionData };
 
 	try {
 		// Create question points
-		const points = await createQuestionPoints(correct, wrong, empty, question.id);
+		const createdPoints = await createQuestionPoints({ ...points, questionId: question.id });
 
 		// Update question is res.locals
-		(res.locals.question as QuestionPrivate) = {
-			...question,
-			points: {
-				correct: points.correct,
-				wrong: points.wrong,
-				empty: points.empty,
-			},
-			answerOptions: [],
-		};
+		(res.locals.questionPoints as QuestionPointsSelect) = createdPoints;
 
 		// Go to next MW
 		return next();

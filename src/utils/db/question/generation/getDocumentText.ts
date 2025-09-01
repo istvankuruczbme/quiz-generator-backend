@@ -1,3 +1,4 @@
+import AppError from "../../../../classes/AppError";
 import getDocxText from "./getDocxText";
 import getMarkdownText from "./getMarkdownText";
 import getPdfText from "./getPdfText";
@@ -18,6 +19,6 @@ export default async function getDocumentText(file: Express.Multer.File): Promis
 			return getTxtText(file.buffer);
 
 		default:
-			throw new Error("quiz/generation/file-invalid-type");
+			throw new AppError({ message: "Invalid file type to generate questions.", status: 400 });
 	}
 }

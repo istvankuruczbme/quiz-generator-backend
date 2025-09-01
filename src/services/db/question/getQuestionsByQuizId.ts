@@ -1,15 +1,12 @@
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { db } from "../../../drizzle/db";
 import { QuestionTable } from "../../../drizzle/schema/question";
 import { QuestionPointsTable } from "../../../drizzle/schema/questionPoints";
 import { QuestionPrivate } from "../../../types/questionTypes";
-import getAnswerOptionsByQuestionId from "../answerOption/getAnswerOptionsByQuestionId";
 import { AnswerOptionPrivate } from "../../../types/answerOptionTypes";
+import { AnswerOptionTable } from "../../../drizzle/schema/answerOption";
 
-export default async function getQuestionsByQuizId(
-	quizId: string,
-	isPrivate = false
-): Promise<QuestionPrivate[]> {
+export default async function getQuestionsByQuizId(quizId: string): Promise<QuestionPrivate[]> {
 	// Get questions
 	const questions = await db
 		.select({
@@ -22,20 +19,25 @@ export default async function getQuestionsByQuizId(
 				wrong: QuestionPointsTable.wrong,
 				empty: QuestionPointsTable.empty,
 			},
+			answerOptions: sql<
+				AnswerOptionPrivate[]
+			>`array_agg(json_build_object('id', ${AnswerOptionTable.id}, 'text', ${AnswerOptionTable.text}, 'isCorrect', ${AnswerOptionTable.isCorrect}))`,
 		})
 		.from(QuestionTable)
-		.innerJoin(QuestionPointsTable, eq(QuestionTable.id, QuestionPointsTable.questionId))
+		.innerJoin(QuestionPointsTable, eq(QuestionPointsTable.questionId, QuestionTable.id))
+		.leftJoin(AnswerOptionTable, eq(AnswerOptionTable.questionId, QuestionTable.id))
 		.where(eq(QuestionTable.quizId, quizId))
+		.groupBy(
+			QuestionTable.id,
+			QuestionTable.text,
+			QuestionTable.photoUrl,
+			QuestionTable.order,
+			QuestionPointsTable.correct,
+			QuestionPointsTable.wrong,
+			QuestionPointsTable.empty
+		)
 		.orderBy(asc(QuestionTable.order));
 
-	// Get answer options
-	const answerOptions = await Promise.all(
-		questions.map(async (question) => await getAnswerOptionsByQuestionId(question.id, isPrivate))
-	);
-
-	// Return the full structure
-	return questions.map((question, i) => ({
-		...question,
-		answerOptions: (answerOptions[i] || []) as AnswerOptionPrivate[],
-	}));
+	// Return questions
+	return questions;
 }

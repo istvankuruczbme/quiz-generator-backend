@@ -1,20 +1,25 @@
 import { Request, Response, NextFunction } from "express";
-import { QuizConfigQuestionOrder, QuizConfigVisibility } from "../../../drizzle/schema/quizConfig";
-import { QuizFullPrivate } from "../../../types/quizTypes";
+import { QuizPrivate } from "../../../types/quizTypes";
 import updateQuizConfigByQuizId from "../../../services/db/quizConfig/updateQuizConfigByQuizId";
+import { UpdateQuizConfigData } from "../../../utils/db/quizConfig/validation/schemas/updateQuizConfigSchema";
 
-export default async function updateQuizConfigMW(req: Request, res: Response, next: NextFunction) {
-	// Get quiz from res.locals
-	const { quiz } = res.locals as { quiz: QuizFullPrivate };
-	// Get data from request body
-	const { visibility, questionOrder } = req.body as {
-		visibility: QuizConfigVisibility;
-		questionOrder: QuizConfigQuestionOrder;
+export default async function updateQuizConfigMW(_: Request, res: Response, next: NextFunction) {
+	// Get quiz and quiz config data
+	const { quiz, quizConfigData } = res.locals as {
+		quiz: QuizPrivate;
+		quizConfigData: UpdateQuizConfigData;
 	};
 
 	try {
 		// Update quiz config
-		await updateQuizConfigByQuizId(quiz.id, { visibility, questionOrder });
+		const { visibility, questionOrder } = await updateQuizConfigByQuizId(quiz.id, quizConfigData);
+
+		// Update quiz in res.locals
+		(res.locals.quiz as QuizPrivate).config = {
+			...quiz.config,
+			visibility,
+			questionOrder,
+		};
 
 		// Go to next MW
 		return next();

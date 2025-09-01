@@ -1,61 +1,49 @@
 import { Router } from "express";
-import validateQuizDataMW from "../middlewares/db/quiz/validateQuizDataMW";
+import authUserMW from "../middlewares/auth/authUserMW";
 import getUserMW from "../middlewares/db/user/getUserMW";
+import returnQuizMW from "../middlewares/db/quiz/returnQuizMW";
+import getUserQuizSummariesMW from "../middlewares/db/quiz/getUserQuizSummariesMW";
+import returnQuizSummariesMW from "../middlewares/db/quiz/returnQuizSummariesMW";
+import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
+import getQuizSummaryMW from "../middlewares/db/quiz/getQuizSummaryMW";
 import uploadQuizPhotoMW from "../middlewares/db/quiz/uploadQuizPhotoMW";
 import createQuizEmbeddingMW from "../middlewares/db/quiz/createQuizEmbeddingMW";
 import createQuizMW from "../middlewares/db/quiz/createQuizMW";
 import updateQuizPhotoUrlMW from "../middlewares/db/quiz/updateQuizPhotoUrlMW";
 import createQuizConfigMW from "../middlewares/db/quizConfig/createQuizConfigMW";
-import returnQuizMW from "../middlewares/db/quiz/returnQuizMW";
-import getUserQuizSummariesMW from "../middlewares/db/quiz/getUserQuizSummariesMW";
-import returnQuizSummariesMW from "../middlewares/db/quiz/returnQuizSummariesMW";
-import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
-import getQuizMW from "../middlewares/db/quiz/getQuizMW";
-import authUserMW from "../middlewares/auth/authUserMW";
 import validateQuestionsOrderDataMW from "../middlewares/db/question/validateQuestionsOrderDataMW";
 import validateQuizQuestionsMW from "../middlewares/db/quiz/validateQuizQuestionsMW";
 import updateQuestionsOrderMW from "../middlewares/db/question/updateQuestionsOrderMW";
-import sendQuizUpdatedResponseMW from "../middlewares/db/quiz/sendQuizUpdatedResponseMW";
-import getQuizSummaryMW from "../middlewares/db/quiz/getQuizSummaryMW";
-import validateQuizWriteActionMW from "../middlewares/db/quiz/validateQuizWriteActionMW";
-import validateQuizConfigDataMW from "../middlewares/db/quizConfig/validateQuizConfigDataMW";
-import updateQuizConfigMW from "../middlewares/db/quizConfig/updateQuizConfigMW";
 import updateQuizMW from "../middlewares/db/quiz/updateQuizMW";
 import deleteQuizMW from "../middlewares/db/quiz/deleteQuizMW";
 import deleteQuizPhotoMW from "../middlewares/db/quiz/deleteQuizPhotoMW";
 import sendQuizDeletedResponseMW from "../middlewares/db/quiz/sendQuizDeletedResponseMW";
 import deleteQuizQuestionPhotosMW from "../middlewares/db/quiz/deleteQuizQuestionPhotosMW";
-import removeQuizPhotoUrlMW from "../middlewares/db/quiz/removeQuizPhotoUrlMW";
 import getNumberOfQuizzesCreatedByUserInPeriodMW from "../middlewares/db/quiz/getNumberOfQuizzesCreatedByUserInPeriodMW";
 import getUserSubscriptionMW from "../middlewares/db/user/getUserSubscriptionMW";
-import validateCreateQuizAccessMW from "../middlewares/db/quiz/validateCreateQuizAccessMW";
+import checkCreateQuizAccessMW from "../middlewares/db/quiz/checkCreateQuizAccessMW";
 import finishQuizMW from "../middlewares/db/quiz/finishQuizMW";
-import validateQuizReadActionMW from "../middlewares/db/quiz/validateQuizReadActionMW";
 import getSubscriptionFeaturesMW from "../middlewares/stripe/subscription/getSubscriptionFeaturesMW";
 import imageUploadMW from "../middlewares/helper/imageUploadMW";
+import validateCreateQuizDataMW from "../middlewares/db/quiz/validateCreateQuizDataMW";
+import formatCreatedQuizMW from "../middlewares/db/quiz/formatCreatedQuizMW";
+import getQuizPrivateMW from "../middlewares/db/quiz/getQuizPrivateMW";
+import validateUpdateQuizDataMW from "../middlewares/db/quiz/validateUpdateQuizDataMW";
+import formatUpdatedQuizMW from "../middlewares/db/quiz/formatUpdatedQuizMW";
 
 const router = Router();
 
-// Add authentication middlewares
-router.use(authUserMW);
-
-// Add getUserMW
-router.use(getUserMW);
+// Add MWs
+router.use(authUserMW, getUserMW);
 
 // Get user quizzes
 router.get("/my-quizzes", getUserQuizSummariesMW, returnQuizSummariesMW);
 
 // Get quiz with private data
-router.get("/:quizId", validateQuizIdMW, getQuizMW, validateQuizWriteActionMW, returnQuizMW);
+router.get("/:quizId", validateQuizIdMW, getQuizPrivateMW, returnQuizMW);
 
 // Get quiz summary
-router.get(
-	"/:quizId/summary",
-	validateQuizIdMW,
-	getQuizSummaryMW,
-	validateQuizReadActionMW,
-	returnQuizMW
-);
+router.get("/:quizId/summary", validateQuizIdMW, getQuizSummaryMW, returnQuizMW);
 
 // Create new quiz
 router.post(
@@ -63,14 +51,15 @@ router.post(
 	getUserSubscriptionMW,
 	getSubscriptionFeaturesMW,
 	getNumberOfQuizzesCreatedByUserInPeriodMW,
-	validateCreateQuizAccessMW,
+	checkCreateQuizAccessMW,
 	imageUploadMW,
-	validateQuizDataMW,
+	validateCreateQuizDataMW,
 	createQuizEmbeddingMW,
 	createQuizMW,
 	uploadQuizPhotoMW,
 	updateQuizPhotoUrlMW,
 	createQuizConfigMW,
+	formatCreatedQuizMW,
 	returnQuizMW
 );
 
@@ -78,67 +67,35 @@ router.post(
 router.put(
 	"/:quizId",
 	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
+	getQuizPrivateMW,
 	imageUploadMW,
-	validateQuizDataMW,
+	validateUpdateQuizDataMW,
 	createQuizEmbeddingMW,
 	uploadQuizPhotoMW,
 	updateQuizMW,
-	updateQuizPhotoUrlMW,
-	sendQuizUpdatedResponseMW
-);
-
-// Update quiz config
-router.put(
-	"/:quizId/config",
-	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
-	validateQuizConfigDataMW,
-	updateQuizConfigMW,
-	sendQuizUpdatedResponseMW
+	formatUpdatedQuizMW,
+	returnQuizMW
 );
 
 // Update order of questions
 router.put(
 	"/:quizId/questions",
 	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
+	getQuizPrivateMW,
 	validateQuestionsOrderDataMW,
 	validateQuizQuestionsMW,
 	updateQuestionsOrderMW,
-	sendQuizUpdatedResponseMW
+	returnQuizMW
 );
 
 // Finish quiz
-router.put(
-	"/:quizId/finish",
-	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
-	finishQuizMW,
-	sendQuizUpdatedResponseMW
-);
-
-// Delete quiz photo
-router.delete(
-	"/:quizId/photo",
-	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
-	deleteQuizPhotoMW,
-	removeQuizPhotoUrlMW,
-	sendQuizUpdatedResponseMW
-);
+router.put("/:quizId/finish", validateQuizIdMW, getQuizPrivateMW, finishQuizMW, returnQuizMW);
 
 // Delete quiz
 router.delete(
 	"/:quizId",
 	validateQuizIdMW,
-	getQuizMW,
-	validateQuizWriteActionMW,
+	getQuizPrivateMW,
 	deleteQuizMW,
 	deleteQuizPhotoMW,
 	deleteQuizQuestionPhotosMW,

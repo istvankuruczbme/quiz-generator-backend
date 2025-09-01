@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import validateUUID from "../../../utils/validation/validateUUID";
+import AppError from "../../../classes/AppError";
 
 export default function validateQuestionIdMW(req: Request, _: Response, next: NextFunction) {
 	// Get question ID from request params
@@ -7,7 +8,9 @@ export default function validateQuestionIdMW(req: Request, _: Response, next: Ne
 
 	try {
 		// Validation
-		validateUUID(questionId, "question/");
+		if (!validateUUID(questionId)) {
+			throw new AppError({ message: "Invalid question ID.", status: 400 });
+		}
 
 		// Go to next MW
 		return next();

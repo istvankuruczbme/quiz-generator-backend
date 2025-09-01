@@ -1,28 +1,29 @@
 import { Request, Response, NextFunction } from "express";
 import { QuestionPrivate } from "../../../types/questionTypes";
 import updateQuestionPointsByQuestionId from "../../../services/db/questionPoints/updateQuestionPointsByQuestionId";
+import { UpdateQuestionData } from "../../../utils/db/question/validation/schemas/updateQuestionSchema";
+import { QuestionPointsSelect } from "../../../types/questionPointsTypes";
 
 export default async function updateQuestionPointsMW(
-	req: Request,
+	_: Request,
 	res: Response,
 	next: NextFunction
 ) {
-	// Get question points data from request body
+	// Get question and question data
 	const {
-		points: { correct, wrong, empty },
-	} = req.body as {
-		points: {
-			correct: number;
-			wrong: number;
-			empty: number;
-		};
-	};
-	// Get question from res.locals
-	const { question } = res.locals as { question: QuestionPrivate };
+		question,
+		questionData: { points },
+	} = res.locals as { question: QuestionPrivate; questionData: UpdateQuestionData };
+
+	// Check points
+	if (!points) return next();
 
 	try {
 		// Update question points
-		await updateQuestionPointsByQuestionId(question.id, { correct, wrong, empty });
+		const updatedQuestionPoints = await updateQuestionPointsByQuestionId(question.id, points);
+
+		// Add updated question points to res.locals
+		(res.locals.updatedQuestionPoints as QuestionPointsSelect) = updatedQuestionPoints;
 
 		// Go to next MW
 		return next();

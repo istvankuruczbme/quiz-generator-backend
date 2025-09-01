@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import validateQuestionsGenerationData from "../../../../utils/db/question/generation/validateQuestionsGenerationData";
+import validateQuestionsGenerationData from "../../../../utils/db/question/generation/validation/validateQuestionsGenerationData";
 import { SubscriptionFeatures } from "../../../../assets/subscriptionFeatures";
-import { QuizFullPrivate } from "../../../../types/quizTypes";
+import { QuestionGenerationData } from "../../../../utils/db/question/generation/validation/schemas/questionGenerationSchema";
 
 export default function validateQuestionsGenerationDataMW(
 	req: Request,
@@ -10,38 +10,20 @@ export default function validateQuestionsGenerationDataMW(
 ) {
 	// Get quiz and subscription features from res.locals
 	const {
-		quiz,
 		subscriptionFeatures: { maxQuestionCount, maxAnswerOptionCount },
 	} = res.locals as {
-		quiz: QuizFullPrivate;
 		subscriptionFeatures: SubscriptionFeatures;
-	};
-	// Get data from request body
-	const {
-		strategy,
-		creativity,
-		questionCount: questionCountUser,
-		answerOptionCount,
-	} = req.body as {
-		strategy: unknown;
-		creativity: unknown;
-		questionCount: unknown;
-		answerOptionCount: unknown;
 	};
 
 	try {
 		// Validaton
-		validateQuestionsGenerationData(strategy, creativity, questionCountUser, answerOptionCount);
+		const generationData = validateQuestionsGenerationData(req.body, {
+			maxQuestionCount,
+			maxAnswerOptionCount,
+		});
 
-		// Validate question count
-		if ((questionCountUser as number) > maxQuestionCount - quiz.questions.length) {
-			throw new Error("quiz/questions/generation-question-count-invalid");
-		}
-
-		// Validate answer option count
-		if ((answerOptionCount as number) > maxAnswerOptionCount) {
-			throw new Error("quiz/questions/generation-answer-option-count-invalid");
-		}
+		// Add generation data to res.locals
+		(res.locals.generationData as QuestionGenerationData) = generationData;
 
 		// Go to next MW
 		return next();

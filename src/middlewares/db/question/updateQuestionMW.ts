@@ -1,20 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import { QuestionPrivate } from "../../../types/questionTypes";
+import { QuestionPrivate, QuestionSelect } from "../../../types/questionTypes";
 import updateQuestion from "../../../services/db/question/updateQuestion";
+import { UpdateQuestionData } from "../../../utils/db/question/validation/schemas/updateQuestionSchema";
 
-export default async function updateQuestionMW(req: Request, res: Response, next: NextFunction) {
-	// Get question from res.locals
-	const { question } = res.locals as {
+export default async function updateQuestionMW(_: Request, res: Response, next: NextFunction) {
+	// Get question and question data
+	const {
+		question,
+		questionData: { text, photoUrl },
+	} = res.locals as {
 		question: QuestionPrivate;
-	};
-	// Get question data from request body
-	const { text } = req.body as {
-		text: string;
+		questionData: UpdateQuestionData;
 	};
 
 	try {
 		// Update question
-		await updateQuestion(question.id, { text });
+		const updatedQuestion = await updateQuestion(question.id, { text, photoUrl });
+
+		// Add updated question to res.locals
+		(res.locals.updatedQuestion as QuestionSelect) = updatedQuestion;
 
 		// Go to next MW
 		return next();

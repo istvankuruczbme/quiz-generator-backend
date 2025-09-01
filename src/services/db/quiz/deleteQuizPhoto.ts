@@ -1,4 +1,5 @@
 import { quizPhotosBucket } from "../../../assets/storageBucketNames";
+import AppError from "../../../classes/AppError";
 import { supabase } from "../../../config/supabase";
 
 export default async function deleteQuizPhoto(quizId: string): Promise<void> {
@@ -8,22 +9,28 @@ export default async function deleteQuizPhoto(quizId: string): Promise<void> {
 	});
 
 	// Check if there was an error
-	if (listError != null) throw listError;
+	if (listError) {
+		throw new AppError({ message: "Error getting quiz photo.", details: listError.message });
+	}
+
+	console.log("Quiz photo data:", data);
 
 	// Check if data exists
-	if (data == null || data.length === 0) return;
+	if (!data || data.length === 0) return;
 
 	// Get quiz photo
 	const file = data[0];
 
 	// Check if quiz photo exists
-	if (file == undefined) return;
+	if (!file) return;
 
 	// Delete file
-	const { error: removeError } = await supabase.storage
+	const { error: deleteError } = await supabase.storage
 		.from(quizPhotosBucket)
 		.remove([`${quizId}/${file.name}`]);
 
 	// Check if there was an error
-	if (removeError != null) throw removeError;
+	if (deleteError) {
+		throw new AppError({ message: "Error deleting quiz photo.", details: deleteError.message });
+	}
 }

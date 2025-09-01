@@ -1,31 +1,68 @@
 import { Request, Response, NextFunction } from "express";
-import { OpenAIQuestionResponse } from "../../../../types/questionTypes";
+import { OpenAIQuestionResponse, QuestionPrivate } from "../../../../types/questionTypes";
 import createQuestion from "../../../../services/db/question/createQuestion";
-import { QuizFullPrivate } from "../../../../types/quizTypes";
+import { QuizPrivate } from "../../../../types/quizTypes";
 import createQuestionPoints from "../../../../services/db/questionPoints/createQuestionPoints";
-import createAnswerOption from "../../../../services/db/answerOption/createAnswerOption";
+import { AnswerOptionInsert } from "../../../../types/answerOptionTypes";
+import createAnswerOptions from "../../../../services/db/answerOption/createAnswerOptions";
 
-export default function createGeneratedQuestionsMW(_: Request, res: Response, next: NextFunction) {
+export default async function createGeneratedQuestionsMW(
+	_: Request,
+	res: Response,
+	next: NextFunction
+) {
 	// Get quiz and generated questions from res.locals
 	const { quiz, questions } = res.locals as {
-		quiz: QuizFullPrivate;
+		quiz: QuizPrivate;
 		questions: OpenAIQuestionResponse[];
 	};
 
 	try {
 		// Create questions
-		questions.forEach(async (question, i) => {
-			// Create question
-			const { id } = await createQuestion(question.text, quiz.questions.length + 1 + i, quiz.id);
+		const dbQuestions = await Promise.all(
+			questions.map(async (question, i) => {
+				// Create question
+				const q = await createQuestion({
+					text: question.text,
+					order: quiz.questions.length + 1 + i,
+					quizId: quiz.id,
+				});
 
-			// Create quesiton points
-			await createQuestionPoints(3, 0, 0, id);
+				// Create quesiton points
+				const points = await createQuestionPoints({
+					correct: 3,
+					wrong: 0,
+					empty: 0,
+					questionId: q.id,
+				});
 
-			// Create answer options
-			question.answerOptions.forEach(async (option) => {
-				await createAnswerOption(option.text, option.isCorrect, id);
-			});
-		});
+				// Create answer options
+				const answerOptionsData: AnswerOptionInsert[] = question.answerOptions.map(
+					(option) => ({
+						text: option.text,
+						isCorrect: option.isCorrect,
+						questionId: q.id,
+					})
+				);
+				const answerOptions = await createAnswerOptions(answerOptionsData);
+
+				// Return question
+				return {
+					id: q.id,
+					photoUrl: q.photoUrl,
+					text: q.text,
+					order: q.order,
+					points,
+					answerOptions,
+				};
+			})
+		);
+
+		// Update quiz in res.locals
+		(res.locals.quiz as QuizPrivate) = {
+			...quiz,
+			questions: [...quiz.questions, ...dbQuestions],
+		};
 
 		// Go to next MW
 		return next();

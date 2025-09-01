@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { QuizFullPrivate } from "../../../types/quizTypes";
+import { QuizPrivate } from "../../../types/quizTypes";
 import deleteQuiz from "../../../services/db/quiz/deleteQuiz";
 
 export default async function deleteQuizMW(_: Request, res: Response, next: NextFunction) {
-	// Get quiz from res.locals
-	const { quiz } = res.locals as { quiz: QuizFullPrivate };
+	// Get quiz
+	const { quiz } = res.locals as { quiz: QuizPrivate };
 
 	try {
 		// Delete quiz

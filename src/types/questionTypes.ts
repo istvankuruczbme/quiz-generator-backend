@@ -23,8 +23,7 @@ export type QuestionPrivate = Omit<QuestionSelect, "quizId"> & {
 };
 //#endregion
 
-// DB insert
-
+//#region OpenAI question
 type OpenAIAnswerOptionResponse = {
 	text: string;
 	isCorrect: boolean;
@@ -33,3 +32,4 @@ export type OpenAIQuestionResponse = {
 	text: string;
 	answerOptions: OpenAIAnswerOptionResponse[];
 };
+//#endregion

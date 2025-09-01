@@ -1,7 +1,11 @@
-export default function validateBearerAuthorizationHeader(authorization: string | undefined): void {
-	if (authorization == undefined || typeof authorization !== "string") {
-		throw new Error("auth/header-missing");
-	}
+import AppError from "../../classes/AppError";
 
-	if (!authorization.startsWith("Bearer")) throw new Error("auth/unauthorized");
+export default function validateBearerAuthorizationHeader(authorization: string | undefined): void {
+	if (
+		authorization == undefined ||
+		typeof authorization !== "string" ||
+		!authorization.startsWith("Bearer")
+	) {
+		throw new AppError({ message: "Unauthorized request", status: 403 });
+	}
 }

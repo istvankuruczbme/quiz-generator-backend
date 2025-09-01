@@ -1,4 +1,5 @@
 import { userPhotosBucket } from "../../../assets/storageBucketNames";
+import AppError from "../../../classes/AppError";
 import { supabase } from "../../../config/supabase";
 
 export default async function uploadUserPhoto(
@@ -11,7 +12,7 @@ export default async function uploadUserPhoto(
 		.upload(`${userId}/${file.originalname}`, file.buffer);
 
 	// Check if there was an error
-	if (uploadError != null) throw uploadError;
+	if (uploadError) throw new AppError({ message: "Error uploading user photo." });
 
 	// Get file public URL
 	const { data } = supabase.storage.from(userPhotosBucket).getPublicUrl(uploadData.path);

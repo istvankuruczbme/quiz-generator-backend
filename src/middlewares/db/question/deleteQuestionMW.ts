@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { QuestionPublic } from "../../../types/questionTypes";
+import { QuestionPrivate } from "../../../types/questionTypes";
 import deleteQuestion from "../../../services/db/question/deleteQuestion";
 
 export default async function deleteQuestionMW(_: Request, res: Response, next: NextFunction) {
-	// Get question from res.locals
-	const { question } = res.locals as { question: QuestionPublic };
+	// Get questions
+	const { question } = res.locals as { question: QuestionPrivate };
 
 	try {
 		// Delete question

@@ -1,29 +1,14 @@
+import AppError from "../../../classes/AppError";
 import { db } from "../../../drizzle/db";
 import { QuizTable } from "../../../drizzle/schema/quiz";
-import { Quiz } from "../../../types/quizTypes";
+import { QuizInsert, QuizSelect } from "../../../types/quizTypes";
 
-export default async function createQuiz(
-	title: string,
-	description: string,
-	categoryId: string,
-	embedding: number[],
-	userId: string
-): Promise<Quiz> {
+export default async function createQuiz(data: QuizInsert): Promise<QuizSelect> {
 	// Create quiz
-	const [quiz] = await db
-		.insert(QuizTable)
-		.values({
-			title,
-			description,
-			categoryId,
-			photoUrl: null,
-			embedding,
-			userId,
-		})
-		.returning();
+	const [quiz] = await db.insert(QuizTable).values(data).returning();
 
 	// Check if quiz was created
-	if (quiz == undefined) throw new Error("quiz/not-created");
+	if (!quiz) throw new AppError({ message: "Error creating quiz." });
 
 	// Return quiz
 	return quiz;

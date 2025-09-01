@@ -1,20 +1,28 @@
 import { Request, Response, NextFunction } from "express";
-import validateQuizQuestion from "../../../utils/db/quiz/validateQuizQuestion";
+import { QuizPrivate } from "../../../types/quizTypes";
+import { QuestionsOrderData } from "../../../utils/db/question/validation/schemas/questionsOrderSchema";
+import AppError from "../../../classes/AppError";
 
 export default async function validateQuizQuestionsMW(
-	req: Request,
-	_: Response,
+	_: Request,
+	res: Response,
 	next: NextFunction
 ) {
-	// Get question IDs from request body
-	const { questionIds } = req.body as { questionIds: string[] };
-	// Get quiz ID from request params
-	const { quizId } = req.params as { quizId: string };
+	// Get quiz and questions order data
+	const {
+		quiz,
+		questionsOrderData: { questionIds },
+	} = res.locals as { quiz: QuizPrivate; questionsOrderData: QuestionsOrderData };
+
+	// Get question IDs of quiz
+	const quizQuestionIds = quiz.questions.map((question) => question.id);
 
 	try {
 		// Validation
 		for (const questionId of questionIds) {
-			await validateQuizQuestion(questionId, quizId);
+			if (!quizQuestionIds.includes(questionId)) {
+				throw new AppError({ message: `Question with ID ${questionId} not found.` });
+			}
 		}
 
 		// Go to next MW

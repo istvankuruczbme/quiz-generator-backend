@@ -9,6 +9,7 @@ import { stripeWebhookRoute } from "./routes/stripeWebhookRoute";
 import { categoryRoute } from "./routes/categoryRoute";
 import { userRoute } from "./routes/userRoute";
 import { quizRoute } from "./routes/quizRoute";
+import { quizConfigRoute } from "./routes/quizConfigRoute";
 import { questionRoute } from "./routes/questionRoute";
 // Functions
 import errorHandlerMW from "./middlewares/error/errorHandlerMW";
@@ -27,6 +28,7 @@ app.use("/api/stripe/webhook", stripeWebhookRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/users", userRoute);
 app.use("/api/quizzes", quizRoute);
+app.use("/api/quizzes/:quizId/config", quizConfigRoute);
 app.use("/api/quizzes/:quizId/questions", questionRoute);
 
 // Error handler

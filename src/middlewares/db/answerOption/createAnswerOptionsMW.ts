@@ -1,35 +1,26 @@
 import { Request, Response, NextFunction } from "express";
-import createAnswerOption from "../../../services/db/answerOption/createAnswerOption";
-import { QuestionPrivate } from "../../../types/questionTypes";
-import { AnswerOptionPrivate } from "../../../types/answerOptionTypes";
+import { QuestionPrivate, QuestionSelect } from "../../../types/questionTypes";
+import { CreateQuestionData } from "../../../utils/db/question/validation/schemas/createQuestionSchema";
+import createAnswerOptions from "../../../services/db/answerOption/createAnswerOptions";
+import { AnswerOptionSelect } from "../../../types/answerOptionTypes";
 
-export default async function createAnswerOptionsMW(
-	req: Request,
-	res: Response,
-	next: NextFunction
-) {
-	// Get answer options from request body
-	const { answerOptions } = req.body as { answerOptions: AnswerOptionPrivate[] };
-	// Get question from res.locals
-	const { question } = res.locals as { question: QuestionPrivate };
+export default async function createAnswerOptionsMW(_: Request, res: Response, next: NextFunction) {
+	// Get question and question data
+	const {
+		question,
+		questionData: { answerOptions },
+	} = res.locals as { question: QuestionSelect; questionData: CreateQuestionData };
 
 	try {
 		// Create answer options
-		const answerOptionsCreated = await Promise.all(
-			answerOptions.map(
-				async (option) => await createAnswerOption(option.text, option.isCorrect, question.id)
-			)
-		);
+		const answerOptionsData = answerOptions.map((option) => ({
+			...option,
+			questionId: question.id,
+		}));
+		const createdAnswerOptions = await createAnswerOptions(answerOptionsData);
 
-		// Update question in res.locals
-		(res.locals.question as QuestionPrivate) = {
-			...question,
-			answerOptions: answerOptionsCreated.map((option) => ({
-				id: option.id,
-				text: option.text,
-				isCorrect: option.isCorrect,
-			})),
-		};
+		// Add answer options to res.locals
+		(res.locals.answerOptions as AnswerOptionSelect[]) = createdAnswerOptions;
 
 		// Go to next MW
 		return next();
