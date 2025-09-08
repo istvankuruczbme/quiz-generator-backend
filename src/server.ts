@@ -11,6 +11,8 @@ import { userRoute } from "./routes/userRoute";
 import { quizRoute } from "./routes/quizRoute";
 import { quizConfigRoute } from "./routes/quizConfigRoute";
 import { questionRoute } from "./routes/questionRoute";
+import { completionRoute } from "./routes/completionRoute";
+import { completionQuestionRoute } from "./routes/completionQuestionRoute";
 // Functions
 import errorHandlerMW from "./middlewares/error/errorHandlerMW";
 import freeTokenizer from "./utils/tokenizer/freeTokenizer";
@@ -30,6 +32,8 @@ app.use("/api/users", userRoute);
 app.use("/api/quizzes", quizRoute);
 app.use("/api/quizzes/:quizId/config", quizConfigRoute);
 app.use("/api/quizzes/:quizId/questions", questionRoute);
+app.use("/api/quizzes/:quizId/completions", completionRoute);
+app.use("/api/quizzes/:quizId/completions/:completionId/questions", completionQuestionRoute);
 
 // Error handler
 app.use(errorHandlerMW);

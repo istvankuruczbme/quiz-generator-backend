@@ -4,6 +4,7 @@ import { relations } from "drizzle-orm";
 import { QuestionPointsTable } from "./questionPoints";
 import { AnswerOptionTable } from "./answerOption";
 import { id } from "../schemaHelpers";
+import { CompletionQuestionTable } from "./completionQuestion";
 
 // Schema
 export const QuestionTable = pgTable("question", {
@@ -25,5 +26,6 @@ export const QuestionRelations = relations(QuestionTable, ({ one, many }) => {
 		}),
 		points: one(QuestionPointsTable),
 		answerOptions: many(AnswerOptionTable),
+		completions: many(CompletionQuestionTable),
 	};
 });

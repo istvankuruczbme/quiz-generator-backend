@@ -1,6 +1,9 @@
 import { QuestionTable } from "../drizzle/schema/question";
-import { QuestionPointsTable } from "../drizzle/schema/questionPoints";
-import { AnswerOptionPrivate, AnswerOptionPublic } from "./answerOptionTypes";
+import {
+	AnswerOptionPrivate,
+	AnswerOptionPublic,
+	CompletionAnswerOption,
+} from "./answerOptionTypes";
 import { QuestionPoints } from "./questionPointsTypes";
 
 // #region DB types

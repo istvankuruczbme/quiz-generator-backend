@@ -1,19 +1,19 @@
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, eq, isNull, or, sql } from "drizzle-orm";
 import { db } from "../../../drizzle/db";
 import { QuizTable } from "../../../drizzle/schema/quiz";
 import { QuizConfigTable } from "../../../drizzle/schema/quizConfig";
 import { CategoryTable } from "../../../drizzle/schema/category";
 import { UserTable } from "../../../drizzle/schema/user";
-import { QuizPrivate } from "../../../types/quizTypes";
+import { QuizPublic } from "../../../types/quizTypes";
 import { CompletionTable } from "../../../drizzle/schema/completion";
 import AppError from "../../../classes/AppError";
-import getQuestionsPrivateByQuizId from "../question/getQuestionsPrivateByQuizId";
+import getQuestionsPublicByQuizId from "../question/getQuestionsPublicByQuizId";
 
-export default async function getQuizPrivate(
+export default async function getQuizPublic(
 	id: string,
 	params: { userId: string }
-): Promise<QuizPrivate> {
-	// Get params
+): Promise<QuizPublic> {
+	// Get user ID
 	const { userId } = params;
 
 	// Get quiz
@@ -51,8 +51,8 @@ export default async function getQuizPrivate(
 			and(
 				eq(QuizTable.id, id),
 				isNull(QuizTable.deletedAt),
-				eq(QuizTable.userId, userId),
-				eq(QuizConfigTable.state, "DRAFT")
+				eq(QuizConfigTable.state, "ACTIVE"),
+				or(eq(QuizConfigTable.visibility, "PUBLIC"), eq(QuizTable.userId, userId))
 			)
 		)
 		.groupBy(
@@ -77,7 +77,7 @@ export default async function getQuizPrivate(
 	if (!quiz) throw new AppError({ message: "Quiz not found.", status: 404 });
 
 	// Get quiz question
-	const questions = await getQuestionsPrivateByQuizId(quiz.id);
+	const questions = await getQuestionsPublicByQuizId(quiz.id);
 
 	// Return quiz
 	return {

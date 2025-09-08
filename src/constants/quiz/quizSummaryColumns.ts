@@ -4,7 +4,7 @@ import { QuestionTable } from "../../drizzle/schema/question";
 import { QuizTable } from "../../drizzle/schema/quiz";
 import { QuizConfigTable } from "../../drizzle/schema/quizConfig";
 import { UserTable } from "../../drizzle/schema/user";
-import { QuizCompletionTable } from "../../drizzle/schema/quizCompletion";
+import { CompletionTable } from "../../drizzle/schema/completion";
 
 export const QUIZ_SUMMARY_COLUMS = {
 	id: QuizTable.id,
@@ -29,5 +29,5 @@ export const QUIZ_SUMMARY_COLUMS = {
 		photoUrl: UserTable.photoUrl,
 	},
 	questionCount: sql<number>`COUNT(${QuestionTable.id})`,
-	completionCount: sql<number>`COUNT(${QuizCompletionTable.id})`,
+	completionCount: sql<number>`COUNT(${CompletionTable.id})`,
 } as const;

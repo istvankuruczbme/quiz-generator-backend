@@ -2,7 +2,7 @@ import { char, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { createdAt, deletedAt, updatedAt } from "../schemaHelpers";
 import { relations } from "drizzle-orm";
 import { QuizTable } from "./quiz";
-import { QuizCompletionTable } from "./quizCompletion";
+import { CompletionTable } from "./completion";
 import { UserCategoryTable } from "./userCategory";
 
 // Schema
@@ -26,6 +26,6 @@ export const UserRelations = relations(UserTable, ({ many }) => {
 	return {
 		categories: many(UserCategoryTable),
 		quizzes: many(QuizTable),
-		completions: many(QuizCompletionTable),
+		completions: many(CompletionTable),
 	};
 });

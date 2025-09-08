@@ -6,7 +6,7 @@ import { QuizSummary } from "../../../types/quizTypes";
 import { CategoryTable } from "../../../drizzle/schema/category";
 import { UserTable } from "../../../drizzle/schema/user";
 import { QuestionTable } from "../../../drizzle/schema/question";
-import { QuizCompletionTable } from "../../../drizzle/schema/quizCompletion";
+import { CompletionTable } from "../../../drizzle/schema/completion";
 import AppError from "../../../classes/AppError";
 import { QUIZ_SUMMARY_COLUMS } from "../../../constants/quiz/quizSummaryColumns";
 
@@ -25,7 +25,7 @@ export default async function getQuizSummary(
 		.innerJoin(CategoryTable, eq(QuizTable.categoryId, CategoryTable.id))
 		.innerJoin(UserTable, eq(QuizTable.userId, UserTable.id))
 		.leftJoin(QuestionTable, eq(QuestionTable.quizId, QuizTable.id))
-		.leftJoin(QuizCompletionTable, eq(QuizCompletionTable.quizId, QuizTable.id))
+		.leftJoin(CompletionTable, eq(CompletionTable.quizId, QuizTable.id))
 		.where(
 			and(
 				eq(QuizTable.id, id),

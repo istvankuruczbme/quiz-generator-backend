@@ -13,3 +13,9 @@ export type AnswerOptionPublic = Omit<AnswerOptionSelect, "questionId" | "isCorr
 // #region Answer option private
 export type AnswerOptionPrivate = Omit<AnswerOptionSelect, "questionId">;
 //#endregion
+
+// #region Completion answer option
+export type CompletionAnswerOption = AnswerOptionPrivate & {
+	selected: boolean;
+};
+// #endregion

@@ -6,7 +6,7 @@ import { QuizConfigTable } from "../../../drizzle/schema/quizConfig";
 import { UserTable } from "../../../drizzle/schema/user";
 import { QuizSummary } from "../../../types/quizTypes";
 import { QuestionTable } from "../../../drizzle/schema/question";
-import { QuizCompletionTable } from "../../../drizzle/schema/quizCompletion";
+import { CompletionTable } from "../../../drizzle/schema/completion";
 import { QUIZ_SUMMARY_COLUMS } from "../../../constants/quiz/quizSummaryColumns";
 
 export default async function getQuizSummariesByUserId(userId: string): Promise<QuizSummary[]> {
@@ -18,7 +18,7 @@ export default async function getQuizSummariesByUserId(userId: string): Promise<
 		.innerJoin(CategoryTable, eq(QuizTable.categoryId, CategoryTable.id))
 		.innerJoin(UserTable, eq(QuizTable.userId, UserTable.id))
 		.leftJoin(QuestionTable, eq(QuestionTable.quizId, QuizTable.id))
-		.leftJoin(QuizCompletionTable, eq(QuizCompletionTable.quizId, QuizTable.id))
+		.leftJoin(CompletionTable, eq(CompletionTable.quizId, QuizTable.id))
 		.where(and(eq(QuizTable.userId, userId), isNull(QuizTable.deletedAt)))
 		.groupBy(
 			QuizTable.id,
@@ -40,22 +40,4 @@ export default async function getQuizSummariesByUserId(userId: string): Promise<
 
 	// Return quiz summaries
 	return quizSummaries;
-
-	// // Get quiz summaries
-	// const quizDatas = await getQuizDatasByUserId(userId);
-
-	// // Get question count and completion count of quizzes
-	// const questionCounts = await Promise.all(
-	// 	quizDatas.map(async (quiz) => await getQuestionCountByQuizId(quiz.id))
-	// );
-	// const completionCounts = await Promise.all(
-	// 	quizDatas.map(async (quiz) => await getQuizCompletionCountByQuizId(quiz.id))
-	// );
-
-	// // Return quizzes
-	// return quizDatas.map((quizData, i) => ({
-	// 	...quizData,
-	// 	questionCount: questionCounts[i] || 0,
-	// 	completionCount: completionCounts[i] || 0,
-	// }));
 }

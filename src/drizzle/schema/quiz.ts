@@ -3,7 +3,7 @@ import { UserTable } from "./user";
 import { relations } from "drizzle-orm";
 import { QuestionTable } from "./question";
 import { createdAt, deletedAt, id, updatedAt } from "../schemaHelpers";
-import { QuizCompletionTable } from "./quizCompletion";
+import { CompletionTable } from "./completion";
 import { CategoryTable } from "./category";
 import { QuizConfigTable } from "./quizConfig";
 
@@ -42,6 +42,6 @@ export const QuizRelations = relations(QuizTable, ({ one, many }) => {
 			references: [UserTable.id],
 		}),
 		questions: many(QuestionTable),
-		completions: many(QuizCompletionTable),
+		completions: many(CompletionTable),
 	};
 });

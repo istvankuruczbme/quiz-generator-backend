@@ -1,5 +1,6 @@
 import { QuizTable } from "../drizzle/schema/quiz";
 import { CategorySelect } from "./categoryTypes";
+import { CompletionQuestionPrivate, CompletionQuestionPublic } from "./completionQuestionTypes";
 import { QuestionPrivate, QuestionPublic } from "./questionTypes";
 import { QuizConfig } from "./quizConfigTypes";
 import { UserPublic } from "./userTypes";
@@ -25,16 +26,28 @@ export type QuizSummary = QuizData & {
 };
 // #endregion
 
-// #region Quiz public
+// #region Quiz (public)
 export type QuizPublic = QuizData & {
 	questions: QuestionPublic[];
 	completionCount: number;
 };
 //#endregion
 
-// #region Quiz private
+// #region Quiz (private)
 export type QuizPrivate = QuizData & {
 	questions: QuestionPrivate[];
 	completionCount: number;
+};
+//#endregion
+
+//#region Completion question (public)
+export type CompletionQuizPublic = QuizData & {
+	questions: CompletionQuestionPublic[];
+};
+//#endregion
+
+//#region Completion question (private)
+export type CompletionQuizPrivate = QuizData & {
+	questions: CompletionQuestionPrivate[];
 };
 //#endregion

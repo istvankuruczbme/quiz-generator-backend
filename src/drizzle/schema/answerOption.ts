@@ -2,7 +2,6 @@ import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { QuestionTable } from "./question";
 import { relations } from "drizzle-orm";
 import { id } from "../schemaHelpers";
-import { QuizCompletionMarkedAnswerOptionTable } from "./quizCompletionMarkedAnswerOption";
 
 // Schema
 export const AnswerOptionTable = pgTable("answer_option", {
@@ -21,6 +20,5 @@ export const AnswerOptionRelations = relations(AnswerOptionTable, ({ one, many }
 			fields: [AnswerOptionTable.questionId],
 			references: [QuestionTable.id],
 		}),
-		quizCompletions: many(QuizCompletionMarkedAnswerOptionTable),
 	};
 });

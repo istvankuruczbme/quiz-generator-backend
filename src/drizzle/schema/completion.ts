@@ -1,15 +1,16 @@
-import { pgTable, uuid } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
 import { createdAt, id, updatedAt } from "../schemaHelpers";
 import { QuizTable } from "./quiz";
 import { relations } from "drizzle-orm";
 import { UserTable } from "./user";
-import { QuizCompletionMarkedAnswerOptionTable } from "./quizCompletionMarkedAnswerOption";
+import { CompletionQuestionTable } from "./completionQuestion";
 
 // Schema
-export const QuizCompletionTable = pgTable("quiz_completion", {
+export const CompletionTable = pgTable("completion", {
 	id,
 	updatedAt,
 	createdAt,
+	finishedAt: timestamp("finished_at"),
 	quizId: uuid("quiz_id")
 		.references(() => QuizTable.id)
 		.notNull(),
@@ -19,16 +20,16 @@ export const QuizCompletionTable = pgTable("quiz_completion", {
 });
 
 // Relations
-export const QuizCompletionRelations = relations(QuizCompletionTable, ({ one, many }) => {
+export const CompletionRelations = relations(CompletionTable, ({ one, many }) => {
 	return {
 		quiz: one(QuizTable, {
-			fields: [QuizCompletionTable.quizId],
+			fields: [CompletionTable.quizId],
 			references: [QuizTable.id],
 		}),
 		user: one(UserTable, {
-			fields: [QuizCompletionTable.userId],
+			fields: [CompletionTable.userId],
 			references: [UserTable.id],
 		}),
-		markedAnswerOptions: many(QuizCompletionMarkedAnswerOptionTable),
+		questions: many(CompletionQuestionTable),
 	};
 });

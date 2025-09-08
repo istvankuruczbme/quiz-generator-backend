@@ -6,7 +6,9 @@ import { QuestionPrivate } from "../../../types/questionTypes";
 import { AnswerOptionPrivate } from "../../../types/answerOptionTypes";
 import { AnswerOptionTable } from "../../../drizzle/schema/answerOption";
 
-export default async function getQuestionsByQuizId(quizId: string): Promise<QuestionPrivate[]> {
+export default async function getQuestionsPrivateByQuizId(
+	quizId: string
+): Promise<QuestionPrivate[]> {
 	// Get questions
 	const questions = await db
 		.select({
