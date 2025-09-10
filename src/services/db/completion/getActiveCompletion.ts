@@ -1,11 +1,11 @@
 import AppError from "../../../classes/AppError";
 import { db } from "../../../drizzle/db";
-import { CompletionWithQuestions } from "../../../types/completionTypes";
+import { ActiveCompletionWithQuestions } from "../../../types/completionTypes";
 
-export default async function getCompletion(
+export default async function getActiveCompletion(
 	id: string,
 	params: { quizId: string }
-): Promise<CompletionWithQuestions> {
+): Promise<ActiveCompletionWithQuestions> {
 	// Get quiz ID
 	const { quizId } = params;
 
@@ -22,7 +22,8 @@ export default async function getCompletion(
 				},
 			},
 		},
-		where: (completion, { eq, and }) => and(eq(completion.id, id), eq(completion.quizId, quizId)),
+		where: (completion, { eq, and, isNull }) =>
+			and(eq(completion.id, id), eq(completion.quizId, quizId), isNull(completion.finishedAt)),
 	});
 
 	// Check completion

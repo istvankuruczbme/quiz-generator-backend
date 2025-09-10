@@ -1,25 +1,26 @@
 import { Request, Response, NextFunction } from "express";
+import { CompletionPrivate, FinishedCompletionWithQuestions } from "../../../types/completionTypes";
+import { QuizPrivate } from "../../../types/quizTypes";
 import { UserSelect } from "../../../types/userTypes";
-import { QuizPublic } from "../../../types/quizTypes";
-import { CompletionPublic, ActiveCompletionWithQuestions } from "../../../types/completionTypes";
+import { CompletionQuestionPrivate } from "../../../types/completionQuestionTypes";
 import getUserPublicData from "../../../utils/db/user/getUserPublicData";
-import { CompletionQuestionPublic } from "../../../types/completionQuestionTypes";
+import AppError from "../../../classes/AppError";
 
-export default function formatCompletionMW(_: Request, res: Response, next: NextFunction) {
-	// Get user, quiz and completion
-	const { user, quiz, completion } = res.locals as {
+export default function formatFinishedCompletionMW(_: Request, res: Response, next: NextFunction) {
+	// Get completion, quiz and user
+	const { completion, quiz, user } = res.locals as {
+		completion: FinishedCompletionWithQuestions;
+		quiz: QuizPrivate;
 		user: UserSelect;
-		quiz: QuizPublic;
-		completion: ActiveCompletionWithQuestions;
 	};
 
 	// Map question data
-	const questions: CompletionQuestionPublic[] = quiz.questions.map((question) => {
+	const questions: CompletionQuestionPrivate[] = quiz.questions.map((question) => {
 		// Get completion question
 		const questionCompletion = completion.questions.find((q) => q.questionId === question.id);
 
 		// Check question completion
-		if (!questionCompletion) return question;
+		if (!questionCompletion) throw new AppError({ message: "Question has no answer." });
 
 		// Return question with completion data
 		return {
@@ -32,7 +33,7 @@ export default function formatCompletionMW(_: Request, res: Response, next: Next
 	});
 
 	// Update completion in res.locals
-	(res.locals.completion as CompletionPublic) = {
+	(res.locals.completion as CompletionPrivate) = {
 		id: completion.id,
 		updatedAt: completion.updatedAt,
 		createdAt: completion.createdAt,

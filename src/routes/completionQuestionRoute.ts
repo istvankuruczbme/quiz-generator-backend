@@ -4,7 +4,7 @@ import getUserMW from "../middlewares/db/user/getUserMW";
 import validateQuizIdMW from "../middlewares/db/quiz/validateQuizIdMW";
 import getQuizPublicMW from "../middlewares/db/quiz/getQuizPublicMW";
 import validateCompletionIdMW from "../middlewares/db/completion/validateCompletionIdMW";
-import getCompletionMW from "../middlewares/db/completion/getCompletionMW";
+import getActiveCompletionMW from "../middlewares/db/completion/getActiveCompletionMW";
 import validateCreateCompletionQuestionMW from "../middlewares/db/completionQuestion/validateCreateCompletionQuestionMW";
 import createCompletionQuestionMW from "../middlewares/db/completionQuestion/createCompletionQuestionMW";
 import validateQuestionIdMW from "../middlewares/db/question/validateQuestionIdMW";
@@ -22,7 +22,7 @@ router.use(
 	validateQuizIdMW,
 	getQuizPublicMW,
 	validateCompletionIdMW,
-	getCompletionMW
+	getActiveCompletionMW
 );
 
 // Create completion question

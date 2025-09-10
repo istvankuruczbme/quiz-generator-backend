@@ -9,9 +9,16 @@ export type CompletionInsert = typeof CompletionTable.$inferInsert;
 export type CompletionUpdate = Partial<Pick<CompletionSelect, "updatedAt" | "finishedAt">>;
 //#endregion
 
-// #region Completion with questions
-export type CompletionWithQuestions = Omit<CompletionSelect, "userId" | "quizId"> & {
+// #region Active ompletion with questions
+export type ActiveCompletionWithQuestions = Omit<CompletionSelect, "userId" | "quizId"> & {
 	questions: CompletionQuestionWithQuestionId[];
+};
+//#endregion
+
+// #region Finished ompletion with questions
+export type FinishedCompletionWithQuestions = Omit<CompletionSelect, "userId" | "quizId"> & {
+	questions: CompletionQuestionWithQuestionId[];
+	quiz: { id: string };
 };
 //#endregion
 

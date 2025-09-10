@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { CompletionWithQuestions } from "../../../types/completionTypes";
+import { ActiveCompletionWithQuestions } from "../../../types/completionTypes";
 import { QuestionPrivate } from "../../../types/questionTypes";
 import { CompletionQuestionPrivate } from "../../../types/completionQuestionTypes";
 import AppError from "../../../classes/AppError";
@@ -11,7 +11,7 @@ export default function getCompletionQuestionPrivateMW(
 ) {
 	// Get completion and question
 	const { completion, question } = res.locals as {
-		completion: CompletionWithQuestions;
+		completion: ActiveCompletionWithQuestions;
 		question: QuestionPrivate;
 	};
 
