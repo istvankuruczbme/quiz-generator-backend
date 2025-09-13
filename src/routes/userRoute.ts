@@ -26,6 +26,9 @@ import authUserMW from "../middlewares/auth/authUserMW";
 import getUserProfileMW from "../middlewares/db/user/getUserProfileMW";
 import imageUploadMW from "../middlewares/helper/imageUploadMW";
 import getCategoriesMW from "../middlewares/db/category/getCategoriesMW";
+import getUserCompletionsMW from "../middlewares/db/completion/getUserCompletionsMW";
+import returnCompletionsMW from "../middlewares/db/completion/returnCompletionsMW";
+import createUserCategoriesEmbeddingMW from "../middlewares/db/userCategory/createUserCategoriesEmbeddingMW";
 
 const router = Router();
 
@@ -40,6 +43,9 @@ router.get("/:userId/subscription", getUserMW, getUserSubscriptionMW, returnSubs
 
 // Get user categories
 router.get("/:userId/categories", getUserMW, getUserCategoriesMW, returnUserCategoriesMW);
+
+// Get user completions
+router.get("/:userId/completions", getUserMW, getUserCompletionsMW, returnCompletionsMW);
 
 // Create a session to customer portal
 router.post(
@@ -80,6 +86,7 @@ router.put(
 	getCategoriesMW,
 	getUserCategoriesMW,
 	updateUserCategoriesMW,
+	createUserCategoriesEmbeddingMW,
 	returnUserCategoriesMW
 );
 

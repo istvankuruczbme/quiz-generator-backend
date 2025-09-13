@@ -1,18 +1,17 @@
 import AppError from "../../../classes/AppError";
 import { openai } from "../../../config/openai";
+import { CategorySelect } from "../../../types/categoryTypes";
 
-export default async function createQuizEmbedding(quizData: {
-	title: string;
-	description: string;
-	category: string;
-}): Promise<number[]> {
-	// Get quiz properties
-	const { title, description, category } = quizData;
+export default async function createUserCategoriesEmbedding(
+	categories: CategorySelect[]
+): Promise<number[]> {
+	// Get category names
+	const categoryNames = categories.map((category) => category.name).join(" ");
 
 	// Create embedding
 	const { data } = await openai.embeddings.create({
 		model: "text-embedding-3-small",
-		input: `Title: ${title}. Description: ${description}. Category: ${category}.`,
+		input: categoryNames,
 		encoding_format: "float",
 	});
 

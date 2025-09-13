@@ -1,4 +1,4 @@
-import { char, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { char, pgTable, text, uniqueIndex, uuid, vector } from "drizzle-orm/pg-core";
 import { createdAt, deletedAt, updatedAt } from "../schemaHelpers";
 import { relations } from "drizzle-orm";
 import { QuizTable } from "./quiz";
@@ -14,6 +14,7 @@ export const UserTable = pgTable(
 		photoUrl: text("photo_url"),
 		customerId: char("customer_id", { length: 18 }),
 		subscriptionId: char("subscription_id", { length: 28 }),
+		embedding: vector("embedding", { dimensions: 1536 }),
 		updatedAt,
 		createdAt,
 		deletedAt,

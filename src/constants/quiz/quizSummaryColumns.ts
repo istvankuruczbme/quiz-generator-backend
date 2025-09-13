@@ -28,6 +28,6 @@ export const QUIZ_SUMMARY_COLUMS = {
 		name: UserTable.name,
 		photoUrl: UserTable.photoUrl,
 	},
-	questionCount: sql<number>`COUNT(${QuestionTable.id})`,
-	completionCount: sql<number>`COUNT(${CompletionTable.id})`,
+	questionCount: sql<number>`COUNT(${QuestionTable.id})::int`,
+	completionCount: sql<number>`COUNT(DISTINCT ${CompletionTable.id})::int`,
 } as const;

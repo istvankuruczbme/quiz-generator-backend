@@ -57,6 +57,13 @@
       "when": 1757325973304,
       "tag": "0007_known_midnight",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1757748794695,
+      "tag": "0008_flawless_spectrum",
+      "breakpoints": true
     }
   ]
 }

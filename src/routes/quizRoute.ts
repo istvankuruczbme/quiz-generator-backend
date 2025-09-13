@@ -30,7 +30,8 @@ import formatCreatedQuizMW from "../middlewares/db/quiz/formatCreatedQuizMW";
 import getQuizPrivateMW from "../middlewares/db/quiz/getQuizPrivateMW";
 import validateUpdateQuizDataMW from "../middlewares/db/quiz/validateUpdateQuizDataMW";
 import formatUpdatedQuizMW from "../middlewares/db/quiz/formatUpdatedQuizMW";
-import getQuizPublicMW from "../middlewares/db/quiz/getQuizPublicMW";
+import validateQuizSearchDataMW from "../middlewares/db/quiz/validateQuizSearchDataMW";
+import searchQuizzesMW from "../middlewares/db/quiz/searchQuizzesMW";
 
 const router = Router();
 
@@ -45,6 +46,9 @@ router.get("/:quizId/private", validateQuizIdMW, getQuizPrivateMW, returnQuizMW)
 
 // Get quiz summary
 router.get("/:quizId/summary", validateQuizIdMW, getQuizSummaryMW, returnQuizMW);
+
+// Search quizzes
+router.get("/search", validateQuizSearchDataMW, searchQuizzesMW, returnQuizSummariesMW);
 
 // Create new quiz
 router.post(

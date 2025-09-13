@@ -6,7 +6,13 @@ export type UserInsert = typeof UserTable.$inferSelect;
 export type UserUpdate = Partial<
 	Pick<
 		UserSelect,
-		"name" | "photoUrl" | "customerId" | "subscriptionId" | "updatedAt" | "deletedAt"
+		| "name"
+		| "photoUrl"
+		| "customerId"
+		| "subscriptionId"
+		| "embedding"
+		| "updatedAt"
+		| "deletedAt"
 	>
 >;
 // #endregion
