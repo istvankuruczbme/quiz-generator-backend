@@ -1,0 +1,2 @@
+ALTER TABLE "quiz" ADD COLUMN "search" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "quiz"."title"), 'A') ||
+						  setweight(to_tsvector('english',"quiz"."description"), 'B')) STORED NOT NULL;

@@ -20,7 +20,7 @@ export default async function getQuizzesByEmbedding(
 	const similarity = sql<number>`1 - (${cosineDistance(QuizTable.embedding, embedding)})`;
 
 	// Get quiz summaries
-	const quizSummaries = await db
+	const quizSummariesRaw = await db
 		.select({ ...QUIZ_SUMMARY_COLUMS, similarity })
 		.from(QuizTable)
 		.innerJoin(QuizConfigTable, eq(QuizConfigTable.quizId, QuizTable.id))
@@ -57,6 +57,12 @@ export default async function getQuizzesByEmbedding(
 		)
 		.orderBy((quiz) => desc(quiz.similarity))
 		.limit(limit ?? 5);
+
+	// Remove similarity from results
+	const quizSummaries = quizSummariesRaw.map((quiz) => {
+		const { similarity, ...quizSummary } = quiz;
+		return quizSummary;
+	});
 
 	// Return quiz summaries
 	return quizSummaries;

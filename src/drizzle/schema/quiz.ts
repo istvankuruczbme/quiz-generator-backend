@@ -1,8 +1,8 @@
 import { index, pgTable, text, uuid, vector } from "drizzle-orm/pg-core";
 import { UserTable } from "./user";
-import { relations } from "drizzle-orm";
+import { relations, sql, SQL } from "drizzle-orm";
 import { QuestionTable } from "./question";
-import { createdAt, deletedAt, id, updatedAt } from "../schemaHelpers";
+import { createdAt, deletedAt, id, tsvector, updatedAt } from "../schemaHelpers";
 import { CompletionTable } from "./completion";
 import { CategoryTable } from "./category";
 import { QuizConfigTable } from "./quizConfig";
@@ -19,6 +19,12 @@ export const QuizTable = pgTable(
 		description: text("description").notNull(),
 		photoUrl: text("photo_url"),
 		embedding: vector("embedding", { dimensions: 1536 }).notNull(),
+		search: tsvector("search")
+			.notNull()
+			.generatedAlwaysAs((): SQL => {
+				return sql`setweight(to_tsvector('english', ${QuizTable.title}), 'A') ||
+						  setweight(to_tsvector('english',${QuizTable.description}), 'B')`;
+			}),
 		updatedAt,
 		createdAt,
 		deletedAt,
@@ -26,7 +32,10 @@ export const QuizTable = pgTable(
 			.references(() => UserTable.id)
 			.notNull(),
 	},
-	(table) => [index("embedding_index").using("hnsw", table.embedding.op("vector_cosine_ops"))]
+	(table) => [
+		index("embedding_index").using("hnsw", table.embedding.op("vector_cosine_ops")),
+		index("search_index").using("gin", table.search),
+	]
 );
 
 // Relations

@@ -1,7 +1,16 @@
-import { timestamp, uuid } from "drizzle-orm/pg-core";
+import { customType, timestamp, uuid } from "drizzle-orm/pg-core";
 
-// Ids
+// Id
 const id = uuid("id").defaultRandom().primaryKey();
+
+// Text search
+export const tsvector = customType<{
+	data: string;
+}>({
+	dataType() {
+		return `tsvector`;
+	},
+});
 
 // Timestamps
 const updatedAt = timestamp("updated_at")

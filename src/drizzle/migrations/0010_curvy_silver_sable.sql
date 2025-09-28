@@ -1,0 +1,1 @@
+CREATE INDEX "search_index" ON "quiz" USING gin ("search");

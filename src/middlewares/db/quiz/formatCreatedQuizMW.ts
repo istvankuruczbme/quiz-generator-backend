@@ -25,7 +25,6 @@ export default async function formatCreatedQuizMW(_: Request, res: Response, nex
 			title: quiz.title,
 			description: quiz.description,
 			photoUrl: quiz.photoUrl,
-			embedding: quiz.embedding,
 			updatedAt: quiz.updatedAt,
 			createdAt: quiz.createdAt,
 			config: {

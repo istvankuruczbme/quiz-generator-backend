@@ -15,7 +15,10 @@ export default async function searchQuizzesMW(_: Request, res: Response, next: N
 
 	try {
 		// Query by search data
-		if (quizSearchData.searchText || quizSearchData.categoryIds) {
+		if (
+			quizSearchData.searchText ||
+			(quizSearchData.categoryIds && quizSearchData.categoryIds.length > 0)
+		) {
 			// Get quiz summaries by search data
 			const quizSummaries = await getQuizSummariesByTitleAndCategory({
 				titleQuery: quizSearchData.searchText,
@@ -29,7 +32,10 @@ export default async function searchQuizzesMW(_: Request, res: Response, next: N
 		}
 
 		// No quiz search data
-		if (!quizSearchData.searchText && !quizSearchData.categoryIds) {
+		if (
+			!quizSearchData.searchText &&
+			(!quizSearchData.categoryIds || quizSearchData.categoryIds.length === 0)
+		) {
 			// Recommended quizzes based on categories selected by user
 			if (user.embedding) {
 				// Get quizzes by user embedding

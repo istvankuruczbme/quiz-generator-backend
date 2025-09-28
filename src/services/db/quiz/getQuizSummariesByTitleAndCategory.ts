@@ -1,4 +1,4 @@
-import { and, desc, eq, ilike, inArray, isNull, or } from "drizzle-orm";
+import { and, desc, eq, ilike, inArray, isNull, or, sql } from "drizzle-orm";
 import { QUIZ_SUMMARY_COLUMS } from "../../../constants/quiz/quizSummaryColumns";
 import { db } from "../../../drizzle/db";
 import { QuizTable } from "../../../drizzle/schema/quiz";
@@ -18,9 +18,12 @@ export default async function getQuizSummariesByTitleAndCategory(params: {
 	// Get params
 	const { titleQuery, categoryIds, limit, userId } = params;
 
+	// Match query
+	const rank = sql<number>`ts_rank_cd(${QuizTable.search}, websearch_to_tsquery('english', ${titleQuery}))`;
+
 	// Get quiz summaries
-	const quizSummaries = await db
-		.select(QUIZ_SUMMARY_COLUMS)
+	const quizSummariesRaw = await db
+		.select({ ...QUIZ_SUMMARY_COLUMS, rank })
 		.from(QuizTable)
 		.innerJoin(QuizConfigTable, eq(QuizConfigTable.quizId, QuizTable.id))
 		.innerJoin(CategoryTable, eq(QuizTable.categoryId, CategoryTable.id))
@@ -34,7 +37,9 @@ export default async function getQuizSummariesByTitleAndCategory(params: {
 					and(eq(QuizConfigTable.state, "ACTIVE"), eq(QuizConfigTable.visibility, "PUBLIC")),
 					eq(QuizTable.userId, userId)
 				),
-				titleQuery ? ilike(QuizTable.title, `%${titleQuery}%`) : undefined,
+				titleQuery
+					? sql`${QuizTable.search} @@ websearch_to_tsquery('english', ${titleQuery})`
+					: undefined,
 				categoryIds && categoryIds.length > 0
 					? inArray(QuizTable.categoryId, categoryIds)
 					: undefined
@@ -57,8 +62,14 @@ export default async function getQuizSummariesByTitleAndCategory(params: {
 			UserTable.name,
 			UserTable.photoUrl
 		)
-		.orderBy((quiz) => desc(quiz.completionCount))
+		.orderBy((quiz) => [desc(quiz.rank), desc(quiz.completionCount)])
 		.limit(limit ?? 5);
+
+	// Remove rank from results
+	const quizSummaries = quizSummariesRaw.map((quiz) => {
+		const { rank, ...quizSummary } = quiz;
+		return quizSummary;
+	});
 
 	// Return quiz summaries
 	return quizSummaries;

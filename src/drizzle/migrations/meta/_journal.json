@@ -64,6 +64,20 @@
       "when": 1757748794695,
       "tag": "0008_flawless_spectrum",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1759045750922,
+      "tag": "0009_left_nekra",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1759046885611,
+      "tag": "0010_curvy_silver_sable",
+      "breakpoints": true
     }
   ]
 }

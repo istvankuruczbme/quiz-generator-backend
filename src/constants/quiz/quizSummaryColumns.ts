@@ -15,7 +15,6 @@ export const QUIZ_SUMMARY_COLUMS = {
 	title: QuizTable.title,
 	description: QuizTable.description,
 	photoUrl: QuizTable.photoUrl,
-	embedding: QuizTable.embedding,
 	updatedAt: QuizTable.updatedAt,
 	createdAt: QuizTable.createdAt,
 	config: {

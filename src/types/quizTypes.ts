@@ -12,7 +12,7 @@ export type QuizUpdate = Partial<Omit<QuizSelect, "id" | "userId" | "createdAt">
 // #endregion
 
 // #region Quiz data
-type QuizData = Omit<QuizSelect, "categoryId" | "userId" | "deletedAt"> & {
+type QuizData = Omit<QuizSelect, "embedding" | "search" | "categoryId" | "userId" | "deletedAt"> & {
 	config: QuizConfig;
 	category: CategorySelect;
 	user: UserPublic;

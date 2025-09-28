@@ -20,7 +20,6 @@ export default async function getQuizzesPublicByQuizIds(quizIds: string[]): Prom
 				id: CategoryTable.id,
 				name: CategoryTable.name,
 			},
-			embedding: QuizTable.embedding,
 			updatedAt: QuizTable.updatedAt,
 			createdAt: QuizTable.createdAt,
 			config: {
