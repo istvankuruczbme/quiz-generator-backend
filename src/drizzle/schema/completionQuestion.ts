@@ -1,4 +1,4 @@
-import { check, pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
+import { check, pgTable, primaryKey, timestamp, uuid } from "drizzle-orm/pg-core";
 import { id } from "../schemaHelpers";
 import { QuestionTable } from "./question";
 import { relations, sql } from "drizzle-orm";
@@ -10,14 +10,15 @@ export const CompletionQuestionTable = pgTable(
 	{
 		questionId: uuid("question_id")
 			.references(() => QuestionTable.id)
-			.primaryKey(),
-		selectedAnswerOptionIds: uuid("selected_answer_option_ids").array().notNull(),
-		answeredAt: timestamp("answered_at").notNull().defaultNow(),
+			.notNull(),
 		completionId: uuid("completion_id")
 			.references(() => CompletionTable.id)
 			.notNull(),
+		selectedAnswerOptionIds: uuid("selected_answer_option_ids").array().notNull(),
+		answeredAt: timestamp("answered_at").notNull().defaultNow(),
 	},
 	(table) => [
+		primaryKey({ columns: [table.questionId, table.completionId] }),
 		check(
 			"selected_answer_option_ids_nonempty",
 			sql`array_length(${table.selectedAnswerOptionIds}, 1) > 0`

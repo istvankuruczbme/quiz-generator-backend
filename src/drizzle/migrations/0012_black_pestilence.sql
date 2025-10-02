@@ -1,0 +1,1 @@
+ALTER TABLE "completion_question" ALTER COLUMN "question_id" SET NOT NULL;
