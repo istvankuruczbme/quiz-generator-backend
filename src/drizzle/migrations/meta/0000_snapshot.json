@@ -1,5 +1,5 @@
 {
-  "id": "fad92e71-4c88-4a23-add9-c050d1881c75",
+  "id": "26127dc6-b2b9-4297-8728-6fc88e711929",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -81,6 +81,163 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.completion": {
+      "name": "completion",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "finished_at": {
+          "name": "finished_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "quiz_id": {
+          "name": "quiz_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "completion_quiz_id_quiz_id_fk": {
+          "name": "completion_quiz_id_quiz_id_fk",
+          "tableFrom": "completion",
+          "tableTo": "quiz",
+          "columnsFrom": [
+            "quiz_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completion_user_id_user_id_fk": {
+          "name": "completion_user_id_user_id_fk",
+          "tableFrom": "completion",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.completion_question": {
+      "name": "completion_question",
+      "schema": "",
+      "columns": {
+        "question_id": {
+          "name": "question_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "completion_id": {
+          "name": "completion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "selected_answer_option_ids": {
+          "name": "selected_answer_option_ids",
+          "type": "uuid[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answered_at": {
+          "name": "answered_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "completion_question_question_id_question_id_fk": {
+          "name": "completion_question_question_id_question_id_fk",
+          "tableFrom": "completion_question",
+          "tableTo": "question",
+          "columnsFrom": [
+            "question_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completion_question_completion_id_completion_id_fk": {
+          "name": "completion_question_completion_id_completion_id_fk",
+          "tableFrom": "completion_question",
+          "tableTo": "completion",
+          "columnsFrom": [
+            "completion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "completion_question_question_id_completion_id_pk": {
+          "name": "completion_question_question_id_completion_id_pk",
+          "columns": [
+            "question_id",
+            "completion_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "selected_answer_option_ids_nonempty": {
+          "name": "selected_answer_option_ids_nonempty",
+          "value": "array_length(\"completion_question\".\"selected_answer_option_ids\", 1) > 0"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.question": {
@@ -177,7 +334,23 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "question_points_question_id_index": {
+          "name": "question_points_question_id_index",
+          "columns": [
+            {
+              "expression": "question_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "question_points_question_id_question_id_fk": {
           "name": "question_points_question_id_question_id_fk",
@@ -194,7 +367,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "question_points_question_id_unique": {
+          "name": "question_points_question_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "question_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -240,6 +421,16 @@
           "primaryKey": false,
           "notNull": true
         },
+        "search": {
+          "name": "search",
+          "type": "tsvector",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "as": "setweight(to_tsvector('english', \"quiz\".\"title\"), 'A') ||\n\t\t\t\t\t\t  setweight(to_tsvector('english',\"quiz\".\"description\"), 'B')",
+            "type": "stored"
+          }
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp",
@@ -283,6 +474,21 @@
           "concurrently": false,
           "method": "hnsw",
           "with": {}
+        },
+        "search_index": {
+          "name": "search_index",
+          "columns": [
+            {
+              "expression": "search",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -314,139 +520,6 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.quiz_completion": {
-      "name": "quiz_completion",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "quiz_id": {
-          "name": "quiz_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "quiz_completion_quiz_id_quiz_id_fk": {
-          "name": "quiz_completion_quiz_id_quiz_id_fk",
-          "tableFrom": "quiz_completion",
-          "tableTo": "quiz",
-          "columnsFrom": [
-            "quiz_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "quiz_completion_user_id_user_id_fk": {
-          "name": "quiz_completion_user_id_user_id_fk",
-          "tableFrom": "quiz_completion",
-          "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.quiz_completion_marked_answer_option": {
-      "name": "quiz_completion_marked_answer_option",
-      "schema": "",
-      "columns": {
-        "answer_option_id": {
-          "name": "answer_option_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "quiz_completion_id": {
-          "name": "quiz_completion_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "quiz_completion_marked_answer_option_answer_option_id_answer_option_id_fk": {
-          "name": "quiz_completion_marked_answer_option_answer_option_id_answer_option_id_fk",
-          "tableFrom": "quiz_completion_marked_answer_option",
-          "tableTo": "answer_option",
-          "columnsFrom": [
-            "answer_option_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "quiz_completion_marked_answer_option_quiz_completion_id_quiz_completion_id_fk": {
-          "name": "quiz_completion_marked_answer_option_quiz_completion_id_quiz_completion_id_fk",
-          "tableFrom": "quiz_completion_marked_answer_option",
-          "tableTo": "quiz_completion",
-          "columnsFrom": [
-            "quiz_completion_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "quiz_completion_marked_answer_option_answer_option_id_quiz_completion_id_pk": {
-          "name": "quiz_completion_marked_answer_option_answer_option_id_quiz_completion_id_pk",
-          "columns": [
-            "answer_option_id",
-            "quiz_completion_id"
-          ]
-        }
-      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -494,7 +567,23 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "quiz_config_quiz_id_index": {
+          "name": "quiz_config_quiz_id_index",
+          "columns": [
+            {
+              "expression": "quiz_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "quiz_config_quiz_id_quiz_id_fk": {
           "name": "quiz_config_quiz_id_quiz_id_fk",
@@ -511,7 +600,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "quiz_config_quiz_id_unique": {
+          "name": "quiz_config_quiz_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "quiz_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -526,20 +623,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "customer_id": {
-          "name": "customer_id",
-          "type": "char(18)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "name": {
           "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -550,9 +635,21 @@
           "primaryKey": false,
           "notNull": false
         },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "char(18)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "subscription_id": {
           "name": "subscription_id",
           "type": "char(28)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "embedding": {
+          "name": "embedding",
+          "type": "vector(1536)",
           "primaryKey": false,
           "notNull": false
         },
@@ -596,15 +693,7 @@
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "user_email_unique": {
-          "name": "user_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -675,19 +764,19 @@
       "name": "category_name",
       "schema": "public",
       "values": [
-        "History",
-        "Geography",
-        "Science",
-        "Literature",
-        "Art",
-        "Music",
-        "Movies",
-        "Sports",
-        "Technology",
-        "Politics",
-        "Food",
-        "Travel",
-        "General Knowledge"
+        "history",
+        "geography",
+        "science",
+        "literature",
+        "art",
+        "music",
+        "movies",
+        "sports",
+        "technology",
+        "politics",
+        "food",
+        "travel",
+        "general knowledge"
       ]
     },
     "public.quiz_config_question_order": {

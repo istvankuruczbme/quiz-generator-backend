@@ -1,5 +1,5 @@
-import { encoder } from "../../config/tiktoken";
+import { tokenizer } from "../../config/tiktoken";
 
 export default function freeTokenizer(): void {
-	encoder.free();
+	tokenizer.free();
 }

@@ -1,4 +1,5 @@
 import questionResponseFormat from "../../assets/openaiQuestionStructure";
+import AppError from "../../classes/AppError";
 import { openai } from "../../config/openai";
 import { OpenAIQuestionResponse } from "../../types/questionTypes";
 
@@ -21,7 +22,7 @@ export default async function generateQuestion(
 			},
 		],
 		response_format: questionResponseFormat,
-		temperature: temperature || 0.5,
+		temperature: temperature ?? 0.5,
 	});
 	// console.log(completion);
 
@@ -29,7 +30,8 @@ export default async function generateQuestion(
 	const rawQuestion = completion.choices[0]?.message.content;
 
 	// Check if question exists
-	if (rawQuestion == undefined) throw new Error("quiz/generation/no-openai-response");
+	if (!rawQuestion) throw new AppError({ message: "No question generated" });
 
+	// Return parsed question
 	return JSON.parse(rawQuestion) as OpenAIQuestionResponse;
 }

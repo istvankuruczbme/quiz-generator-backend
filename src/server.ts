@@ -21,8 +21,8 @@ import freeTokenizer from "./utils/tokenizer/freeTokenizer";
 const app = express();
 
 // Middlewares
-app.use(express.json()); // Parse JSON requests
 app.use(cors({ origin: process.env.CLIENT_URL })); // Enable requests only from the client
+app.use(express.json()); // Parse JSON requests
 
 // Routes
 app.use("/api/products", productRoute);
@@ -38,14 +38,17 @@ app.use("/api/quizzes/:quizId/completions/:completionId/questions", completionQu
 // Error handler
 app.use(errorHandlerMW);
 
-// Run the server
-const server = app.listen(process.env.PORT!, () => {
-	console.log("Listening on port", process.env.PORT!);
+// Start server
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => {
+	console.log("Listening on port", port);
 });
 
-// Clean up encoder on shutdown
+// Stop server
 process.on("SIGINT", () => {
-	console.log("Shutting down...");
+	// Free tokenizer resources
 	freeTokenizer();
+
+	// Close server
 	server.close(() => process.exit(0));
 });

@@ -10,10 +10,10 @@ export default async function getUserFromAuth(token: string): Promise<User> {
 	} = await supabase.auth.getUser(token);
 
 	// Check error
-	if (error != null) throw new AppError({ message: "Error getting authenticated user." });
+	if (error) throw new AppError({ message: "Error getting authenticated user." });
 
 	// Check user
-	if (user == null) throw new AppError({ message: "User not found.", status: 404 });
+	if (!user) throw new AppError({ message: "User not found.", status: 404 });
 
 	// Return user
 	return user;

@@ -11,7 +11,8 @@ import * as answerOption from "./schema/answerOption";
 import * as completion from "./schema/completion";
 import * as completionQuestion from "./schema/completionQuestion";
 
-const client = postgres(process.env.SUPABASE_DATABASE_URL!, { prepare: false });
+// Postgres client
+const postgresClient = postgres(process.env.SUPABASE_DATABASE_URL!, { prepare: false });
 
 // Schema
 const schema = {
@@ -27,4 +28,5 @@ const schema = {
 	...completionQuestion,
 };
 
-export const db = drizzle(client, { schema });
+// Drizzle client
+export const db = drizzle(postgresClient, { schema });

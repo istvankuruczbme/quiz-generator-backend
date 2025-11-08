@@ -1,5 +1,4 @@
 import { encoding_for_model } from "tiktoken";
 
-const encoder = encoding_for_model("chatgpt-4o-latest");
-
-export { encoder };
+// Tokenizer for tokenizing text for the specified model
+export const tokenizer = encoding_for_model("chatgpt-4o-latest");

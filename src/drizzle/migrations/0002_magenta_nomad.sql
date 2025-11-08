@@ -1,2 +1,0 @@
-CREATE UNIQUE INDEX "question_points_question_id_index" ON "question_points" USING btree ("question_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "quiz_config_quiz_id_index" ON "quiz_config" USING btree ("quiz_id");

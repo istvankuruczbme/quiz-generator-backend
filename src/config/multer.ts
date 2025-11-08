@@ -3,6 +3,9 @@ import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import AppError from "../classes/AppError";
 
+const MAX_PDF_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+// Multer configuration for image uploads
 const imageUpload = multer({
 	storage: multer.memoryStorage(),
 	fileFilter: (_: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
@@ -15,8 +18,7 @@ const imageUpload = multer({
 	},
 });
 
-const MAX_PDF_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-
+// Multer configuration for quiz file uploads
 const quizFileUpload = multer({
 	storage: multer.memoryStorage(),
 	fileFilter(_: Request, file: Express.Multer.File, cb: FileFilterCallback) {

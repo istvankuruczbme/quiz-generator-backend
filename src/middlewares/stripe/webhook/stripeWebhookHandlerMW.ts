@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Stripe from "stripe";
 import updateUserSubscriptionId from "../../../services/db/user/updateUserSubscriptionId";
 import getUserByCustomerId from "../../../services/db/user/getUserByCustomerId";
+import AppError from "../../../classes/AppError";
 
 export default async function stripeWebhookHandlerMW(
 	req: Request,
@@ -23,7 +24,7 @@ export default async function stripeWebhookHandlerMW(
 				const user = await getUserByCustomerId(customerId);
 
 				// Check if user exists
-				if (user == undefined) throw new Error("user/not-found");
+				if (!user) throw new AppError({ message: "user/not-found", status: 404 });
 
 				// Update user with subscription ID
 				await updateUserSubscriptionId(user.id, subscription.id);
@@ -45,7 +46,7 @@ export default async function stripeWebhookHandlerMW(
 				const user = await getUserByCustomerId(customerId);
 
 				// Check if user exists
-				if (user == undefined) throw new Error("user/not-found");
+				if (!user) throw new AppError({ message: "user/not-found", status: 404 });
 
 				// Delete user subscription ID
 				await updateUserSubscriptionId(user.id, null);

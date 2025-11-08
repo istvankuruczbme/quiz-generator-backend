@@ -1,2 +1,0 @@
-ALTER TABLE "question_points" ADD CONSTRAINT "question_points_question_id_unique" UNIQUE("question_id");--> statement-breakpoint
-ALTER TABLE "quiz_config" ADD CONSTRAINT "quiz_config_quiz_id_unique" UNIQUE("quiz_id");
