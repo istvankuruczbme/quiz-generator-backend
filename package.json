@@ -28,11 +28,10 @@
 		"pdf-parse": "^1.1.1",
 		"postgres": "^3.4.5",
 		"remove-markdown": "^0.6.0",
-		"sentence-splitter": "^5.0.0",
 		"stripe": "^17.6.0",
 		"tiktoken": "^1.0.20",
-		"zod": "^3.25.76",
-		"typescript": "^5.7.3"
+		"typescript": "^5.7.3",
+		"zod": "^3.25.76"
 	},
 	"devDependencies": {
 		"@types/express": "^5.0.0",

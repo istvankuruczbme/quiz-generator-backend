@@ -1,5 +1,4 @@
 import mammoth from "mammoth";
-import AppError from "../../../../classes/AppError";
 
 export default async function getDocxText(buffer: Buffer): Promise<string> {
 	// Extract text
@@ -7,10 +6,7 @@ export default async function getDocxText(buffer: Buffer): Promise<string> {
 
 	// Check messages
 	if (messages.length !== 0) {
-		throw new AppError({
-			message: "Error extracting text from DOCX file.",
-			details: messages.map((message) => message.message).join("\n"),
-		});
+		console.warn("DOCX extraction warnings:\n", messages.map((m) => m.message).join("\n"));
 	}
 
 	// Return text

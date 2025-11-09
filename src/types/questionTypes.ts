@@ -1,3 +1,4 @@
+import { LineType } from "../assets/questionGeneration/lineTypeOptions";
 import { QuestionTable } from "../drizzle/schema/question";
 import {
 	AnswerOptionPrivate,
@@ -35,4 +36,12 @@ export type OpenAIQuestionResponse = {
 	text: string;
 	answerOptions: OpenAIAnswerOptionResponse[];
 };
+//#endregion
+
+// #region Question generation
+export type Line = {
+	type: LineType;
+	content: string;
+};
+export type Chunk = Line[];
 //#endregion

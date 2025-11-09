@@ -1,13 +1,14 @@
 import { franc } from "franc";
-import { languages } from "../../../assets/languageTokenLimits";
 import AppError from "../../../classes/AppError";
 
-export default function getTextLanguage(text: string): string {
+const LANGUAGES = ["eng", "hun"];
+
+export default function validateTextLanguage(text: string): void {
 	// Get language
 	const language = franc(text);
 
 	// Check und response
-	if (!languages.includes(language)) {
+	if (!LANGUAGES.includes(language)) {
 		throw new AppError({
 			message: "Invalid language.",
 			details:
@@ -15,7 +16,4 @@ export default function getTextLanguage(text: string): string {
 			status: 400,
 		});
 	}
-
-	// Return language
-	return language;
 }

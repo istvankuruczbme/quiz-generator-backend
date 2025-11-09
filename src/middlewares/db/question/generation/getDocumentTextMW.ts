@@ -9,6 +9,8 @@ export default async function getDocumentTextMW(req: Request, res: Response, nex
 		// Extract text from document
 		const text = await getDocumentText(file);
 
+		// console.log("Raw text:\n", JSON.stringify(text.slice(0, 1500)));
+
 		// Add text to res.locals
 		(res.locals.text as string) = text;
 
