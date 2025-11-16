@@ -23,13 +23,10 @@ export default function groupChunksByTokenCount(chunks: string[]): string[] {
 				groups.push(subChunk.trim());
 				charCount += maxChars;
 			}
-
-			// Go to next chunk
-			continue;
+		} else {
+			// Add chunk to groups
+			groups.push(chunk);
 		}
-
-		// Add chunk to groups
-		groups.push(chunk);
 	}
 
 	// Return groups

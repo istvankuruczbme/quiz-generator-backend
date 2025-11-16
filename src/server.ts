@@ -21,7 +21,7 @@ import freeTokenizer from "./utils/tokenizer/freeTokenizer";
 const app = express();
 
 // Middlewares
-app.use(cors({ origin: process.env.CLIENT_URL })); // Enable requests only from the client
+app.use(cors({ origin: [process.env.CLIENT_URL as string, "http://localhost:5173"] })); // Enable requests only from the client
 app.use(express.json()); // Parse JSON requests
 
 // Routes
