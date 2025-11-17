@@ -14,7 +14,7 @@ export default async function generateQuestion(
 		messages: [
 			{
 				role: "developer",
-				content: `Generate a multiple-choice question from the given text with ${answerOptionCount} answer options.`,
+				content: `Your task is to generate a multiple-choice question with ${answerOptionCount} possible answer options from the given text. There must be at least 1 correct answer. The question and answer options must always be written in the language of the text.`,
 			},
 			{
 				role: "user",

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { QuestionGenerationStrategy } from "../../../../assets/questionGenerationStrategies";
+import { QuestionGenerationStrategy } from "../../../../assets/questionGeneration/questionGenerationStrategies";
 import selectChunks from "../../../../utils/db/question/generation/selectChunks";
 
 export default async function selectChunksMW(req: Request, res: Response, next: NextFunction) {
@@ -14,6 +14,10 @@ export default async function selectChunksMW(req: Request, res: Response, next: 
 	try {
 		// Get selected chunks
 		const selectedChunks = await selectChunks(chunks, questionCount, strategy);
+
+		// for (let i = 0; i < selectedChunks.length; i++) {
+		// 	console.log(`Selected Chunk ${i + 1}:`, selectedChunks[i], "\n\n");
+		// }
 
 		// Add selected chunks to res.locals
 		(res.locals.selectedChunks as string[]) = selectedChunks;

@@ -1,4 +1,4 @@
-import { QuestionGenerationStrategy } from "../../../../assets/questionGenerationStrategies";
+import { QuestionGenerationStrategy } from "../../../../assets/questionGeneration/questionGenerationStrategies";
 import selectRandomElements from "../../../array/selectRandomElements";
 import selectChunksByEmbedding from "./selectChunksByEmbedding";
 import selectChunksByTfidfScore from "./selectChunksByTfidfScore";

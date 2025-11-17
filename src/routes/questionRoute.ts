@@ -28,9 +28,7 @@ import createGeneratedQuestionsMW from "../middlewares/db/question/generation/cr
 import uploadQuizDocumentMW from "../middlewares/db/quiz/uploadQuizDocumentMW";
 import imageUploadMW from "../middlewares/helper/imageUploadMW";
 import quizFileUploadMW from "../middlewares/helper/quizFileUploadMW";
-import detectTextLanguageMW from "../middlewares/db/question/generation/detectTextLanguageMW";
-import getTokenLimitMW from "../middlewares/db/question/generation/getTokenLimitMW";
-import validateExistingGenerationFileMW from "../utils/db/question/generation/validateExistingGenerationFileMW";
+import validateGenerationFileLimitMW from "../utils/db/question/generation/validateGenerationFileLimitMW";
 import getQuizPrivateMW from "../middlewares/db/quiz/getQuizPrivateMW";
 import returnQuizMW from "../middlewares/db/quiz/returnQuizMW";
 import validateCreateQuestionDataMW from "../middlewares/db/question/validateCreateQuestionDataMW";
@@ -38,6 +36,7 @@ import formatCreatedQuestionMW from "../middlewares/db/question/formatCreatedQue
 import getQuestionPrivateMW from "../middlewares/db/question/getQuestionPrivateMW";
 import validateUpdateQuestionDataMW from "../middlewares/db/question/validateUpdateQuestionDataMW";
 import formatUpdatedQuestionMW from "../middlewares/db/question/formatUpdatedQuestionMW";
+import validateTextLanguageMW from "../middlewares/db/question/generation/validateTextLanguageMW";
 
 const router = Router({ mergeParams: true });
 
@@ -66,13 +65,12 @@ router.post(
 	"/generate",
 	getUserSubscriptionMW,
 	getSubscriptionFeaturesMW,
-	validateExistingGenerationFileMW,
+	validateGenerationFileLimitMW,
 	quizFileUploadMW,
 	validateQuestionsGenerationDataMW,
 	uploadQuizDocumentMW,
 	getDocumentTextMW,
-	detectTextLanguageMW,
-	getTokenLimitMW,
+	validateTextLanguageMW,
 	createChunksMW,
 	selectChunksMW,
 	generateQuestionsMW,

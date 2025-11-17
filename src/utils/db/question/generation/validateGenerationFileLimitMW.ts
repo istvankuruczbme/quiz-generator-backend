@@ -4,7 +4,7 @@ import getQuizDocuments from "../../../../services/db/quiz/getQuizDocuments";
 import { SubscriptionFeatures } from "../../../../assets/subscriptionFeatures";
 import AppError from "../../../../classes/AppError";
 
-export default async function validateExistingGenerationFileMW(
+export default async function validateGenerationFileLimitMW(
 	_: Request,
 	res: Response,
 	next: NextFunction
