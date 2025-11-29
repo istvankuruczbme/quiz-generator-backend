@@ -2,33 +2,76 @@ import createTokensFromText from "../../../tokenizer/createTokensFromText";
 
 const MAX_TOKENS = 168_000 - 16_000; // 168k context window - max output
 
-export default function groupChunksByTokenCount(chunks: string[]): string[] {
-	// Initialize groups array
-	const groups: string[] = [];
+type Group = {
+	text: string;
+	tokenCount: number;
+};
 
-	// Loop through chunks
+function createSubGroups(group: Group, maxChars: number): Group[] {
+	const subGroups: Group[] = [];
+	let charCount = 0;
+
+	while (charCount < group.text.length) {
+		const subChunk = group.text.slice(charCount, charCount + maxChars);
+		const subChunkTokenCount = createTokensFromText(subChunk).length;
+
+		subGroups.push({ text: subChunk, tokenCount: subChunkTokenCount });
+		charCount += maxChars;
+	}
+
+	return subGroups;
+}
+
+export default function groupChunksByTokenCount(
+	chunks: string[],
+	minChunkTokenCount: number
+): string[] {
+	const groups: Group[] = [];
+
+	let i = 0;
 	for (const chunk of chunks) {
-		// Get number of tokens
-		const chunkTokenCount = createTokensFromText(chunk).length;
+		i++;
+
+		const tokenCount = createTokensFromText(chunk).length;
+
+		// console.log(
+		// 	i,
+		// 	". Current chunk:",
+		// 	tokenCount,
+		// 	" Last group:",
+		// 	groups.at(-1)?.tokenCount,
+		// 	" Min:",
+		// 	minChunkTokenCount
+		// );
 
 		// Token count exceeds max tokens
-		if (chunkTokenCount > MAX_TOKENS) {
-			// Calculate max chars per sub-chunk
-			const maxChars = Math.floor((MAX_TOKENS / chunkTokenCount) * chunk.length * 0.9); // 0.9 safety factor
+		if (tokenCount > MAX_TOKENS) {
+			const maxChars = Math.floor((MAX_TOKENS / tokenCount) * chunk.length * 0.9); // 0.9 safety factor
 
-			// Add sub-chunks to groups array
-			let charCount = 0;
-			while (charCount < chunk.length) {
-				const subChunk = chunk.slice(charCount, charCount + maxChars);
-				groups.push(subChunk.trim());
-				charCount += maxChars;
-			}
+			const subGroups = createSubGroups({ text: chunk, tokenCount }, maxChars);
+			groups.push(...subGroups);
+
+			continue;
+		}
+
+		// Normal chunk, add to groups
+		if (groups.length === 0) {
+			groups.push({ text: chunk, tokenCount });
 		} else {
-			// Add chunk to groups
-			groups.push(chunk);
+			if (tokenCount < minChunkTokenCount || groups.at(-1)!.tokenCount < minChunkTokenCount) {
+				const newGroupTokenCount = groups.at(-1)!.tokenCount + tokenCount;
+				if (newGroupTokenCount <= MAX_TOKENS) {
+					groups.at(-1)!.text += "\n\n" + chunk;
+					groups.at(-1)!.tokenCount = newGroupTokenCount;
+				} else {
+					groups.push({ text: chunk, tokenCount });
+				}
+			} else {
+				groups.push({ text: chunk, tokenCount });
+			}
 		}
 	}
 
-	// Return groups
-	return groups;
+	// Return text of groups
+	return groups.map((group) => group.text);
 }

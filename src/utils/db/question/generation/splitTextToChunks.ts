@@ -1,6 +1,7 @@
 import { Chunk } from "../../../../types/questionTypes";
 
-const LIST_MARKERS_REGEX = /^(\d+\.|[-–*•])/;
+const LIST_MARKERS_REGEX =
+	/^\s*(?:[\u2022\u2023\u25E6\u2043\*\-–—]|[\(\[]?[A-Za-z]\.|[A-Za-z]\)|\d+[\.\)]|[ivxlcdmIVXLCDM]+[\.\)])\s+/;
 const STARTS_WITH_UPPERCASE_REGEX = /^[A-Z(]/;
 const ENDS_WITH_PUNCTUATION_REGEX = /[.!?:"”)]$/;
 
