@@ -4,15 +4,15 @@ import groupChunksForEmbedding from "../../../tokenizer/groupChunksForEmbedding"
 
 export default async function selectChunksByEmbedding(chunks: string[], n = 1) {
 	// Group chunks
-	const chunksArray = groupChunksForEmbedding(chunks);
+	const chunkGroups = groupChunksForEmbedding(chunks);
 
 	// Create embedding for every chunk
 	const embeddings = await Promise.all(
-		chunksArray.map(async (chunks) => (await createEmbeddings(chunks)).flat()).flat()
+		chunkGroups.map(async (chunks) => await createEmbeddings(chunks))
 	);
 
 	// Calculate norm for every embedding vector
-	const norms = embeddings.map((embedding, i) => ({
+	const norms = embeddings.flat().map((embedding, i) => ({
 		index: i,
 		norm: calculateVectorNorm(embedding),
 	}));

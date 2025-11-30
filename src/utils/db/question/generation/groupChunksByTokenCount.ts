@@ -28,21 +28,8 @@ export default function groupChunksByTokenCount(
 ): string[] {
 	const groups: Group[] = [];
 
-	let i = 0;
 	for (const chunk of chunks) {
-		i++;
-
 		const tokenCount = createTokensFromText(chunk).length;
-
-		// console.log(
-		// 	i,
-		// 	". Current chunk:",
-		// 	tokenCount,
-		// 	" Last group:",
-		// 	groups.at(-1)?.tokenCount,
-		// 	" Min:",
-		// 	minChunkTokenCount
-		// );
 
 		// Token count exceeds max tokens
 		if (tokenCount > MAX_TOKENS) {
