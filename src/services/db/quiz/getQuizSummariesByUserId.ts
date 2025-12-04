@@ -1,4 +1,4 @@
-import { and, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 import { db } from "../../../drizzle/db";
 import { CategoryTable } from "../../../drizzle/schema/category";
 import { QuizTable } from "../../../drizzle/schema/quiz";
@@ -36,7 +36,8 @@ export default async function getQuizSummariesByUserId(userId: string): Promise<
 			UserTable.id,
 			UserTable.name,
 			UserTable.photoUrl
-		);
+		)
+		.orderBy(desc(QuizTable.createdAt));
 
 	// Return quiz summaries
 	return quizSummaries;

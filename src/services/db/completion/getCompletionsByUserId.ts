@@ -31,6 +31,7 @@ export default async function getCompletionsByUserId(userId: string): Promise<Co
 			},
 		},
 		where: (completion, { eq }) => eq(completion.userId, userId),
+		orderBy: (completion, { desc }) => [desc(completion.finishedAt)],
 	});
 
 	// Get quizzes
