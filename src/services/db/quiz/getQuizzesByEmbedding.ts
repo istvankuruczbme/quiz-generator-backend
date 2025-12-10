@@ -11,10 +11,10 @@ import { CompletionTable } from "../../../drizzle/schema/completion";
 
 export default async function getQuizzesByEmbedding(
 	embedding: number[],
-	params: { similarityThreshold?: number; limit?: number; userId: string }
+	params: { similarityThreshold?: number; limit?: number }
 ): Promise<QuizSummary[]> {
 	// Get params
-	const { similarityThreshold, limit, userId } = params;
+	const { similarityThreshold, limit } = params;
 
 	// Calculate similarity
 	const similarity = sql<number>`1 - (${cosineDistance(QuizTable.embedding, embedding)})`;
@@ -31,10 +31,7 @@ export default async function getQuizzesByEmbedding(
 		.where(
 			and(
 				isNull(QuizTable.deletedAt),
-				or(
-					and(eq(QuizConfigTable.state, "ACTIVE"), eq(QuizConfigTable.visibility, "PUBLIC")),
-					eq(QuizTable.userId, userId)
-				),
+				and(eq(QuizConfigTable.state, "ACTIVE"), eq(QuizConfigTable.visibility, "PUBLIC")),
 				similarityThreshold ? gt(similarity, similarityThreshold) : undefined
 			)
 		)

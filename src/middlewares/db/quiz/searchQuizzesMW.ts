@@ -41,7 +41,6 @@ export default async function searchQuizzesMW(_: Request, res: Response, next: N
 				// Get quizzes by user embedding
 				const quizSummaries = await getQuizzesByEmbedding(user.embedding, {
 					limit: quizSearchData.limit,
-					userId: user.id,
 				});
 
 				// Add quizzes to res.locals

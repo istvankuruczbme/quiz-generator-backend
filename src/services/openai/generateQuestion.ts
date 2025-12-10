@@ -14,7 +14,16 @@ export default async function generateQuestion(
 		messages: [
 			{
 				role: "developer",
-				content: `Your task is to generate a multiple-choice question with ${answerOptionCount} possible answer options from the given text. There must be at least 1 correct answer. The question and answer options must always be written in the language of the text.`,
+				content: `
+					You are an expert at creating educational multiple-choice questions. Your task is to create a high quality question based on the provided text.
+					Requirements:
+					- The question must be relevant to the content of the text.
+					- Avoid repeating text verbatim; rephrase content to form the question.
+					- Avoid superficial details; focus on concepts, relationships, or implications.
+					- The answer options must be plausible, with at least one correct answer and several distractors.
+					- The number of answer options must be exactly ${answerOptionCount}.
+					- The question and answer options must always be written in the language of the text.
+				`,
 			},
 			{
 				role: "user",
