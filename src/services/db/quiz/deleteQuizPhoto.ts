@@ -13,8 +13,6 @@ export default async function deleteQuizPhoto(quizId: string): Promise<void> {
 		throw new AppError({ message: "Error getting quiz photo.", details: listError.message });
 	}
 
-	console.log("Quiz photo data:", data);
-
 	// Check if data exists
 	if (!data || data.length === 0) return;
 

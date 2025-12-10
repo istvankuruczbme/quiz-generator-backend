@@ -32,6 +32,7 @@ import validateUpdateQuizDataMW from "../middlewares/db/quiz/validateUpdateQuizD
 import formatUpdatedQuizMW from "../middlewares/db/quiz/formatUpdatedQuizMW";
 import validateQuizSearchDataMW from "../middlewares/db/quiz/validateQuizSearchDataMW";
 import searchQuizzesMW from "../middlewares/db/quiz/searchQuizzesMW";
+import validateQuizBeforeFinishMW from "../middlewares/db/quiz/validateQuizBeforeFinishMW";
 
 const router = Router();
 
@@ -94,7 +95,14 @@ router.put(
 );
 
 // Finish quiz
-router.put("/:quizId/finish", validateQuizIdMW, getQuizPrivateMW, finishQuizMW, returnQuizMW);
+router.put(
+	"/:quizId/finish",
+	validateQuizIdMW,
+	getQuizPrivateMW,
+	validateQuizBeforeFinishMW,
+	finishQuizMW,
+	returnQuizMW
+);
 
 // Delete quiz
 router.delete(
